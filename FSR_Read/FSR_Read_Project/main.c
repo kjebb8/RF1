@@ -49,20 +49,26 @@
  * @image html example_board_setup_a.jpg "Use board setup A for this example."
  */
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <string.h>
-#include "nrf.h"
-#include "nrf_drv_saadc.h"
-#include "nrf_drv_ppi.h"
-#include "nrf_drv_timer.h"
-#include "boards.h"
-#include "app_error.h"
-#include "nrf_delay.h"
-#include "app_util_platform.h"
-#include "nrf_pwr_mgmt.h"
-#include "nrf_drv_power.h"
+ #include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include "nrf.h"
+ #include "nrf_drv_saadc.h"
+ #include "nrf_drv_ppi.h"
+ #include "nrf_drv_timer.h"
+ #include "boards.h"
+ #include "app_error.h"
+ #include "nrf_delay.h"
+ #include "app_util_platform.h"
+ #include "nrf_pwr_mgmt.h"
+ #include "nrf_drv_power.h"
+ #include "nrf_drv_gpiote.h"
+ #include "app_timer.h"
+ #include "nrf_drv_clock.h"
+ #include "app_scheduler.h"
+ #include "nordic_common.h"
+ #include "app_timer_appsh.h"
 
 #define NRF_LOG_MODULE_NAME "APP" //Log Name
 #include "nrf_log.h"

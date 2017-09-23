@@ -33,6 +33,10 @@ SRC_FILES += \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
   $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf52.S \
   $(SDK_ROOT)/components/toolchain/system_nrf52.c \
+	$(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c \
+	$(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c \
+	$(SDK_ROOT)/components/libraries/timer/app_timer_appsh.c \
+	$(SDK_ROOT)/components/libraries/scheduler/app_scheduler.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
@@ -61,6 +65,9 @@ INC_FOLDERS += \
   $(SDK_ROOT)/components/drivers_nrf/common \
   $(SDK_ROOT)/components/drivers_nrf/ppi \
   $(SDK_ROOT)/components/libraries/log/src \
+	$(SDK_ROOT)/components/drivers_nrf/gpiote \
+	$(SDK_ROOT)/components/drivers_nrf/clock \
+	$(SDK_ROOT)/components/libraries/scheduler \
 
 # Libraries common to all targets
 LIB_FILES += \
@@ -88,7 +95,7 @@ CFLAGS +=  -Wall -Werror -O3 -g3
 CFLAGS += -mfloat-abi=hard -mfpu=fpv4-sp-d16
 # keep every function in separate section, this allows linker to discard unused ones
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
-CFLAGS += -fno-builtin --short-enums 
+CFLAGS += -fno-builtin --short-enums
 
 # C++ flags common to all targets
 CXXFLAGS += \
@@ -122,7 +129,7 @@ LDFLAGS += -Wl,--gc-sections
 LDFLAGS += --specs=nano.specs -lc -lnosys
 
 
-.PHONY: $(TARGETS) default all clean help flash 
+.PHONY: $(TARGETS) default all clean help flash
 
 # Default target - first one defined
 default: nrf52832_xxaa
