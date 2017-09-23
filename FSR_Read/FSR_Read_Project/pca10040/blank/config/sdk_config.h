@@ -996,6 +996,210 @@
 #define SEGGER_RTT_CONFIG_MAX_NUM_DOWN_BUFFERS 2
 #endif
 
+// <e> GPIOTE_ENABLED - nrf_drv_gpiote - GPIOTE peripheral driver
+//==========================================================
+#ifndef GPIOTE_ENABLED
+#define GPIOTE_ENABLED 1
+#endif
+#if  GPIOTE_ENABLED
+// <o> GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS - Number of lower power input pins
+#ifndef GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS
+#define GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS 4
+#endif
+
+// <o> GPIOTE_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef GPIOTE_CONFIG_IRQ_PRIORITY
+#define GPIOTE_CONFIG_IRQ_PRIORITY 7
+#endif
+
+// <e> GPIOTE_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef GPIOTE_CONFIG_LOG_ENABLED
+#define GPIOTE_CONFIG_LOG_ENABLED 0
+#endif
+#if  GPIOTE_CONFIG_LOG_ENABLED
+// <o> GPIOTE_CONFIG_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef GPIOTE_CONFIG_LOG_LEVEL
+#define GPIOTE_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> GPIOTE_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef GPIOTE_CONFIG_INFO_COLOR
+#define GPIOTE_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> GPIOTE_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef GPIOTE_CONFIG_DEBUG_COLOR
+#define GPIOTE_CONFIG_DEBUG_COLOR 0
+#endif
+
+#endif //GPIOTE_CONFIG_LOG_ENABLED
+// </e>
+
+#endif //GPIOTE_ENABLED
+// </e>
+
+// <e> APP_SCHEDULER_ENABLED - app_scheduler - Events scheduler
+//==========================================================
+#ifndef APP_SCHEDULER_ENABLED
+#define APP_SCHEDULER_ENABLED 1
+#endif
+#if  APP_SCHEDULER_ENABLED
+// <q> APP_SCHEDULER_WITH_PAUSE  - Enabling pause feature
+
+
+#ifndef APP_SCHEDULER_WITH_PAUSE
+#define APP_SCHEDULER_WITH_PAUSE 0
+#endif
+
+// <q> APP_SCHEDULER_WITH_PROFILER  - Enabling scheduler profiling
+
+
+#ifndef APP_SCHEDULER_WITH_PROFILER
+#define APP_SCHEDULER_WITH_PROFILER 0
+#endif
+
+#endif //APP_SCHEDULER_ENABLED
+// </e>
+
+// <e> CLOCK_ENABLED - nrf_drv_clock - CLOCK peripheral driver
+//==========================================================
+#ifndef CLOCK_ENABLED
+#define CLOCK_ENABLED 1
+#endif
+#if  CLOCK_ENABLED
+// <o> CLOCK_CONFIG_XTAL_FREQ  - HF XTAL Frequency
+
+// <0=> Default (64 MHz)
+
+#ifndef CLOCK_CONFIG_XTAL_FREQ
+#define CLOCK_CONFIG_XTAL_FREQ 0
+#endif
+
+// <o> CLOCK_CONFIG_LF_SRC  - LF Clock Source
+
+// <0=> RC
+// <1=> XTAL
+// <2=> Synth
+
+#ifndef CLOCK_CONFIG_LF_SRC
+#define CLOCK_CONFIG_LF_SRC 1
+#endif
+
+// <o> CLOCK_CONFIG_IRQ_PRIORITY  - Interrupt priority
+
+
+// <i> Priorities 0,2 (nRF51) and 0,1,4,5 (nRF52) are reserved for SoftDevice
+// <0=> 0 (highest)
+// <1=> 1
+// <2=> 2
+// <3=> 3
+// <4=> 4
+// <5=> 5
+// <6=> 6
+// <7=> 7
+
+#ifndef CLOCK_CONFIG_IRQ_PRIORITY
+#define CLOCK_CONFIG_IRQ_PRIORITY 7
+#endif
+
+// <e> CLOCK_CONFIG_LOG_ENABLED - Enables logging in the module.
+//==========================================================
+#ifndef CLOCK_CONFIG_LOG_ENABLED
+#define CLOCK_CONFIG_LOG_ENABLED 0
+#endif
+#if  CLOCK_CONFIG_LOG_ENABLED
+// <o> CLOCK_CONFIG_LOG_LEVEL  - Default Severity level
+
+// <0=> Off
+// <1=> Error
+// <2=> Warning
+// <3=> Info
+// <4=> Debug
+
+#ifndef CLOCK_CONFIG_LOG_LEVEL
+#define CLOCK_CONFIG_LOG_LEVEL 3
+#endif
+
+// <o> CLOCK_CONFIG_INFO_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef CLOCK_CONFIG_INFO_COLOR
+#define CLOCK_CONFIG_INFO_COLOR 0
+#endif
+
+// <o> CLOCK_CONFIG_DEBUG_COLOR  - ANSI escape code prefix.
+
+// <0=> Default
+// <1=> Black
+// <2=> Red
+// <3=> Green
+// <4=> Yellow
+// <5=> Blue
+// <6=> Magenta
+// <7=> Cyan
+// <8=> White
+
+#ifndef CLOCK_CONFIG_DEBUG_COLOR
+#define CLOCK_CONFIG_DEBUG_COLOR 0
+#endif
+
+#endif //CLOCK_CONFIG_LOG_ENABLED
+// </e>
+
+#endif //CLOCK_ENABLED
+// </e>
+
 // </h>
 //==========================================================
 

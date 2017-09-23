@@ -56,7 +56,13 @@ _build/nrf52832_xxaa_nrf_drv_common.c.o: \
  ../../../../../../components/libraries/util/app_util_platform.h \
  ../../../../../../components/libraries/util/nrf_assert.h \
  ../../../../../../components/drivers_nrf/hal/nrf_peripherals.h \
- ../../../../../../components/device/nrf52832_peripherals.h
+ ../../../../../../components/device/nrf52832_peripherals.h \
+ ../../../../../../components/drivers_nrf/power/nrf_drv_power.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_power.h \
+ ../../../../../../components/libraries/util/nordic_common.h \
+ ../../../../../../components/drivers_nrf/common/nrf_drv_common.h \
+ ../../../../../../components/drivers_nrf/clock/nrf_drv_clock.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_clock.h
 
 /usr/local/gcc-arm-none-eabi-6-2017-q1-update/lib/gcc/arm-none-eabi/6.3.1/include/stddef.h:
 
@@ -171,3 +177,15 @@ _build/nrf52832_xxaa_nrf_drv_common.c.o: \
 ../../../../../../components/drivers_nrf/hal/nrf_peripherals.h:
 
 ../../../../../../components/device/nrf52832_peripherals.h:
+
+../../../../../../components/drivers_nrf/power/nrf_drv_power.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_power.h:
+
+../../../../../../components/libraries/util/nordic_common.h:
+
+../../../../../../components/drivers_nrf/common/nrf_drv_common.h:
+
+../../../../../../components/drivers_nrf/clock/nrf_drv_clock.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_clock.h:

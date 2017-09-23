@@ -41,7 +41,33 @@ _build/nrf52832_xxaa_nrf_drv_gpiote.c.o: \
  ../../../../../../components/device/nrf51_to_nrf52.h \
  ../../../../../../components/device/nrf52_name_change.h \
  ../../../../../../components/device/compiler_abstraction.h \
- ../../../../../../components/libraries/util/sdk_macros.h
+ ../../../../../../components/libraries/util/sdk_macros.h \
+ ../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_gpiote.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_peripherals.h \
+ ../../../../../../components/device/nrf52832_peripherals.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_gpio.h \
+ ../../../../../../components/libraries/util/nrf_assert.h \
+ ../../../../../../components/libraries/util/app_error.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdio.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/lib/gcc/arm-none-eabi/6.3.1/include/stdarg.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/types.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/_pthreadtypes.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/types.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/stdio.h \
+ ../../../../../../components/libraries/util/app_error_weak.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdlib.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/stdlib.h \
+ ../../../../../../components/libraries/util/sdk_errors.h \
+ ../../../../../../components/drivers_nrf/common/nrf_drv_common.h \
+ ../../../../../../components/libraries/util/app_util_platform.h \
+ ../../../../../../components/libraries/util/nrf_assert.h \
+ ../../../../../../components/libraries/util/nrf_bitmask.h \
+ ../../../../../../components/libraries/log/nrf_log.h \
+ ../../../../../../components/libraries/log/src/nrf_log_internal.h \
+ ../../../../../../components/libraries/util/app_util.h \
+ ../../../../../../components/libraries/log/nrf_log_ctrl.h \
+ ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h
 
 ../../../../../../components/libraries/util/sdk_common.h:
 
@@ -126,3 +152,55 @@ _build/nrf52832_xxaa_nrf_drv_gpiote.c.o: \
 ../../../../../../components/device/compiler_abstraction.h:
 
 ../../../../../../components/libraries/util/sdk_macros.h:
+
+../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_gpiote.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_peripherals.h:
+
+../../../../../../components/device/nrf52832_peripherals.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_gpio.h:
+
+../../../../../../components/libraries/util/nrf_assert.h:
+
+../../../../../../components/libraries/util/app_error.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdio.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/lib/gcc/arm-none-eabi/6.3.1/include/stdarg.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/types.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/_pthreadtypes.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/types.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/sys/stdio.h:
+
+../../../../../../components/libraries/util/app_error_weak.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdlib.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/stdlib.h:
+
+../../../../../../components/libraries/util/sdk_errors.h:
+
+../../../../../../components/drivers_nrf/common/nrf_drv_common.h:
+
+../../../../../../components/libraries/util/app_util_platform.h:
+
+../../../../../../components/libraries/util/nrf_assert.h:
+
+../../../../../../components/libraries/util/nrf_bitmask.h:
+
+../../../../../../components/libraries/log/nrf_log.h:
+
+../../../../../../components/libraries/log/src/nrf_log_internal.h:
+
+../../../../../../components/libraries/util/app_util.h:
+
+../../../../../../components/libraries/log/nrf_log_ctrl.h:
+
+../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h:
