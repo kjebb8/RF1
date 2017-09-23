@@ -64,12 +64,8 @@
  #include "nrf_pwr_mgmt.h"
  #include "nrf_drv_power.h"
  #include "nrf_drv_gpiote.h"
- #include "app_timer.h"
- #include "nrf_drv_clock.h"
  #include "app_scheduler.h"
  #include "nordic_common.h"
- #include "app_timer_appsh.h"
- #include "nrf_pwr_mgmt.h"
 
 #define NRF_LOG_MODULE_NAME "APP" //Log Name
 #include "nrf_log.h"
@@ -79,7 +75,7 @@
 volatile uint8_t state = 1;
 
 static const nrf_drv_timer_t m_timer = NRF_DRV_TIMER_INSTANCE(0); //Macro creates an instance of a timer driver with ID 0
-static nrf_saadc_value_t     m_buffer_pool[2][SAMPLES_IN_BUFFER]; // typedef int16_t nrf_saadc_value_t, Setting up 2 sample buffers
+static nrf_saadc_value_t     m_buffer_pool[1][SAMPLES_IN_BUFFER]; // typedef int16_t nrf_saadc_value_t, Setting up 2 sample buffers
 static nrf_ppi_channel_t     m_ppi_channel; //Enum for different PPI channels
 static uint32_t              m_adc_evt_counter;
 
@@ -88,20 +84,12 @@ static uint32_t              m_adc_evt_counter;
 // clearing a pin will light the LED and setting the pin will turn of the LED.
 #define LED_1_PIN                       BSP_LED_0     // LED 1 on the nRF51-DK or nRF52-DK
 #define LED_2_PIN                       BSP_LED_1     // LED 3 on the nRF51-DK or nRF52-DK
-#define LED_3_PIN                       BSP_LED_2     // LED 3 on the nRF51-DK or nRF52-DK
-#define BUTTON_1_PIN                    BSP_BUTTON_0  // Button 1 on the nRF51-DK or nRF52-DK
-#define BUTTON_2_PIN                    BSP_BUTTON_1  // Button 2 on the nRF51-DK or nRF52-DK
-
-// General application timer settings.
-#define APP_TIMER_PRESCALER             16    // Value of the RTC1 PRESCALER register.
-#define APP_TIMER_OP_QUEUE_SIZE         2     // Size of timer operation queues.
-
-// Application timer ID.
-APP_TIMER_DEF(m_led_a_timer_id);
+//// #define BUTTON_1_PIN                    BSP_BUTTON_0  // Button 1 on the nRF51-DK or nRF52-DK
+// #define BUTTON_2_PIN                    BSP_BUTTON_1  // Button 2 on the nRF51-DK or nRF52-DK
 
 //Scheduler settings
-#define SCHED_MAX_EVENT_DATA_SIZE       MAX(APP_TIMER_SCHED_EVT_SIZE, sizeof(nrf_drv_gpiote_pin_t))
-#define SCHED_QUEUE_SIZE                10
+#define SCHED_MAX_EVENT_DATA_SIZE       sizeof(nrf_drv_saadc_evt_t)
+#define SCHED_QUEUE_SIZE                5
 
 // Function returns true if called from main context (CPU in thread
 // mode), and returns false if called from an interrupt context. This
@@ -123,60 +111,53 @@ bool main_context ( void )
 
 
 // Function for controlling LED's based on button presses.
-void button_handler(nrf_drv_gpiote_pin_t pin)
-{
-    uint32_t err_code;
-
-    // Handle button presses.
-    switch (pin)
-    {
-    case BUTTON_1_PIN:
-        err_code = app_timer_start(m_led_a_timer_id, APP_TIMER_TICKS(200, APP_TIMER_PRESCALER), NULL);
-        APP_ERROR_CHECK(err_code);
-
-        // Light LED 2 if running in main context and turn it off if running in an interrupt context.
-        // This has no practical use in a real application, but it is useful here in the tutorial.
-        if (main_context())
-        {
-            nrf_drv_gpiote_out_clear(LED_2_PIN);
-        }
-        else
-        {
-            nrf_drv_gpiote_out_set(LED_2_PIN);
-        }
-
-        break;
-    case BUTTON_2_PIN:
-        nrf_drv_gpiote_out_set(LED_1_PIN);
-        nrf_drv_gpiote_out_set(LED_2_PIN);
-        nrf_drv_gpiote_out_set(LED_3_PIN);
-        err_code = app_timer_stop(m_led_a_timer_id);
-        APP_ERROR_CHECK(err_code);
-        break;
-    default:
-        break;
-    }
-}
+// void button_handler(nrf_drv_gpiote_pin_t pin)
+// {
+//     // Handle button presses.
+//     switch (pin)
+//     {
+//     case BUTTON_1_PIN:
+//
+//         // Light LED 1 if in interrupt context
+//         if (main_context())
+//         {
+//             nrf_drv_gpiote_out_set(LED_1_PIN);
+//         }
+//         else
+//         {
+//             nrf_drv_gpiote_out_clear(LED_1_PIN);
+//         }
+//
+//          break;
+//     case BUTTON_2_PIN:
+//         nrf_drv_gpiote_out_set(LED_1_PIN);
+//         nrf_drv_gpiote_out_set(LED_2_PIN);
+//         nrf_drv_gpiote_out_set(LED_3_PIN);
+//         break;
+//     default:
+//         break;
+//     }
+// }
 
 
 //Button handler function to be called by the scheduler
-void button_scheduler_event_handler(void *p_event_data, uint16_t event_size)
-{
-    //In this case, p_event_data is a pointer to a nrf_drv_gpiote_pin_t that represeants
-    //the pin number of the button that was pressed. The size is constant
-    button_handler(*((nrf_drv_gpiote_pin_t*)p_event_data));
-}
+// void button_scheduler_event_handler(void *p_event_data, uint16_t event_size)
+// {
+//     //In this case, p_event_data is a pointer to a nrf_drv_gpiote_pin_t that represeants
+//     //the pin number of the button that was pressed. The size is constant
+//     button_handler(*((nrf_drv_gpiote_pin_t*)p_event_data));
+// }
 
 // Button event handler.
-void gpiote_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
-{
-    // The button_handler function could be implemented here directly, but is
-    // extracted to a separate function as it makes it easier to demonstrate
-    // the scheduler with less modifications to the code later in the tutorial.
-    //button_handler(pin);
-
-    app_sched_event_put(&pin, sizeof(pin), button_scheduler_event_handler);
-}
+// void gpiote_event_handler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
+// {
+//     // The button_handler function could be implemented here directly, but is
+//     // extracted to a separate function as it makes it easier to demonstrate
+//     // the scheduler with less modifications to the code later in the tutorial.
+//     //button_handler(pin);
+//
+//     //app_sched_event_put(&pin, sizeof(pin), button_scheduler_event_handler);
+// }
 
 
 // Function for configuring GPIO.
@@ -194,71 +175,29 @@ static void gpio_config()
     APP_ERROR_CHECK(err_code);
     err_code = nrf_drv_gpiote_out_init(LED_2_PIN, &out_config);
     APP_ERROR_CHECK(err_code);
-    err_code = nrf_drv_gpiote_out_init(LED_3_PIN, &out_config);
-    APP_ERROR_CHECK(err_code);
-
-    // Set output pins (this will turn off the LED's).
+    // err_code = nrf_drv_gpiote_out_init(LED_3_PIN, &out_config);
+    // APP_ERROR_CHECK(err_code);
+    //
+    // // Set output pins (this will turn off the LED's).
     nrf_drv_gpiote_out_set(LED_1_PIN);
     nrf_drv_gpiote_out_set(LED_2_PIN);
-    nrf_drv_gpiote_out_set(LED_3_PIN);
-
-    // Make a configuration for input pints. This is suitable for both pins in this example.
-    nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
-    in_config.pull = NRF_GPIO_PIN_PULLUP;
-
-    // Configure input pins for buttons, with separate event handlers for each button.
-    err_code = nrf_drv_gpiote_in_init(BUTTON_1_PIN, &in_config, gpiote_event_handler);
-    APP_ERROR_CHECK(err_code);
-    err_code = nrf_drv_gpiote_in_init(BUTTON_2_PIN, &in_config, gpiote_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    // Enable input pins for buttons.
-    nrf_drv_gpiote_in_event_enable(BUTTON_1_PIN, true);
-    nrf_drv_gpiote_in_event_enable(BUTTON_2_PIN, true);
+    // nrf_drv_gpiote_out_set(LED_3_PIN);
+    //
+    // // Make a configuration for input pints. This is suitable for both pins in this example.
+    // nrf_drv_gpiote_in_config_t in_config = GPIOTE_CONFIG_IN_SENSE_HITOLO(true);
+    // in_config.pull = NRF_GPIO_PIN_PULLUP;
+    //
+    // // Configure input pins for buttons, with separate event handlers for each button.
+    // err_code = nrf_drv_gpiote_in_init(BUTTON_1_PIN, &in_config, gpiote_event_handler);
+    // APP_ERROR_CHECK(err_code);
+    // err_code = nrf_drv_gpiote_in_init(BUTTON_2_PIN, &in_config, gpiote_event_handler);
+    // APP_ERROR_CHECK(err_code);
+    //
+    // // Enable input pins for buttons.
+    // nrf_drv_gpiote_in_event_enable(BUTTON_1_PIN, true);
+    // nrf_drv_gpiote_in_event_enable(BUTTON_2_PIN, true);
 }
 
-
-// Timeout handler for the repeated timer
-static void timer_handler(void * p_context)
-{
-    // Toggle LED 1.
-    nrf_drv_gpiote_out_toggle(LED_1_PIN);
-
-    // Light LED 3 if running in main context and turn it off if running in an interrupt context.
-    // This has no practical use in a real application, but it is useful here in the tutorial.
-    if (main_context())
-    {
-        nrf_drv_gpiote_out_clear(LED_3_PIN);
-    }
-    else
-    {
-        nrf_drv_gpiote_out_set(LED_3_PIN);
-    }
-}
-
-
-// Create timers
-static void create_timers()
-{
-    uint32_t err_code;
-
-    // Create timers
-    err_code = app_timer_create(&m_led_a_timer_id,
-                                APP_TIMER_MODE_REPEATED,
-                                timer_handler);
-    APP_ERROR_CHECK(err_code);
-}
-
-
-// Function starting the internal LFCLK oscillator.
-// This is needed by RTC1 which is used by the Application Timer
-// (When SoftDevice is enabled the LFCLK is always running and this is not needed).
-static void lfclk_request(void)
-{
-    uint32_t err_code = nrf_drv_clock_init();
-    APP_ERROR_CHECK(err_code);
-    nrf_drv_clock_lfclk_request(NULL);
-}
 
 //----------------------------------------------------------------------------------------
 //Start of SAADC Example
@@ -305,7 +244,6 @@ void saadc_sampling_event_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
 void saadc_sampling_event_enable(void)
 {
     ret_code_t err_code = nrf_drv_ppi_channel_enable(m_ppi_channel); //Enable the PPI
@@ -313,26 +251,56 @@ void saadc_sampling_event_enable(void)
     APP_ERROR_CHECK(err_code);
 }
 
+// The executable event from the scheduler to read and reset the ADC result buffer
+void saadc_scheduler_event_handler(void * p_event_data, uint16_t event_size)
+{
+    ret_code_t err_code;
 
-//Once a sample buffer is full, it is set up again
+    err_code = nrf_drv_saadc_buffer_convert(((nrf_drv_saadc_evt_t*)p_event_data)->data.done.p_buffer, SAMPLES_IN_BUFFER); //Sets the ADC up for conversion
+    APP_ERROR_CHECK(err_code);
+
+    //int i;
+    //NRF_LOG_INFO("ADC event number: %d\r\n", (int)m_adc_evt_counter);
+
+    //for (i = 0; i < SAMPLES_IN_BUFFER; i++)
+    //{
+      NRF_LOG_RAW_INFO("%d %d\r\n", ((nrf_drv_saadc_evt_t*)p_event_data)->data.done.p_buffer[0], ((nrf_drv_saadc_evt_t*)p_event_data)->data.done.p_buffer[1]); // Log the samples in the full buffer
+      //NRF_LOG_RAW_HEXDUMP_INFO(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER);
+    //}
+
+    // LED_1_PIN turns on if in main context
+    m_adc_evt_counter++;
+    if (main_context())
+    {
+        nrf_drv_gpiote_out_clear(LED_1_PIN);
+    }
+    else
+    {
+        nrf_drv_gpiote_out_set(LED_1_PIN);
+    }
+}
+
+//Once a sample buffer is full, it puts an event in the scheduler
 void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
 {
     if (p_event->type == NRF_DRV_SAADC_EVT_DONE) //Event when buffer is full of samples
     {
-        ret_code_t err_code;
+        // Puts the const pointer into normal pointer
+        void * p_event_copy = NULL;
+        memcpy(&p_event_copy, &p_event, sizeof(p_event));
 
-        err_code = nrf_drv_saadc_buffer_convert(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER); //Sets the ADC up for conversion
-        APP_ERROR_CHECK(err_code);
+        // Schedule the full buffer even to be handled
+        app_sched_event_put(p_event_copy, sizeof(nrf_drv_saadc_evt_t), saadc_scheduler_event_handler);
 
-        //int i;
-        //NRF_LOG_INFO("ADC event number: %d\r\n", (int)m_adc_evt_counter);
-
-        //for (i = 0; i < SAMPLES_IN_BUFFER; i++)
-        //{
-          NRF_LOG_RAW_INFO("%d %d\r\n", p_event->data.done.p_buffer[0], p_event->data.done.p_buffer[1]); // Log the samples in the full buffer
-          //NRF_LOG_RAW_HEXDUMP_INFO(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER);
-        //}
-        m_adc_evt_counter++;
+        // If executed in interrupt context, LED_2_PIN turns on
+        if (main_context())
+        {
+            nrf_drv_gpiote_out_set(LED_2_PIN);
+        }
+        else
+        {
+            nrf_drv_gpiote_out_clear(LED_2_PIN);
+        }
     }
 }
 
@@ -363,18 +331,8 @@ void saadc_init(void)
  */
 int main(void)
 {
-    // Request LF clock.
-    lfclk_request();
-
     // Configure GPIO's.
     gpio_config();
-
-    // Initialize the Application timer Library.
-    //APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
-    APP_TIMER_APPSH_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, true);
-
-    // Create application timer instances.
-    create_timers();
 
     APP_SCHED_INIT(SCHED_MAX_EVENT_DATA_SIZE, SCHED_QUEUE_SIZE);
 

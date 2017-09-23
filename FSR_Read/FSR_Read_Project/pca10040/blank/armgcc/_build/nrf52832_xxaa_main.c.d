@@ -77,13 +77,8 @@ _build/nrf52832_xxaa_main.c.o: ../../../main.c \
  ../../../../../../components/drivers_nrf/hal/nrf_power.h \
  ../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h \
  ../../../../../../components/drivers_nrf/hal/nrf_gpiote.h \
- ../../../../../../components/libraries/timer/app_timer.h \
- ../../../../../../components/libraries/util/app_util.h \
- ../../../../../../components/drivers_nrf/clock/nrf_drv_clock.h \
- ../../../../../../components/drivers_nrf/hal/nrf_clock.h \
  ../../../../../../components/libraries/scheduler/app_scheduler.h \
- ../../../../../../components/libraries/timer/app_timer_appsh.h \
- ../../../../../../components/libraries/timer/app_timer.h \
+ ../../../../../../components/libraries/util/app_util.h \
  ../../../../../../components/libraries/log/nrf_log.h \
  ../../../../../../components/libraries/log/src/nrf_log_internal.h \
  ../../../../../../components/libraries/log/nrf_log_ctrl.h \
@@ -245,19 +240,9 @@ _build/nrf52832_xxaa_main.c.o: ../../../main.c \
 
 ../../../../../../components/drivers_nrf/hal/nrf_gpiote.h:
 
-../../../../../../components/libraries/timer/app_timer.h:
-
-../../../../../../components/libraries/util/app_util.h:
-
-../../../../../../components/drivers_nrf/clock/nrf_drv_clock.h:
-
-../../../../../../components/drivers_nrf/hal/nrf_clock.h:
-
 ../../../../../../components/libraries/scheduler/app_scheduler.h:
 
-../../../../../../components/libraries/timer/app_timer_appsh.h:
-
-../../../../../../components/libraries/timer/app_timer.h:
+../../../../../../components/libraries/util/app_util.h:
 
 ../../../../../../components/libraries/log/nrf_log.h:
 
