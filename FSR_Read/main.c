@@ -222,11 +222,11 @@ void saadc_sampling_event_init(void)
 
     /* setup m_timer for compare event every 400ms */
     uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, 400); //Number of ticks for 400ms
-    nrf_drv_timer_extended_compare(&m_timer,
-                                   NRF_TIMER_CC_CHANNEL0,
-                                   ticks,
-                                   NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK,
-                                   false); //Implement a compare of the timer to 400ms ticks
+    nrf_drv_timer_extended_compare(&m_timer,//Timer instance
+                                   NRF_TIMER_CC_CHANNEL0, //Capture/compare channel/register 0
+                                   ticks,//Value in the CC register
+                                   NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, //Shortcut that clears the counter register when there is a compare event
+                                   false); //Don't enable the timer interrupt
     nrf_drv_timer_enable(&m_timer); //Turn on timer
 
     uint32_t timer_compare_event_addr = nrf_drv_timer_compare_event_address_get(&m_timer,
