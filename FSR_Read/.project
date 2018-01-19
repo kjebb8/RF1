@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>FSR_Read</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>components</name>
+			<type>2</type>
+			<location>/Users/keeganjebb/Desktop/Programming/BLE_SDK/nRF5_SDK_12.3.0_d7731ad/components</location>
+		</link>
+		<link>
+			<name>external</name>
+			<type>2</type>
+			<location>/Users/keeganjebb/Desktop/Programming/BLE_SDK/nRF5_SDK_12.3.0_d7731ad/external</location>
+		</link>
+	</linkedResources>
+</projectDescription>
