@@ -41,7 +41,7 @@ static void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
         {
             float f_value = ((float)(p_event->data.done.p_buffer[i]))*0.825/(0.5*1024);
             m_adc_results_mvolt[i] = (int16_t)(f_value*1000);
-             //1000 is the V to mV conversion,
+             //1000 is the V to mV conversion
              //Formula according to spec: RESULT = (V(p)-V(n))*GAIN/Reference*2^(Resolution-Mode)
              // V(p) = (RESULT * Reference) / (GAIN*2^(Resolution-Mode))
              //Gain = 1/2
