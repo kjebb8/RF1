@@ -522,7 +522,7 @@ static void gpiote_leds_init(void)
 }
 
 /**
- * @brief Function called from main application entry.
+ * @brief Function called from main function 
  */
 void fsr_ble_init(void)
 {
