@@ -98,11 +98,15 @@ _build/nrf52832_xxaa_fsr_ble.c.o: ../../../source/fsr_ble.c \
  ../../../../../../components/libraries/bsp/bsp_btn_ble.h \
  ../../../../../../components/libraries/bsp/bsp.h \
  ../../../../../../components/boards/pca10040.h \
- ../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h \
- ../../../../../../components/drivers_nrf/hal/nrf_gpiote.h \
+ ../../../../../../components/libraries/log/nrf_log.h \
+ ../../../../../../components/libraries/log/src/nrf_log_internal.h \
+ ../../../../../../components/libraries/util/sdk_common.h \
+ ../../../../../../components/libraries/util/sdk_os.h \
+ ../../../../../../components/libraries/util/app_util.h \
+ ../../../../../../components/libraries/util/sdk_macros.h \
+ ../../../../../../components/libraries/log/nrf_log_ctrl.h \
  ../../../../../../components/libraries/util/sdk_errors.h \
- ../../../../../../external/segger_rtt/SEGGER_RTT.h \
- ../../../../../../external/segger_rtt/SEGGER_RTT_Conf.h
+ ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h
 
 /usr/local/gcc-arm-none-eabi-6-2017-q1-update/lib/gcc/arm-none-eabi/6.3.1/include/stdint.h:
 
@@ -306,12 +310,20 @@ _build/nrf52832_xxaa_fsr_ble.c.o: ../../../source/fsr_ble.c \
 
 ../../../../../../components/boards/pca10040.h:
 
-../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h:
+../../../../../../components/libraries/log/nrf_log.h:
 
-../../../../../../components/drivers_nrf/hal/nrf_gpiote.h:
+../../../../../../components/libraries/log/src/nrf_log_internal.h:
+
+../../../../../../components/libraries/util/sdk_common.h:
+
+../../../../../../components/libraries/util/sdk_os.h:
+
+../../../../../../components/libraries/util/app_util.h:
+
+../../../../../../components/libraries/util/sdk_macros.h:
+
+../../../../../../components/libraries/log/nrf_log_ctrl.h:
 
 ../../../../../../components/libraries/util/sdk_errors.h:
 
-../../../../../../external/segger_rtt/SEGGER_RTT.h:
-
-../../../../../../external/segger_rtt/SEGGER_RTT_Conf.h:
+../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h:

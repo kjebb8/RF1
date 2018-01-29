@@ -14,7 +14,7 @@
 //Not sure what this was for in original SAADC
 volatile uint8_t state = 1;
 
-static const nrf_drv_timer_t    m_timer = NRF_DRV_TIMER_INSTANCE(1); //Macro creates an instance of a timer driver with ID 0
+static const nrf_drv_timer_t    m_timer = NRF_DRV_TIMER_INSTANCE(1); //Macro creates an instance of a timer driver with ID 1
 static nrf_saadc_value_t        m_buffer_pool[2][SAMPLES_IN_BUFFER]; // typedef int16_t nrf_saadc_value_t, Setting up 2 sample buffers
 static nrf_ppi_channel_t        m_ppi_channel; //Enum for different PPI channels
 static uint32_t                 m_sample_period; //ADC sample period
@@ -61,19 +61,11 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
     ret_code_t err_code;
     err_code = nrf_drv_ppi_init(); //General programmable peripheral interconnect initialization
     APP_ERROR_CHECK(err_code);
-    if (err_code != NRF_ERROR_MODULE_ALREADY_INITIALIZED)
-    {
-        APP_ERROR_CHECK(err_code);
-    }
 
     nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG; //A default timer struct, Parameters defined in sdk_config.h
     timer_cfg.bit_width = NRF_TIMER_BIT_WIDTH_32; //Number of bits used before overflow
     err_code = nrf_drv_timer_init(&m_timer, &timer_cfg, timer_handler_SAADC); //Initialize timer
     APP_ERROR_CHECK(err_code);
-    if (err_code != NRF_ERROR_INVALID_STATE)
-    {
-        APP_ERROR_CHECK(err_code);
-    }
 
     /* setup m_timer for compare event every 400ms */
     uint32_t ticks = nrf_drv_timer_ms_to_ticks(&m_timer, m_sample_period); //Number of ticks for 400ms
@@ -115,10 +107,6 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
 
     err_code = nrf_drv_saadc_init(NULL, saadc_callback); //NULL is default config structure and callback for the event handler
     APP_ERROR_CHECK(err_code);
-    if (err_code != NRF_ERROR_INVALID_STATE)
-    {
-        APP_ERROR_CHECK(err_code);
-    }
 
     err_code = nrf_drv_saadc_channel_init(0, &channel0_config); //Initialize channel to given configuration
     APP_ERROR_CHECK(err_code);

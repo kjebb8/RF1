@@ -56,6 +56,8 @@
 #include "fsr_ble.h"
 #include "nrf_soc.h"
 
+#include "nrf_log_ctrl.h"
+
 #define DEAD_BEEF   0xDEADBEEF  /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
 /**@brief Function for assert macro callback.
@@ -96,7 +98,10 @@ int main(void)
     fsr_ble_init();
     for (;;)
     {
-        power_manage();
+        if (!NRF_LOG_PROCESS())
+        {
+            power_manage();
+        }
     }
 }
 

@@ -55,7 +55,14 @@ _build/nrf52832_xxaa_app_error.c.o: \
  ../../../../../../components/libraries/util/app_util.h \
  ../../../../../../components/libraries/log/nrf_log_ctrl.h \
  ../../../../../../components/libraries/util/sdk_errors.h \
- ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h
+ ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h \
+ ../../../../../../components/libraries/util/app_util_platform.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_soc.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_svc.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_error_soc.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_error.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_nvic.h \
+ ../../../../../../components/libraries/util/nrf_assert.h
 
 ../../../../../../components/device/nrf.h:
 
@@ -168,3 +175,17 @@ _build/nrf52832_xxaa_app_error.c.o: \
 ../../../../../../components/libraries/util/sdk_errors.h:
 
 ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h:
+
+../../../../../../components/libraries/util/app_util_platform.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_soc.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_svc.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_error_soc.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_error.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_nvic.h:
+
+../../../../../../components/libraries/util/nrf_assert.h:

@@ -24,9 +24,11 @@
 #include "bsp.h"
 #include "bsp_btn_ble.h"
 #include "pca10040.h"
-#include "nrf_drv_gpiote.h"
+#include "nrf_gpio.h"
 
-#include "SEGGER_RTT.h"
+#define NRF_LOG_MODULE_NAME "FSR APP"
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
 
 #define ADC_PRINT
 
@@ -102,14 +104,14 @@ void data_subscr_handler(ble_fsrs_t * p_fsrs, bool is_data_subscr)
 {
     if (is_data_subscr)
     {
-        nrf_drv_gpiote_out_set(LED_3);
-        nrf_drv_gpiote_out_clear(LED_4);
+        nrf_gpio_pin_set(LED_3);
+        nrf_gpio_pin_clear(LED_4);
         fsr_adc_sample_begin();
     }
     else
     {
-        nrf_drv_gpiote_out_set(LED_4);
-        nrf_drv_gpiote_out_clear(LED_3);
+        nrf_gpio_pin_set(LED_4);
+        nrf_gpio_pin_clear(LED_3);
         fsr_adc_sample_end();
     }
 }
@@ -251,8 +253,8 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
             APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            nrf_drv_gpiote_out_set(LED_4);
-            nrf_drv_gpiote_out_clear(LED_3);
+            nrf_gpio_pin_set(LED_4);
+            nrf_gpio_pin_clear(LED_3);
             break; // BLE_GAP_EVT_CONNECTED
 
         case BLE_GAP_EVT_DISCONNECTED:
@@ -260,8 +262,8 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             APP_ERROR_CHECK(err_code);
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             fsr_adc_sample_end();
-            nrf_drv_gpiote_out_set(LED_4);
-            nrf_drv_gpiote_out_set(LED_3);
+            nrf_gpio_pin_set(LED_3);
+            nrf_gpio_pin_set(LED_4);
             break; // BLE_GAP_EVT_DISCONNECTED
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -448,9 +450,9 @@ static void adc_complete_handler(int16_t * p_voltage_result)
     for (uint8_t i =0; i < fsr_data.fsr_data_array_size; i++)
     {
         int16_t test = fsr_data.p_fsr_data_array[i];
-        SEGGER_RTT_printf(0, "%d ", test);
+        NRF_LOG_RAW_INFO("%d ", test);
     }
-    SEGGER_RTT_printf(0, "\r\n", 0);
+    NRF_LOG_RAW_INFO("\r\n", 0);
     #endif
 
     err_code = ble_fsrs_data_notify(&m_fsrs, &fsr_data);
@@ -509,24 +511,23 @@ static void buttons_leds_init(bool * p_erase_bonds)
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 }
 
-static void gpiote_leds_init(void)
+static void gpio_leds_init(void)
 {
-    ret_code_t err_code;
-    nrf_drv_gpiote_out_config_t config = GPIOTE_CONFIG_OUT_SIMPLE(true);
+    nrf_gpio_cfg_output(LED_3);
+    nrf_gpio_cfg_output(LED_4);
 
-    err_code = nrf_drv_gpiote_out_init(LED_3, &config);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_drv_gpiote_out_init(LED_4, &config);
-    APP_ERROR_CHECK(err_code);
+    nrf_gpio_pin_set(LED_3);
+    nrf_gpio_pin_set(LED_4);
 }
 
 /**
- * @brief Function called from main function 
+ * @brief Function called from main function
  */
 void fsr_ble_init(void)
 {
-    SEGGER_RTT_printf(0, "Please work SEGGER \r\n");
+    uint32_t err_code = NRF_LOG_INIT(NULL);
+    APP_ERROR_CHECK(err_code);
+    NRF_LOG_INFO("Start reading some FSR!\r\n");
 
     bool erase_bonds;
 
@@ -537,12 +538,12 @@ void fsr_ble_init(void)
     ble_stack_init();
     gap_params_init();
     services_init();
-    gpiote_leds_init();
+    gpio_leds_init();
 
     fsr_adc_init(&m_adc_init);
 
     advertising_init();
     conn_params_init();
-    uint32_t err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 }

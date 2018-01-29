@@ -10,6 +10,8 @@ $(OUTPUT_DIRECTORY)/nrf52832_xxaa.out: \
 
 # Source files common to all targets
 SRC_FILES += \
+	$(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_serial.c \
+	$(SDK_ROOT)/components/libraries/log/src/nrf_log_frontend.c \
 	$(SDK_ROOT)/components/libraries/button/app_button.c \
 	$(SDK_ROOT)/components/libraries/util/app_error.c \
 	$(SDK_ROOT)/components/libraries/util/app_error_weak.c \

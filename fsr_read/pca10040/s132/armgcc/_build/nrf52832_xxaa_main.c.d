@@ -48,7 +48,19 @@ _build/nrf52832_xxaa_main.c.o: ../../../main.c \
  ../../../../../../components/softdevice/s132/headers/nrf_soc.h \
  ../../../../../../components/softdevice/s132/headers/nrf_svc.h \
  ../../../../../../components/softdevice/s132/headers/nrf_error_soc.h \
- ../../../../../../components/softdevice/s132/headers/nrf_error.h
+ ../../../../../../components/softdevice/s132/headers/nrf_error.h \
+ ../../../../../../components/libraries/log/nrf_log_ctrl.h \
+ ../../../../../../components/libraries/util/sdk_errors.h \
+ ../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h \
+ ../../../../../../components/libraries/util/sdk_common.h \
+ ../../../../../../components/device/compiler_abstraction.h \
+ ../../../../../../components/libraries/util/sdk_os.h \
+ ../../../../../../components/libraries/util/app_util.h \
+ ../../../../../../components/libraries/util/sdk_macros.h \
+ ../../../../../../components/libraries/util/app_util_platform.h \
+ ../../../../../../components/softdevice/s132/headers/nrf_nvic.h \
+ ../../../../../../components/libraries/util/nrf_assert.h \
+ ../../../../../../components/libraries/util/app_error.h
 
 /usr/local/gcc-arm-none-eabi-6-2017-q1-update/lib/gcc/arm-none-eabi/6.3.1/include/stdint.h:
 
@@ -149,3 +161,27 @@ _build/nrf52832_xxaa_main.c.o: ../../../main.c \
 ../../../../../../components/softdevice/s132/headers/nrf_error_soc.h:
 
 ../../../../../../components/softdevice/s132/headers/nrf_error.h:
+
+../../../../../../components/libraries/log/nrf_log_ctrl.h:
+
+../../../../../../components/libraries/util/sdk_errors.h:
+
+../../../../../../components/libraries/log/src/nrf_log_ctrl_internal.h:
+
+../../../../../../components/libraries/util/sdk_common.h:
+
+../../../../../../components/device/compiler_abstraction.h:
+
+../../../../../../components/libraries/util/sdk_os.h:
+
+../../../../../../components/libraries/util/app_util.h:
+
+../../../../../../components/libraries/util/sdk_macros.h:
+
+../../../../../../components/libraries/util/app_util_platform.h:
+
+../../../../../../components/softdevice/s132/headers/nrf_nvic.h:
+
+../../../../../../components/libraries/util/nrf_assert.h:
+
+../../../../../../components/libraries/util/app_error.h:
