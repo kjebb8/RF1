@@ -3,11 +3,14 @@
 
 #define NUM_FSR_SENSORS (2)
 
-#define FSR_0_PIN (3)
-#define FSR_1_PIN (4)
+#define POWER_PIN (11)
 
 #define ADC_SAMPLE_PERIOD_MS (1000)
-
-#define FSR_VMAX (2500) //mV
+// 10 ms is 100 Hz
+// 25 ms is 40 Hz
+// 50 ms is 20 Hz
+// 100 ms is 10 Hz
+// 250 ms is 4 Hz
+// 1000 ms is 1 Hz
 
 #endif

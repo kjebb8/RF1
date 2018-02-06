@@ -171,7 +171,7 @@ uint32_t ble_fsrs_init(ble_fsrs_t * p_fsrs, const ble_fsrs_init_t * p_fsrs_init)
     return NRF_SUCCESS;
 }
 
-
+//Notifies the mV ADC data (one value per sensor)
 uint32_t ble_fsrs_data_notify(ble_fsrs_t * p_fsrs, fsr_data_t * p_fsr_data)
 {
     ble_gatts_hvx_params_t hvx_params;

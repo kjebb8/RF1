@@ -29,6 +29,7 @@
 #define NRF_LOG_MODULE_NAME "FSR APP"
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
+#include "counter.h"
 
 #define ADC_PRINT
 
@@ -63,7 +64,6 @@ static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;
 static ble_fsrs_t                       m_fsrs;                                      /**< Structure to identify the Nordic UART Service. */
 
 static void adc_complete_handler(int16_t * p_voltage_result);
-//static void advertising_start(void);
 
 static fsr_adc_init_t m_adc_init =
 {
@@ -100,6 +100,7 @@ static void gap_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+// Called when the CCCD is written to. Either starts ADC sampling and notifications or stops the ADC
 void data_subscr_handler(ble_fsrs_t * p_fsrs, bool is_data_subscr)
 {
     if (is_data_subscr)
@@ -372,7 +373,6 @@ static void ble_stack_init(void)
 
     // Initialize SoftDevice.
     SOFTDEVICE_HANDLER_INIT(&clock_lf_cfg, NULL);
-
     ble_enable_params_t ble_enable_params;
     err_code = softdevice_enable_get_default_config(CENTRAL_LINK_COUNT,
                                                     PERIPHERAL_LINK_COUNT,
@@ -380,7 +380,6 @@ static void ble_stack_init(void)
 
     //From EM1
     ble_enable_params.gatts_enable_params.service_changed = IS_SRVC_CHANGED_CHARACT_PRESENT;
-
     APP_ERROR_CHECK(err_code);
 
     //Check the ram settings against the used number of links
@@ -436,7 +435,7 @@ void bsp_event_handler(bsp_event_t event)
     }
 }
 
-
+// Prints out and notifies the calculated mV ACD values (one value per enabled ADC pin)
 static void adc_complete_handler(int16_t * p_voltage_result)
 {
     uint32_t err_code;
@@ -447,7 +446,7 @@ static void adc_complete_handler(int16_t * p_voltage_result)
     };
 
     #ifdef ADC_PRINT
-    for (uint8_t i =0; i < fsr_data.fsr_data_array_size; i++)
+    for (uint8_t i = 0; i < fsr_data.fsr_data_array_size; i++)
     {
         int16_t test = fsr_data.p_fsr_data_array[i];
         NRF_LOG_RAW_INFO("%d ", test);
@@ -511,6 +510,7 @@ static void buttons_leds_init(bool * p_erase_bonds)
     *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
 }
 
+//Initialize the LEDs to show if notifications are on or off
 static void gpio_leds_init(void)
 {
     nrf_gpio_cfg_output(LED_3);
@@ -525,8 +525,17 @@ static void gpio_leds_init(void)
  */
 void fsr_ble_init(void)
 {
-    uint32_t err_code = NRF_LOG_INIT(NULL);
+    uint32_t err_code;
+
+#if NRF_LOG_USES_TIMESTAMP==1
+    counter_init();
+    counter_start();
+    err_code = NRF_LOG_INIT(counter_get);
     APP_ERROR_CHECK(err_code);
+#else
+    err_code = NRF_LOG_INIT(NULL);
+    APP_ERROR_CHECK(err_code);
+#endif
     NRF_LOG_INFO("Start reading some FSR!\r\n");
 
     bool erase_bonds;

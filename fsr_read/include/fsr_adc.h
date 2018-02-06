@@ -18,4 +18,8 @@ uint32_t fsr_adc_sample_begin(void);
 
 uint32_t fsr_adc_sample_end(void);
 
+void check_saadc_notify();
+
+void check_saadc_calibration();
+
 #endif //FSR_ADC_H__

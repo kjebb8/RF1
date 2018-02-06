@@ -30,6 +30,7 @@ SRC_FILES += \
 		$(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c \
 		$(SDK_ROOT)/components/drivers_nrf/saadc/nrf_drv_saadc.c \
   		$(SDK_ROOT)/components/drivers_nrf/hal/nrf_saadc.c \
+		$(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c \
 	$(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c \
 	$(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c \
 	$(SDK_ROOT)/components/drivers_nrf/uart/nrf_drv_uart.c \
@@ -40,6 +41,7 @@ SRC_FILES += \
 		$(PROJ_DIR)/source/ble_fsrs.c \
 		$(PROJ_DIR)/source/fsr_ble.c \
 		$(PROJ_DIR)/source/fsr_adc.c \
+		$(PROJ_DIR)/source/counter.c \
 	$(SDK_ROOT)/external/segger_rtt/RTT_Syscalls_GCC.c \
 	$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
 	$(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \

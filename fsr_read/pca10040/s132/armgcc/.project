@@ -23,4 +23,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>source</name>
+			<type>2</type>
+			<location>/Users/keeganjebb/Desktop/Programming/BLE_SDK/nRF5_SDK_12.3.0_d7731ad/Projects/FSR_Read_Repo/fsr_read/source</location>
+		</link>
+	</linkedResources>
 </projectDescription>

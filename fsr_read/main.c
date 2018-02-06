@@ -51,6 +51,9 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
+#include "fsr_adc.h"
 
 #include "app_error.h"
 #include "fsr_ble.h"
@@ -76,7 +79,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
     app_error_handler(DEAD_BEEF, line_num, p_file_name);
 }
 
-/**@brief Function for placing the application in low power state while waiting for eveacs.
+/**@brief Function for placing the application in low power state while waiting for events.
  */
 
 #define FPU_EXCEPTION_MASK 0x0000009F
@@ -98,6 +101,10 @@ int main(void)
     fsr_ble_init();
     for (;;)
     {
+        //Check if notification is ready to be sent. Notification will finish before returning
+        check_saadc_notify();
+        //Check if the ADC needs calibration. Calibration will finish before returning
+        check_saadc_calibration();
         if (!NRF_LOG_PROCESS())
         {
             power_manage();
