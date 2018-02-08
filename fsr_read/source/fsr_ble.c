@@ -31,7 +31,7 @@
 #include "nrf_log_ctrl.h"
 #include "counter.h"
 
-#define ADC_PRINT
+//#define ADC_PRINT
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
 
@@ -451,7 +451,7 @@ static void adc_complete_handler(int16_t * p_voltage_result)
         int16_t test = fsr_data.p_fsr_data_array[i];
         NRF_LOG_RAW_INFO("%d ", test);
     }
-    NRF_LOG_RAW_INFO("\r\n", 0);
+    NRF_LOG_RAW_INFO("\r\n");
     #endif
 
     err_code = ble_fsrs_data_notify(&m_fsrs, &fsr_data);

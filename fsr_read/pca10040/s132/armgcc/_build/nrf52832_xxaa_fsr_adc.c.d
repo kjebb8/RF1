@@ -65,6 +65,12 @@ _build/nrf52832_xxaa_fsr_adc.c.o: ../../../source/fsr_adc.c \
  ../../../../../../components/drivers_nrf/timer/nrf_drv_timer.h \
  ../../../../../../components/libraries/util/nordic_common.h \
  ../../../../../../components/drivers_nrf/hal/nrf_timer.h \
+ ../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_gpiote.h \
+ ../../../../../../components/drivers_nrf/hal/nrf_gpio.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdlib.h \
+ /usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/stdlib.h \
+ ../../../../../../components/drivers_nrf/delay/nrf_delay.h \
  ../../../../../../components/libraries/log/nrf_log.h \
  ../../../../../../components/libraries/log/src/nrf_log_internal.h \
  ../../../../../../components/libraries/util/app_util.h \
@@ -201,6 +207,18 @@ _build/nrf52832_xxaa_fsr_adc.c.o: ../../../source/fsr_adc.c \
 ../../../../../../components/libraries/util/nordic_common.h:
 
 ../../../../../../components/drivers_nrf/hal/nrf_timer.h:
+
+../../../../../../components/drivers_nrf/gpiote/nrf_drv_gpiote.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_gpiote.h:
+
+../../../../../../components/drivers_nrf/hal/nrf_gpio.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/stdlib.h:
+
+/usr/local/gcc-arm-none-eabi-6-2017-q1-update/arm-none-eabi/include/machine/stdlib.h:
+
+../../../../../../components/drivers_nrf/delay/nrf_delay.h:
 
 ../../../../../../components/libraries/log/nrf_log.h:
 

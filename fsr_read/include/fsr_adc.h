@@ -14,12 +14,12 @@ typedef struct
 
 void fsr_adc_init(fsr_adc_init_t * p_adc_init);
 
-uint32_t fsr_adc_sample_begin(void);
+void fsr_adc_sample_begin(void);
 
-uint32_t fsr_adc_sample_end(void);
+void fsr_adc_sample_end(void);
 
-void check_saadc_notify();
+void check_saadc_done_sample(void);
 
-void check_saadc_calibration();
+void check_saadc_calibration(void);
 
 #endif //FSR_ADC_H__

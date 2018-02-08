@@ -101,8 +101,8 @@ int main(void)
     fsr_ble_init();
     for (;;)
     {
-        //Check if notification is ready to be sent. Notification will finish before returning
-        check_saadc_notify();
+        //Check if ADC is done a sample and send a notification. Notification will finish before returning
+        check_saadc_done_sample();
         //Check if the ADC needs calibration. Calibration will finish before returning
         check_saadc_calibration();
         if (!NRF_LOG_PROCESS())
