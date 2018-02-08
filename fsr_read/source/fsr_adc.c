@@ -23,7 +23,6 @@
 #define PERIODIC_POWER
 
 static const nrf_drv_timer_t    m_timer = NRF_DRV_TIMER_INSTANCE(1);
-static const nrf_drv_timer_t    m_timer2 = NRF_DRV_TIMER_INSTANCE(2);
 static nrf_saadc_value_t        m_buffer_pool[2][SAMPLES_IN_BUFFER]; // nrf_saadc_value_t is int16_t
 static uint32_t                 m_adc_evt_counter = (SAADC_CALIBRATION_INTERVAL - 1);
 static bool                     m_saadc_calibrate = false;
@@ -33,9 +32,7 @@ static uint32_t                 m_sample_period;
 static int16_t                  m_adc_results_mvolt[SAMPLES_IN_BUFFER]; //Stores the mV values that will be notified
 static fsr_adc_evt_handler_t    m_adc_callback;
 
-static void timer_handler_SAADC2(nrf_timer_event_t event_type, void * p_context)
-{
-}
+// If using periodic power source, the timer event turns on power to the circuit
 static void timer_handler_SAADC(nrf_timer_event_t event_type, void * p_context)
 {
 
@@ -45,7 +42,7 @@ static void timer_handler_SAADC(nrf_timer_event_t event_type, void * p_context)
 #ifdef ADC_PRINT_HELP
     NRF_LOG_INFO("Power On\r\n");
 #endif
-            nrf_drv_gpiote_out_toggle(POWER_PIN);
+            nrf_drv_gpiote_out_set(POWER_PIN);
         }
 #endif
 
@@ -71,15 +68,16 @@ static void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
 
     if ( (p_event->type == NRF_DRV_SAADC_EVT_DONE) && (p_event->data.done.p_buffer != NULL)) //Extra condition is to prevent the extra event generated from abort from notifying values from a NULL pointer
     {
+//Turns off the power source since the sample has already been taken
+#ifdef PERIODIC_POWER
+        nrf_drv_gpiote_out_clear(POWER_PIN);
+#endif
 
-// #ifdef PERIODIC_POWER
-//         nrf_drv_gpiote_out_clear(POWER_PIN);
-// #endif
-// #ifdef ADC_PRINT_HELP
-//     NRF_LOG_INFO("Power Off\r\n");
-// #endif
+#ifdef ADC_PRINT_HELP
+    NRF_LOG_INFO("Power Off\r\n");
+#endif
 
-    //    m_adc_evt_counter++;
+        m_adc_evt_counter++;
 
 #ifdef ADC_PRINT_HELP
     NRF_LOG_INFO("Sample %d\r\n", m_adc_evt_counter);
@@ -97,13 +95,12 @@ static void saadc_callback(nrf_drv_saadc_evt_t const * p_event)
              //Resolution = 10 bits
              //Mode = 0 for single ended
         }
-        NRF_LOG_INFO("%d \r\n", m_adc_results_mvolt[0]);
 
 #ifdef ADC_PRINT_HELP
    NRF_LOG_INFO("mV Calculated\r\n");
 #endif
 
-        //m_done_sample = true;
+        m_done_sample = true;
 
         if(m_adc_evt_counter == SAADC_CALIBRATION_INTERVAL) //Evaluate if offset calibration should be performed. Configure the SAADC_CALIBRATION_INTERVAL constant to change the calibration frequency
         {
@@ -168,13 +165,10 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
 
     nrf_drv_timer_config_t timer_cfg = NRF_DRV_TIMER_DEFAULT_CONFIG;
     timer_cfg.bit_width = NRF_TIMER_BIT_WIDTH_32; //Number of bits used before overflow
-    nrf_drv_timer_config_t timer_cfg2 = NRF_DRV_TIMER_DEFAULT_CONFIG;
-    timer_cfg2.bit_width = NRF_TIMER_BIT_WIDTH_32; //Number of bits used before overflow
-    err_code = nrf_drv_timer_init(&m_timer, &timer_cfg, timer_handler_SAADC2);
-    APP_ERROR_CHECK(err_code);
-    err_code = nrf_drv_timer_init(&m_timer2, &timer_cfg2, timer_handler_SAADC);
+    err_code = nrf_drv_timer_init(&m_timer, &timer_cfg, timer_handler_SAADC);
     APP_ERROR_CHECK(err_code);
 
+//Use a compare event that occurs just before a sample is taken to provide power to the circuit
 #ifdef PERIODIC_POWER
 
     if(!nrf_drv_gpiote_is_init())
@@ -182,29 +176,19 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
         err_code = nrf_drv_gpiote_init();
     }
 
-    //nrf_drv_gpiote_out_config_t config = GPIOTE_CONFIG_OUT_SIMPLE(false);
     nrf_drv_gpiote_out_config_t config = GPIOTE_CONFIG_OUT_SIMPLE(false);
     err_code = nrf_drv_gpiote_out_init(POWER_PIN, &config);
     APP_ERROR_CHECK(err_code);
 
-    //uint32_t ticks_power_pin = nrf_drv_timer_ms_to_ticks(&m_timer, (m_sample_period - POWER_PIN_PERIOD_DIFF));
-    uint32_t ticks_power_pin = nrf_drv_timer_ms_to_ticks(&m_timer2, POWER_PIN_PERIOD_DIFF);
+    uint32_t ticks_power_pin = nrf_drv_timer_ms_to_ticks(&m_timer, (m_sample_period - POWER_PIN_PERIOD_DIFF));
 
-    // nrf_drv_timer_compare(&m_timer2,
-    //                       NRF_TIMER_CC_CHANNEL0, //Capture/compare channel/register
-    //                       ticks_power_pin,//Value in the CC register
-    //                       true); //Don't enable the timer interrupt
-
-    nrf_drv_timer_extended_compare(&m_timer2,
-                                   NRF_TIMER_CC_CHANNEL0, //Capture/compare channel/register
-                                   ticks_power_pin,//Value in the CC register
-                                   NRF_TIMER_SHORT_COMPARE0_CLEAR_MASK, //Shortcut that clears the counter register when there is a compare event
-                                   true); //Don't enable the timer interrupt
+    nrf_drv_timer_compare(&m_timer,
+                          NRF_TIMER_CC_CHANNEL0, //Capture/compare channel/register
+                          ticks_power_pin,//Value in the CC register
+                          true); //Enable the timer interrupt
 #endif
 
-    //uint32_t ticks_saadc_sample = nrf_drv_timer_ms_to_ticks(&m_timer, m_sample_period); //Number of ticks for the given sample period
-    uint32_t ticks_saadc_sample = nrf_drv_timer_us_to_ticks(&m_timer, m_sample_period);
-
+    uint32_t ticks_saadc_sample = nrf_drv_timer_ms_to_ticks(&m_timer, m_sample_period); //Number of ticks for the given sample period
     nrf_drv_timer_extended_compare(&m_timer,
                                    NRF_TIMER_CC_CHANNEL1, //Capture/compare channel/register
                                    ticks_saadc_sample,//Value in the CC register
@@ -237,8 +221,8 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
         .pin_n      = NRF_SAADC_INPUT_DISABLED
     };
 
-    // nrf_saadc_channel_config_t channel1_config = channel0_config;
-    // channel1_config.pin_p = NRF_SAADC_INPUT_AIN2;
+    nrf_saadc_channel_config_t channel1_config = channel0_config;
+    channel1_config.pin_p = NRF_SAADC_INPUT_AIN2;
 
     //From sdk_config.h, the default resolution is 10 bits which is 0-1023
     err_code = nrf_drv_saadc_init(NULL, saadc_callback); //NULL is default config structure
@@ -246,8 +230,8 @@ void fsr_adc_init(fsr_adc_init_t * p_params)
 
     err_code = nrf_drv_saadc_channel_init(0, &channel0_config);
     APP_ERROR_CHECK(err_code);
-    // err_code = nrf_drv_saadc_channel_init(1, &channel1_config);
-    // APP_ERROR_CHECK(err_code);
+    err_code = nrf_drv_saadc_channel_init(1, &channel1_config);
+    APP_ERROR_CHECK(err_code);
 
     convert_buffers();
 }
@@ -257,7 +241,6 @@ void fsr_adc_sample_begin(void)
 {
     ret_code_t err_code;
     nrf_drv_timer_enable(&m_timer);
-    nrf_drv_timer_enable(&m_timer2);
     err_code = nrf_drv_ppi_channel_enable(m_ppi_channel_saadc_sample);
     APP_ERROR_CHECK(err_code);
 }
@@ -267,10 +250,10 @@ void fsr_adc_sample_end(void)
 {
     ret_code_t err_code;
     nrf_drv_timer_disable(&m_timer);
-    nrf_drv_timer_disable(&m_timer2);
     err_code = nrf_drv_ppi_channel_disable(m_ppi_channel_saadc_sample);
     APP_ERROR_CHECK(err_code);
 
+//Turn off power when the sampling ends
 #ifdef PERIODIC_POWER
     nrf_drv_gpiote_out_clear(POWER_PIN);
 #endif

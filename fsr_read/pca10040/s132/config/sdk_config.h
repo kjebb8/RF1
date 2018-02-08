@@ -637,7 +637,7 @@
 // <9=> 31.25 kHz
 
 #ifndef TIMER_DEFAULT_CONFIG_FREQUENCY
-#define TIMER_DEFAULT_CONFIG_FREQUENCY 0
+#define TIMER_DEFAULT_CONFIG_FREQUENCY 4
 #endif
 
 // <o> TIMER_DEFAULT_CONFIG_MODE  - Timer mode or operation
@@ -695,7 +695,7 @@
 
 
 #ifndef TIMER2_ENABLED
-#define TIMER2_ENABLED 1
+#define TIMER2_ENABLED 0
 #endif
 
 // <q> TIMER3_ENABLED  - Enable TIMER3 instance

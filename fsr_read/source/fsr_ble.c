@@ -31,7 +31,7 @@
 #include "nrf_log_ctrl.h"
 #include "counter.h"
 
-//#define ADC_PRINT
+#define ADC_PRINT
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
 
