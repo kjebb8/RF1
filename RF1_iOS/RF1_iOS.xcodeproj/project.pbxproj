@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		C005F2692057174F006A14CB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C005F2682057174F006A14CB /* AppDelegate.swift */; };
-		C005F26B2057174F006A14CB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C005F26A2057174F006A14CB /* ViewController.swift */; };
+		C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C005F26A2057174F006A14CB /* HomeViewController.swift */; };
 		C005F26E2057174F006A14CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C005F26C2057174F006A14CB /* Main.storyboard */; };
 		C005F2702057174F006A14CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C005F26F2057174F006A14CB /* Assets.xcassets */; };
 		C005F2732057174F006A14CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C005F2712057174F006A14CB /* LaunchScreen.storyboard */; };
+		C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* CadenceViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C005F2652057174F006A14CB /* RF1_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RF1_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C005F2682057174F006A14CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		C005F26A2057174F006A14CB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C005F26A2057174F006A14CB /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		C005F26D2057174F006A14CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C005F26F2057174F006A14CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C005F2722057174F006A14CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C005F2742057174F006A14CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C062129B205B2E2C008937C7 /* CadenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,7 +57,8 @@
 			isa = PBXGroup;
 			children = (
 				C005F2682057174F006A14CB /* AppDelegate.swift */,
-				C005F26A2057174F006A14CB /* ViewController.swift */,
+				C005F26A2057174F006A14CB /* HomeViewController.swift */,
+				C062129B205B2E2C008937C7 /* CadenceViewController.swift */,
 				C005F26C2057174F006A14CB /* Main.storyboard */,
 				C005F26F2057174F006A14CB /* Assets.xcassets */,
 				C005F2712057174F006A14CB /* LaunchScreen.storyboard */,
@@ -136,7 +139,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C005F26B2057174F006A14CB /* ViewController.swift in Sources */,
+				C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */,
+				C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,7 +285,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.keeganjebb.RF1-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -296,7 +300,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.keeganjebb.RF1-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
