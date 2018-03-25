@@ -3,7 +3,7 @@
 
 #define NUM_FSR_SENSORS (2)
 
-#define ADC_SAMPLE_PERIOD_MS (10)
+#define ADC_SAMPLE_PERIOD_MS (1000)
 // 10 ms is 100 Hz
 // 25 ms is 40 Hz
 // 50 ms is 20 Hz

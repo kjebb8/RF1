@@ -7,10 +7,10 @@
 //
 
 import UIKit
+import CoreBluetooth
 
 class CadenceViewController: UIViewController {
-
-   
+    
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
@@ -21,7 +21,7 @@ class CadenceViewController: UIViewController {
     
     let cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
     
-    var isTimerPaused = false
+    var isTimerPaused: Bool = false
     
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
@@ -29,13 +29,12 @@ class CadenceViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        stopButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
-        pauseButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
+//        stopButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
+//        pauseButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
         
         updateUI()
         
         initializeTimer()
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -57,8 +56,9 @@ class CadenceViewController: UIViewController {
     }
     
     @objc func updateTimer() {
+        
         runTime += 1
-        cadenceMetrics.incrementSteps()
+        cadenceMetrics.incrementSteps() //Will move
         cadenceMetrics.updateCadence(atTimeInMinutes: runTime)
         updateUI()
     }
@@ -89,6 +89,7 @@ class CadenceViewController: UIViewController {
         let alert = UIAlertController(title: "Stop Tracking?", message: "Your data will be lost", preferredStyle: .alert)
 
         let addAction = UIAlertAction(title: "Stop", style: .default) { (addAction) in
+            self.runTimer.invalidate()
             self.dismiss(animated: true, completion: nil)
         }
         
@@ -108,12 +109,27 @@ class CadenceViewController: UIViewController {
         if isTimerPaused == false {
             runTimer.invalidate()
             isTimerPaused = true
-            pauseButton.setImage(UIImage(named: "Resume Button"), for: .normal)
+            pauseButton.setTitle("Resume", for: .normal)
         } else {
             initializeTimer()
             isTimerPaused = false
-            pauseButton.setImage(UIImage(named: "Pause Button"), for: .normal)
+            pauseButton.setTitle("Pause", for: .normal)
         }
+    }
+    
+    
+}
+
+
+//MARK: - Bluetooth Central Delegate Extension Methods
+
+extension CadenceViewController: CBCentralManagerDelegate {
+    
+    
+    
+    
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        //
     }
     
     

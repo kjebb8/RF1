@@ -10,9 +10,9 @@ import Foundation
 
 class CadenceMetrics {
     
-    private var shortTime: Int
-    private var intervalSteps: Int = 0
-    private var shortTimeSteps = [Int]()
+    private var intervalTime: Int
+    private var intervalTimeSteps: [Int] = [0]
+    private var intervalTimeStepsIndex: Int = 0
     
     var totalSteps: Int = 0
 
@@ -21,27 +21,26 @@ class CadenceMetrics {
     
     init(timeForShortCadenceInSeconds timeInSeconds: Int) {
         
-        shortTime = timeInSeconds
+        intervalTime = timeInSeconds
     }
     
     func incrementSteps() {
         
-        intervalSteps += 2
+        intervalTimeSteps[intervalTimeStepsIndex] += 2
         totalSteps += 2
     }
    
     func updateCadence(atTimeInMinutes currentTime: Int) {
-        
-        shortTimeSteps.append(intervalSteps)
-        intervalSteps = 0
-        
-        if shortTimeSteps.count == shortTime {
-            
-            shortTimeSteps.remove(at: 0)
-        }
 
-        shortCadence = Double(shortTimeSteps.reduce(0, +)) / shortTimeSteps.count.inMinutes //.inMinutes converts to Double
+        shortCadence = Double(intervalTimeSteps.reduce(0, +)) / intervalTimeSteps.count.inMinutes //.inMinutes converts to Double
         averageCadence = Double(totalSteps) /  currentTime.inMinutes
+        
+        if intervalTimeSteps.count == intervalTime {
+            intervalTimeSteps.remove(at: 0)
+        }
+        
+        intervalTimeSteps.append(0)
+        intervalTimeStepsIndex += 1
     }
     
     

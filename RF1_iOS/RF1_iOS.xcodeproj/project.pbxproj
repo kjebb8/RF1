@@ -13,6 +13,7 @@
 		C005F2702057174F006A14CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C005F26F2057174F006A14CB /* Assets.xcassets */; };
 		C005F2732057174F006A14CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C005F2712057174F006A14CB /* LaunchScreen.storyboard */; };
 		C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FBB93205D6C3700B250E6 /* TimeFunctionExtensions.swift */; };
+		C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031BE93206301CC00CEA165 /* PeripheralDevice.swift */; };
 		C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* CadenceViewController.swift */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
 /* End PBXBuildFile section */
@@ -26,6 +27,7 @@
 		C005F2722057174F006A14CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C005F2742057174F006A14CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C01FBB93205D6C3700B250E6 /* TimeFunctionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionExtensions.swift; sourceTree = "<group>"; };
+		C031BE93206301CC00CEA165 /* PeripheralDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDevice.swift; sourceTree = "<group>"; };
 		C062129B205B2E2C008937C7 /* CadenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceViewController.swift; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
+				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -182,6 +185,7 @@
 				C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */,
 				C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
+				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

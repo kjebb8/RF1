@@ -17,7 +17,7 @@
 #include "counter.h"
 
 #define SAMPLES_IN_BUFFER NUM_FSR_SENSORS
-#define SAADC_CALIBRATION_INTERVAL 3        //Determines how often the SAADC should be calibrated relative to NRF_DRV_SAADC_EVT_DONE event
+#define SAADC_CALIBRATION_INTERVAL 100        //Determines how often the SAADC should be calibrated relative to NRF_DRV_SAADC_EVT_DONE event
 
 //#define ADC_PRINT_HELP
 #define PERIODIC_POWER
