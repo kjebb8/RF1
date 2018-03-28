@@ -11,6 +11,17 @@ import CoreBluetooth
 
 class CadenceViewController: UIViewController {
     
+    var cadenceBLEManager: BLEManager!
+    
+    let bleDataProcessor = BLEDataProcessor()
+    
+    let cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
+    
+    var isTimerPaused: Bool = false
+    
+    var runTime: Int = 0 //In seconds
+    var runTimer = Timer()
+    
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
@@ -19,12 +30,7 @@ class CadenceViewController: UIViewController {
     @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var pauseButton: UIButton!
     
-    let cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
-    
-    var isTimerPaused: Bool = false
-    
-    var runTime: Int = 0 //In seconds
-    var runTimer = Timer()
+    @IBOutlet weak var dataLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +41,12 @@ class CadenceViewController: UIViewController {
         updateUI()
         
         initializeTimer()
+        
+        bleDataProcessor.initializeFsrDataArray()
+
+        cadenceBLEManager?.fsrPeripheral?.delegate = self
+
+        cadenceBLEManager?.getNotifications()
     }
 
     override func didReceiveMemoryWarning() {
@@ -58,10 +70,12 @@ class CadenceViewController: UIViewController {
     @objc func updateTimer() {
         
         runTime += 1
-        cadenceMetrics.incrementSteps() //Will move
         cadenceMetrics.updateCadence(atTimeInMinutes: runTime)
         updateUI()
     }
+    
+    
+    //MARK: - Modify the UI Methods
     
     func updateUI() {
         
@@ -82,7 +96,7 @@ class CadenceViewController: UIViewController {
     }
     
     
-    //MARK: - Pressed UI button methods
+    //MARK: - Pressed button methods
     
     @IBAction func stopButtonPressed(_ sender: UIButton) {
         
@@ -90,6 +104,7 @@ class CadenceViewController: UIViewController {
 
         let addAction = UIAlertAction(title: "Stop", style: .default) { (addAction) in
             self.runTimer.invalidate()
+            self.cadenceBLEManager.turnOffNotifications()
             self.dismiss(animated: true, completion: nil)
         }
         
@@ -109,10 +124,12 @@ class CadenceViewController: UIViewController {
         if isTimerPaused == false {
             runTimer.invalidate()
             isTimerPaused = true
+            cadenceBLEManager.turnOffNotifications()
             pauseButton.setTitle("Resume", for: .normal)
         } else {
             initializeTimer()
             isTimerPaused = false
+            cadenceBLEManager.getNotifications()
             pauseButton.setTitle("Pause", for: .normal)
         }
     }
@@ -121,15 +138,33 @@ class CadenceViewController: UIViewController {
 }
 
 
-//MARK: - Bluetooth Central Delegate Extension Methods
+//MARK: - Bluetooth Peripheral Delegate Extension Methods
 
-extension CadenceViewController: CBCentralManagerDelegate {
+extension CadenceViewController: CBPeripheralDelegate {
     
-    
-    
-    
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        //
+    func peripheral(
+        _ peripheral: CBPeripheral,
+        didUpdateValueFor characteristic: CBCharacteristic,
+        error: Error?) {
+        
+        if error != nil {
+            print("Error updating value \(error!)")
+            dataLabel.text = "Error updating value \(error!)"
+            return
+        }
+        
+        if let foundData = characteristic.value {
+            
+            if characteristic.uuid == PeripheralDevice.fsrDataCharacteristicUUID {
+                bleDataProcessor.saveFsrData(updatedData: foundData)
+                dataLabel.text = "\(bleDataProcessor.fsrDataArray[0])  \(bleDataProcessor.fsrDataArray[1])"
+                
+                if bleDataProcessor.fsrDataArray[0] > 1000 {
+                    cadenceMetrics.incrementSteps() //Will move
+                }
+                print(cadenceMetrics.intervalTimeSteps)
+            }
+        }
     }
     
     

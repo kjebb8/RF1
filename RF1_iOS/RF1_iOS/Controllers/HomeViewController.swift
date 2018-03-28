@@ -11,11 +11,7 @@ import CoreBluetooth
 
 class HomeViewController: UIViewController {
     
-    var centralManager: CBCentralManager!
-    var fsrPeripheral: CBPeripheral?
-    var fsrCharacteristic: CBCharacteristic?
-    
-    var fsrDataArray = [Int16]()
+    var homeBLEManager: BLEManager!
     
     var connectedState: Bool = false
     var scanState: Bool = true
@@ -38,19 +34,14 @@ class HomeViewController: UIViewController {
         connectButton.setTitleColor(UIColor.darkGray, for: .disabled)
         connectButton.setTitleColor(UIColor.lightGray, for: .normal)
         
-        initializeFsrDataArray()
-        
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+        homeBLEManager.centralManager = CBCentralManager(delegate: self, queue: nil)
+//        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionRestoreIdentifierKey : Device.restoreIdentifier])
     }
     
-    
-    func initializeFsrDataArray() {
+    override func viewDidAppear(_ animated: Bool) {
         
-        for _ in 0..<PeripheralDevice.numberOfSensors {
-            fsrDataArray.append(0)
-        }
+        homeBLEManager.fsrPeripheral?.delegate = self
     }
-    
     
     func makeScanTimer() {
         
@@ -87,16 +78,8 @@ class HomeViewController: UIViewController {
         } else {
    
             //When the button says "Disconnect"
-            disconnectPeripheral()
+            homeBLEManager.disconnectPeripheral()
         }
-    }
-    
-    func disconnectPeripheral() {
-        
-        if let chtx = fsrCharacteristic {
-            fsrPeripheral?.setNotifyValue(false, for: chtx)
-        }
-        centralManager.cancelPeripheralConnection(fsrPeripheral!)
     }
     
     
@@ -116,7 +99,7 @@ class HomeViewController: UIViewController {
         if scanState == true || connectedState == true || failedToConnect == true {
             
             print("Not Connected")
-            fsrPeripheral = nil
+            homeBLEManager.fsrPeripheral = nil
             statusLabel.text = "Not Connected"
             connectedState = false
             connectButton.isEnabled = true //Needs to be here if called by the scanTimer
@@ -128,7 +111,7 @@ class HomeViewController: UIViewController {
     func updateForBluetoothOff() {
         
         print("Bluetooth Off")
-        fsrPeripheral = nil
+        homeBLEManager.fsrPeripheral = nil
         statusLabel.text = "Bluetooth Off"
         connectedState = false
         scanState = false
@@ -142,7 +125,7 @@ class HomeViewController: UIViewController {
     
     @objc func stopScan() {
         
-        centralManager.stopScan()
+        homeBLEManager.centralManager.stopScan()
         
         if scanState { //If the scan timer timed out
             
@@ -163,24 +146,17 @@ class HomeViewController: UIViewController {
         
         makeScanTimer()
         
-        centralManager.scanForPeripherals(withServices: [PeripheralDevice.fsrServiceUUID], options: nil)
+        homeBLEManager.centralManager.scanForPeripherals(withServices: [PeripheralDevice.fsrServiceUUID], options: nil)
     }
     
     
-    //MARK: - Data Manipulation and Processing Methods
+    //MARK: - Prepare for Segue
     
-    func saveFsrData(updatedData data: Data) {
-        
-        //1. Get a pointer (ptr) to the data value (size of Int16) in the Data buffer
-        //2. Advance the pointer if necessary
-        //3. Put the value ptr points to into the appropriate index of fsrDataArray
-        for i in 0...(fsrDataArray.count - 1) {
-            fsrDataArray[i] = data.withUnsafeBytes { (ptr: UnsafePointer<Int16>) in
-                ptr.advanced(by: i).pointee
-            }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToCadence" {
+            let destinationVC = segue.destination as! CadenceViewController
+            destinationVC.cadenceBLEManager = homeBLEManager
         }
-        print(fsrDataArray)
-        statusLabel.text = "\(fsrDataArray[0])  \(fsrDataArray[1])"
     }
     
     
@@ -239,10 +215,10 @@ extension HomeViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
                 scanState = false
                 stopScan()
                 
-                fsrPeripheral = peripheral
-                fsrPeripheral!.delegate = self as CBPeripheralDelegate
+                homeBLEManager.fsrPeripheral = peripheral
+                homeBLEManager.fsrPeripheral!.delegate = self as CBPeripheralDelegate
                 
-                centralManager.connect(fsrPeripheral!, options: nil)
+                homeBLEManager.centralManager.connect(homeBLEManager.fsrPeripheral!, options: nil)
             }
         }
     }
@@ -251,8 +227,7 @@ extension HomeViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
     func centralManager(
         _ central: CBCentralManager,
         didConnect peripheral: CBPeripheral) {
-        
-        updateForConnectedState()
+
         peripheral.discoverServices([PeripheralDevice.fsrServiceUUID])
     }
     
@@ -327,29 +302,10 @@ extension HomeViewController: CBCentralManagerDelegate, CBPeripheralDelegate {
                 
                 if characteristic.uuid == PeripheralDevice.fsrDataCharacteristicUUID {
                     
-                    fsrCharacteristic = characteristic
-                    fsrPeripheral?.setNotifyValue(true, for: fsrCharacteristic!)
+                    homeBLEManager.fsrCharacteristic = characteristic
+                    
+                    updateForConnectedState()
                 }
-            }
-        }
-    }
-    
-    
-    func peripheral(
-        _ peripheral: CBPeripheral,
-        didUpdateValueFor characteristic: CBCharacteristic,
-        error: Error?) {
-        
-        if error != nil {
-            print("Error updating value \(error!)")
-            statusLabel.text = "Error updating value \(error!)"
-            return
-        }
-        
-        if let foundData = characteristic.value {
-        
-            if characteristic.uuid == PeripheralDevice.fsrDataCharacteristicUUID {
-                saveFsrData(updatedData: foundData)
             }
         }
     }

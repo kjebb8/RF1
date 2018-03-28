@@ -11,7 +11,8 @@ import Foundation
 class CadenceMetrics {
     
     private var intervalTime: Int
-    private var intervalTimeSteps: [Int] = [0]
+//    private var intervalTimeSteps: [Int] = [0]
+    var intervalTimeSteps: [Int] = [0]
     private var intervalTimeStepsIndex: Int = 0
     
     var totalSteps: Int = 0
@@ -35,12 +36,13 @@ class CadenceMetrics {
         shortCadence = Double(intervalTimeSteps.reduce(0, +)) / intervalTimeSteps.count.inMinutes //.inMinutes converts to Double
         averageCadence = Double(totalSteps) /  currentTime.inMinutes
         
-        if intervalTimeSteps.count == intervalTime {
+        intervalTimeSteps.append(0)
+        
+        if intervalTimeSteps.count <= intervalTime {
+            intervalTimeStepsIndex += 1
+        } else {
             intervalTimeSteps.remove(at: 0)
         }
-        
-        intervalTimeSteps.append(0)
-        intervalTimeStepsIndex += 1
     }
     
     
