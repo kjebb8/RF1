@@ -9,18 +9,15 @@
 import UIKit
 import CoreBluetooth
 
-class CadenceViewController: UIViewController {
+class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     
     var cadenceBLEManager: BLEManager!
     
-    let bleDataProcessor = BLEDataProcessor()
+    var bleDataProcessor: BLEDataProcessor!
     
-    let cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
+    var cadenceMetrics: CadenceMetrics!
     
     var isTimerPaused: Bool = false
-    
-    var runTime: Int = 0 //In seconds
-    var runTimer = Timer()
     
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
@@ -34,65 +31,41 @@ class CadenceViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-//        stopButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
-//        pauseButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
         
-        updateUI()
+        cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20, delegate: self)
         
-        initializeTimer()
+        bleDataProcessor = BLEDataProcessor(delegate: cadenceMetrics)
+
+        cadenceBLEManager.fsrPeripheral?.delegate = self
+
+        cadenceBLEManager.getNotifications()
         
-        bleDataProcessor.initializeFsrDataArray()
+        updateUI() //To initialize the view to all zeros
 
-        cadenceBLEManager?.fsrPeripheral?.delegate = self
-
-        cadenceBLEManager?.getNotifications()
     }
-
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
     
-    //MARK: - Timer Methods
+    //MARK: - Modify the UI Methods
     
-    func initializeTimer() {
+    //Called when Cadence timer expiers
+    func didUpdateCadenceValues() {
         
-        runTimer = Timer.scheduledTimer(
-            timeInterval: 1,
-            target: self,
-            selector: (#selector(CadenceViewController.updateTimer)),
-            userInfo: nil,
-            repeats: true)
-    }
-    
-    @objc func updateTimer() {
-        
-        runTime += 1
-        cadenceMetrics.updateCadence(atTimeInMinutes: runTime)
         updateUI()
     }
     
-    
-    //MARK: - Modify the UI Methods
     
     func updateUI() {
         
         shortCadenceLabel.text = "\(Int(cadenceMetrics.shortCadence.rounded()))"
         avgCadenceLabel.text = "\(Int(cadenceMetrics.averageCadence.rounded()))"
-        timeLabel.text = getFormattedTimeString()
+        timeLabel.text = cadenceMetrics.getFormattedTimeString()
         stepsLabel.text = "\(cadenceMetrics.totalSteps)"
-    }
-    
-    func getFormattedTimeString() -> (String) {
-        
-        if runTime.hours >= 1 {
-            return String(format: "%i:%02i:%02i", runTime.hours, runTime.minutes, runTime.seconds)
-        } else {
-            return String(format: "%i:%02i", runTime.minutes, runTime.seconds)
-        }
-        
     }
     
     
@@ -103,7 +76,7 @@ class CadenceViewController: UIViewController {
         let alert = UIAlertController(title: "Stop Tracking?", message: "Your data will be lost", preferredStyle: .alert)
 
         let addAction = UIAlertAction(title: "Stop", style: .default) { (addAction) in
-            self.runTimer.invalidate()
+            self.cadenceMetrics.runTimer.invalidate()
             self.cadenceBLEManager.turnOffNotifications()
             self.dismiss(animated: true, completion: nil)
         }
@@ -122,12 +95,15 @@ class CadenceViewController: UIViewController {
     @IBAction func pauseButtonPressed(_ sender: UIButton) {
         
         if isTimerPaused == false {
-            runTimer.invalidate()
+            
+            cadenceMetrics.runTimer.invalidate()
             isTimerPaused = true
             cadenceBLEManager.turnOffNotifications()
             pauseButton.setTitle("Resume", for: .normal)
+            
         } else {
-            initializeTimer()
+            
+            cadenceMetrics.initializeTimer()
             isTimerPaused = false
             cadenceBLEManager.getNotifications()
             pauseButton.setTitle("Pause", for: .normal)
@@ -156,13 +132,10 @@ extension CadenceViewController: CBPeripheralDelegate {
         if let foundData = characteristic.value {
             
             if characteristic.uuid == PeripheralDevice.fsrDataCharacteristicUUID {
-                bleDataProcessor.saveFsrData(updatedData: foundData)
-                dataLabel.text = "\(bleDataProcessor.fsrDataArray[0])  \(bleDataProcessor.fsrDataArray[1])"
                 
-                if bleDataProcessor.fsrDataArray[0] > 1000 {
-                    cadenceMetrics.incrementSteps() //Will move
-                }
-                print(cadenceMetrics.intervalTimeSteps)
+                bleDataProcessor.processNewData(updatedData: foundData)
+                dataLabel.text = "Forefoot: \(bleDataProcessor.forefootVoltage) Heel: \(bleDataProcessor.heelVoltage)"
+                print("\(bleDataProcessor.forefootVoltage) \(bleDataProcessor.heelVoltage)")
             }
         }
     }

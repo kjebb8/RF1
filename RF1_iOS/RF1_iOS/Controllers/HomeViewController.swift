@@ -26,13 +26,12 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        startButton.imageView!.contentMode = UIViewContentMode.scaleAspectFit
-        startButton.isEnabled = false
+        //startButton.isEnabled = false
         startButton.setTitleColor(UIColor.darkGray, for: .disabled)
-        startButton.setTitleColor(UIColor.lightGray, for: .normal)
+        startButton.setTitleColor(UIColor.white, for: .normal)
         
         connectButton.setTitleColor(UIColor.darkGray, for: .disabled)
-        connectButton.setTitleColor(UIColor.lightGray, for: .normal)
+        connectButton.setTitleColor(UIColor.white, for: .normal)
         
         homeBLEManager.centralManager = CBCentralManager(delegate: self, queue: nil)
 //        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionRestoreIdentifierKey : Device.restoreIdentifier])

@@ -99,9 +99,9 @@
 		C00A81AB205C632F004F4867 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
 				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
 				C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */,
+				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

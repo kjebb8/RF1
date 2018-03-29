@@ -8,11 +8,15 @@
 
 import Foundation
 
-class CadenceMetrics {
+protocol CadenceMetricsDelegate {
+    func didUpdateCadenceValues()
+}
+
+
+class CadenceMetrics: BLEDataProcessorDelegate  {
     
     private var intervalTime: Int
-//    private var intervalTimeSteps: [Int] = [0]
-    var intervalTimeSteps: [Int] = [0]
+    private var intervalTimeSteps: [Int] = [0]
     private var intervalTimeStepsIndex: Int = 0
     
     var totalSteps: Int = 0
@@ -20,18 +24,62 @@ class CadenceMetrics {
     var shortCadence: Double = 0
     var averageCadence: Double = 0
     
-    init(timeForShortCadenceInSeconds timeInSeconds: Int) {
+    var runTime: Int = 0 //In seconds
+    var runTimer = Timer()
+    
+    private var delegateVC: CadenceMetricsDelegate?
+    
+    init(timeForShortCadenceInSeconds timeInSeconds: Int, delegate: CadenceMetricsDelegate) {
         
+        delegateVC = delegate
         intervalTime = timeInSeconds
+        initializeTimer()
     }
     
-    func incrementSteps() {
+    
+    //MARK: - Timer Methods
+    
+    func initializeTimer() {
+        
+        runTimer = Timer.scheduledTimer(
+            timeInterval: 1,
+            target: self,
+            selector: (#selector(CadenceMetrics.updateTime)),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    
+    @objc private func updateTime() {
+        
+        runTime += 1
+        updateCadence(atTimeInMinutes: runTime)
+        delegateVC?.didUpdateCadenceValues()
+    }
+    
+    
+    func getFormattedTimeString() -> (String) {
+        
+        if runTime.hours >= 1 {
+            return String(format: "%i:%02i:%02i", runTime.hours, runTime.minutes, runTime.seconds)
+        } else {
+            return String(format: "%i:%02i", runTime.minutes, runTime.seconds)
+        }
+    }
+    
+    
+    //MARK: - Cadence Calculation Methods
+    
+    //Called from BLE Data Processor
+    internal func didTakeStep() {
         
         intervalTimeSteps[intervalTimeStepsIndex] += 2
         totalSteps += 2
+        delegateVC?.didUpdateCadenceValues()
     }
+    
    
-    func updateCadence(atTimeInMinutes currentTime: Int) {
+    private func updateCadence(atTimeInMinutes currentTime: Int) {
 
         shortCadence = Double(intervalTimeSteps.reduce(0, +)) / intervalTimeSteps.count.inMinutes //.inMinutes converts to Double
         averageCadence = Double(totalSteps) /  currentTime.inMinutes
