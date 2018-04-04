@@ -12,23 +12,23 @@ import CoreBluetooth
 class HomeViewController: UIViewController, BLEManagerDelegate {
     
     var homeBLEManager: BLEManager!
-    
-    var homeBLEState: BLEState = .notConnected
-    
-    var alert: UIAlertController?
 
-    @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var statusButton: UIButton!
+    @IBOutlet weak var startButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        statusButton.setTitleColor(UIColor.darkGray, for: .disabled)
+        statusButton.setTitleColor(UIColor.white, for: .normal)
         
         startButton.setTitleColor(UIColor.darkGray, for: .disabled)
         startButton.setTitleColor(UIColor.white, for: .normal)
     }
     
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) { //Called every time the view is displayed
         homeBLEManager.setDelegate(to: self)
     }
     
@@ -41,17 +41,14 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     //MARK: - UI Modification Methods
     
-    func showAlert(title: String, message: String, extraAlertAction: UIAlertAction? = nil) {
+    func showAlert(title: String, message: String) {
         
-        alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        if let extraAction = extraAlertAction {
-            alert?.addAction(extraAction)
-        } else {
-            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alert?.addAction(okAction)
-        }
-        present(alert!, animated: true, completion: nil)
+        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        alert.addAction(okAction)
+
+        present(alert, animated: true, completion: nil)
     }
     
     
@@ -59,15 +56,18 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
         
         print("Scanning...")
         statusLabel.text = "Scanning..."
+        statusButton.isEnabled = false
+        statusButton.setTitle("Scanning...", for: .disabled)
         startButton.isEnabled = false
     }
     
     
     func updateForConnectedState() {
         
-        print("Connected")
-        alert?.dismiss(animated: true, completion: nil)
-        statusLabel.text = "Connected"
+        print("Connected!")
+        statusLabel.text = "Connected!"
+        statusButton.isEnabled = false
+        statusButton.setTitle("Connected!", for: .disabled)
         startButton.isEnabled = true
     }
     
@@ -75,8 +75,9 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForNotConnectedState() {
             
         print("Not Connected")
-        alert?.dismiss(animated: true, completion: nil)
         statusLabel.text = "Not Connected"
+        statusButton.isEnabled = true
+        statusButton.setTitle("Connect", for: .normal)
         startButton.isEnabled = false
     }
     
@@ -85,32 +86,49 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
         
         print("Bluetooth Off")
         statusLabel.text = "Bluetooth Off"
+        statusButton.isEnabled = false
+        statusButton.setTitle("Turn On Bluetooth", for: .disabled)
+        startButton.isEnabled = false
+    }
+    
+    
+    func updateForBLEUnavailable() {
+        
+        print("Bluetooth Unavailable")
+        statusLabel.text = "Bluetooth Unavailable"
+        statusButton.isEnabled = false
+        statusButton.setTitle("Bluetooth Unavailable", for: .disabled)
         startButton.isEnabled = false
     }
     
     
     //MARK: - Bluetooth Manager Delegate Methods
     
-    func alertForBLEChange(alertMessage: String, askToConnect: Bool) {
-    
-        var connectAction: UIAlertAction? = nil
+    func updateForBLEEvent(_ bleEvent: BLEEvent) {
         
-        if askToConnect {
-
-            connectAction = UIAlertAction(title: "Connect", style: .default) { (reconnectAction) in
-                self.homeBLEManager.startScan()
-            }
+        switch bleEvent {
+            
+        case .scanStarted:
+            return
+            
+        case .scanTimeOut:
+            showAlert(title: "No Device Found", message: "Make sure device is on and try again")
+            
+        case .failedToConnect:
+            showAlert(title: "Failed to Connect", message: "Make sure device is on and try again")
+        
+        case .disconnected:
+            showAlert(title: "Disconnected from Device", message: "Please reconnect to proceed")
+        
+        case .bleTurnedOff:
+            showAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")
         }
-        
-        showAlert(title: "Bluetooth Status", message: alertMessage, extraAlertAction: connectAction)
     }
     
     
     func updateUIForBLEState(_ bleState: BLEState) {
         
-        homeBLEState = bleState
-        
-        switch homeBLEState {
+        switch bleState {
         
         case .scanning:
             updateForScanningState()
@@ -124,19 +142,23 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
         case .bleOff:
             updateForBLEOff()
             
-        case .finishedScan:
-            //Do Nothing
-            return
+        case .bleUnavailable:
+            updateForBLEUnavailable()
         }
     }
     
     
     func didReceiveBLEData(data: Data) {
-        self.homeBLEManager.turnOffNotifications()
+        self.homeBLEManager.turnOffNotifications() //Don't want notifications on the home screen
     }
     
     
     //MARK: - Button Pressed Methods
+    
+    @IBAction func statusButtonPressed(_ sender: UIButton) {
+        homeBLEManager.startScan() //Only enabled when ready to connect
+    }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToCadence" {

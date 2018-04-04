@@ -10,9 +10,18 @@ import Foundation
 import CoreBluetooth
 
 protocol BLEManagerDelegate {
-    func alertForBLEChange(alertMessage: String, askToConnect: Bool)
+    func updateForBLEEvent(_ bleEvent: BLEEvent)
     func updateUIForBLEState(_ bleState: BLEState)
     func didReceiveBLEData(data: Data)
+}
+
+enum BLEEvent {
+   
+    case scanStarted
+    case scanTimeOut
+    case failedToConnect
+    case disconnected
+    case bleTurnedOff
 }
 
 
@@ -22,7 +31,7 @@ enum BLEState {
     case connected
     case notConnected
     case bleOff
-    case finishedScan
+    case bleUnavailable
 }
 
 
@@ -35,9 +44,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     private let timerScanInterval:TimeInterval = 5.0
     private var scanTimer = Timer()
     
-    private var isAppInit = false
-    
-    var bleState: BLEState = .notConnected
+    private var bleState: BLEState = .notConnected
     
     private var delegateVC: BLEManagerDelegate?
     
@@ -47,53 +54,24 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     
+    
     private func makeScanTimer() {
         
         scanTimer = Timer.scheduledTimer(
             timeInterval: timerScanInterval,
             target: self,
-            selector: #selector(BLEManager.stopScan),
+            selector: #selector(BLEManager.scanTimedOut),
             userInfo: nil,
             repeats: false)
-    }
-
-    
-    private func sendAlertToUI() {
-        
-        switch bleState {
-       
-        case .scanning:
-            delegateVC?.alertForBLEChange(alertMessage: "Scanning", askToConnect: false)
-        
-        case .connected:
-            return
-            
-        case .notConnected:
-             delegateVC?.alertForBLEChange(alertMessage: "Not Connected to Device", askToConnect: true)
-            
-        case .bleOff:
-            delegateVC?.alertForBLEChange(alertMessage: "Bluetooth is Turned Off", askToConnect: false)
-            
-        case .finishedScan:
-            return
-        }
     }
     
     
     //MARK: - Bluetooth Public Methods
     
     func setDelegate(to delegate: BLEManagerDelegate) {
-        delegateVC = delegate
         
-        if isAppInit {
-            
-            if bleState == .notConnected {
-                startScan()
-            } else {
-                delegateVC?.updateUIForBLEState(bleState)
-                sendAlertToUI()
-            }
-        }
+        delegateVC = delegate
+        delegateVC?.updateUIForBLEState(bleState)
     }
     
     
@@ -103,20 +81,17 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         centralManager.scanForPeripherals(withServices: [PeripheralDevice.fsrServiceUUID], options: nil)
         bleState = .scanning
         delegateVC?.updateUIForBLEState(bleState)
-        sendAlertToUI()
+        delegateVC?.updateForBLEEvent(.scanStarted)
     }
     
     
-    @objc func stopScan() {
+    @objc func scanTimedOut() {
         
         centralManager.stopScan()
-        
-        if bleState == .scanning {
-            print("Didn't Find Device")
-            bleState = .notConnected
-            delegateVC?.updateUIForBLEState(bleState)
-            sendAlertToUI()
-        }
+        print("Didn't Find Device")
+        bleState = .notConnected
+        delegateVC?.updateUIForBLEState(bleState)
+        delegateVC?.updateForBLEEvent(.scanTimeOut)
     }
     
     
@@ -146,43 +121,28 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     
-    //MARK: - Bluetooth Central Internal Methods
+    //MARK: - Bluetooth Central Manager Delegate Internal Methods
     
     internal func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        
-        isAppInit = true
-        
-        var stateMessage = ""
-        
-        switch central.state {
             
-        case .poweredOff:
-            stateMessage = "Bluetooth on this device is currently powered off."
+        if central.state == .poweredOff {
+            
             scanTimer.invalidate()
             fsrPeripheral = nil
             bleState = .bleOff
             delegateVC?.updateUIForBLEState(bleState)
-            sendAlertToUI()
-            return
+            delegateVC?.updateForBLEEvent(.bleTurnedOff)
             
-        case .unsupported:
-            stateMessage = "This device does not support Bluetooth Low Energy."
-        
-        case .unauthorized:
-            stateMessage = "This app is not authorized to use Bluetooth Low Energy."
-        
-        case .resetting:
-            stateMessage = "The BLE Manager is resetting; a state update is pending."
-       
-        case .unknown:
-            stateMessage = "The state of the BLE Manager is unknown."
-       
-        case .poweredOn:
+        } else if central.state == .poweredOn {
+            
             startScan()
-            return
+            
+        } else {
+            
+            //If unsupported, unauthorized, resetting, unknown
+            bleState = .bleUnavailable
+            delegateVC?.updateUIForBLEState(bleState)
         }
-
-        delegateVC?.alertForBLEChange(alertMessage: stateMessage, askToConnect: false)
     }
     
     
@@ -198,9 +158,8 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             
             if peripheralName == PeripheralDevice.deviceName {
                 
-                bleState = .finishedScan
                 scanTimer.invalidate()
-                stopScan()
+                centralManager.stopScan()
                 
                 fsrPeripheral = peripheral
                 fsrPeripheral!.delegate = self as CBPeripheralDelegate
@@ -229,9 +188,9 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         delegateVC?.updateUIForBLEState(bleState)
         
         if error != nil {
+            
             print("Connection Failed. Error: \(error!)")
-            sendAlertToUI()
-//            delegateVC?.alertForBLEChange(alertMessage: "Failed to connect", askToConnect: true )
+            delegateVC?.updateForBLEEvent(.failedToConnect)
         }
     }
     
@@ -242,20 +201,18 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         error: Error?) {
         
         fsrPeripheral = nil
-        
-        startScan()
-//        bleState = .notConnected
-//        delegateVC?.updateUIForBLEState(bleState)
+        bleState = .notConnected
+        delegateVC?.updateUIForBLEState(bleState)
         
         if error != nil {
+            
             print("Disconnected. Error: \(error!)")
-//            sendAlertToUI()
-//            delegateVC?.alertForBLEChange(alertMessage: "Wearable has disconnected. Please reconnect", askToConnect: true)
+            delegateVC?.updateForBLEEvent(.disconnected)
         }
     }
     
     
-    //MARK: - Bluetooth Central Internal Methods
+    //MARK: - Bluetooth Peripheral Delegate Internal Methods
     
     internal func peripheral(
         _ peripheral: CBPeripheral,

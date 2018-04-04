@@ -18,6 +18,7 @@
 		C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE35206AA88300CD8D04 /* BLEManager.swift */; };
 		C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
+		C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09656F7207580FE00798064 /* CadenceStringValues.swift */; };
 		C09E8027207457310089BD3A /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09E8026207457310089BD3A /* AlertManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +36,7 @@
 		C067BE35206AA88300CD8D04 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataProcessor.swift; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
+		C09656F7207580FE00798064 /* CadenceStringValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStringValues.swift; sourceTree = "<group>"; };
 		C09E8026207457310089BD3A /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
 				C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */,
 				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
+				C09656F7207580FE00798064 /* CadenceStringValues.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -204,6 +207,7 @@
 				C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
 				C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */,
+				C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
 				C09E8027207457310089BD3A /* AlertManager.swift in Sources */,
 			);

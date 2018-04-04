@@ -29,8 +29,6 @@ class BLEDataProcessor {
     
     var heelVoltage: Int = 0 //Could make private if not printing out to label
     
-    private var bleDataProcessorReturn: BLEDataProcessorReturn = .noActionRequired
-    
     private var newForefootDown: Bool = false
     private var oldForefootDown: Bool = false
     
@@ -60,13 +58,8 @@ class BLEDataProcessor {
 
         newHeelDown = heelVoltage > 2500 ? true : false
         
-        if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) {
-            
-            bleDataProcessorReturn = .didTakeStep
-            delegateVC?.didFinishDataProcessing(withReturn: bleDataProcessorReturn)
-            
-        } else {
-            bleDataProcessorReturn = .noActionRequired
+        if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) { //When foot lifts up after stepping
+            delegateVC?.didFinishDataProcessing(withReturn: .didTakeStep)
         }
         
         oldForefootDown = newForefootDown
