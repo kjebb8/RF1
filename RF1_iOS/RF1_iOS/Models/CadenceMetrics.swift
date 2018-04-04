@@ -13,7 +13,7 @@ protocol CadenceMetricsDelegate {
 }
 
 
-class CadenceMetrics: BLEDataProcessorDelegate  {
+class CadenceMetrics {
     
     private var intervalTime: Int
     private var intervalTimeSteps: [Int] = [0]
@@ -33,7 +33,6 @@ class CadenceMetrics: BLEDataProcessorDelegate  {
         
         delegateVC = delegate
         intervalTime = timeInSeconds
-        initializeTimer()
     }
     
     
@@ -44,13 +43,13 @@ class CadenceMetrics: BLEDataProcessorDelegate  {
         runTimer = Timer.scheduledTimer(
             timeInterval: 1,
             target: self,
-            selector: (#selector(CadenceMetrics.updateTime)),
+            selector: (#selector(CadenceMetrics.timerIntervalTick)),
             userInfo: nil,
             repeats: true)
     }
     
     
-    @objc private func updateTime() {
+    @objc private func timerIntervalTick() {
         
         runTime += 1
         updateCadence(atTimeInMinutes: runTime)
@@ -70,8 +69,8 @@ class CadenceMetrics: BLEDataProcessorDelegate  {
     
     //MARK: - Cadence Calculation Methods
     
-    //Called from BLE Data Processor
-    internal func didTakeStep() {
+    //Called from View Controller
+    func incrementSteps() {
         
         intervalTimeSteps[intervalTimeStepsIndex] += 2
         totalSteps += 2

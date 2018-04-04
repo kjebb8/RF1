@@ -9,7 +9,7 @@
 import UIKit
 import CoreBluetooth
 
-class CadenceViewController: UIViewController, CadenceMetricsDelegate {
+class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProcessorDelegate, CadenceMetricsDelegate {
     
     var cadenceBLEManager: BLEManager!
     
@@ -18,6 +18,8 @@ class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     var cadenceMetrics: CadenceMetrics!
     
     var isTimerPaused: Bool = false
+    
+    var alert: UIAlertController?
     
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
@@ -32,16 +34,21 @@ class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        pauseButton.setTitleColor(UIColor.darkGray, for: .disabled)
+        pauseButton.setTitleColor(UIColor.lightGray, for: .normal)
+        
         cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20, delegate: self)
         
-        bleDataProcessor = BLEDataProcessor(delegate: cadenceMetrics)
-
-        cadenceBLEManager.fsrPeripheral?.delegate = self
+        bleDataProcessor = BLEDataProcessor(delegate: self)
 
         cadenceBLEManager.getNotifications()
         
         updateUI() //To initialize the view to all zeros
-
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        cadenceBLEManager.setDelegate(to: self)
     }
     
     
@@ -51,11 +58,83 @@ class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     }
     
     
+    //MARK: - Bluetooth Manager Delegate Methods and Data Processor Call/Callback
+    
+    func alertForBLEChange(alertMessage: String, askToConnect: Bool) {
+        
+        var connectAction: UIAlertAction? = nil
+        
+        if askToConnect {
+            
+            connectAction = UIAlertAction(title: "Connect", style: .default) { (reconnectAction) in
+                self.cadenceBLEManager.startScan()
+            }
+        }
+        
+        showAlert(title: "Bluetooth Status", message: alertMessage, extraAlertAction: connectAction)
+    }
+    
+    
+    func updateUIForBLEState(_ bleState: BLEState) {
+        
+        if bleState != .connected {
+            
+            setPauseState()
+            pauseButton.isEnabled = false
+            
+            if bleState == .notConnected {
+                alert?.dismiss(animated: true, completion: nil)
+            }
+            
+        } else {
+            
+            setRunState()
+            pauseButton.isEnabled = true
+            alert?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    
+    func didReceiveBLEData(data: Data) {
+        
+        bleDataProcessor.processNewData(updatedData: data)
+        dataLabel.text = "Forefoot: \(bleDataProcessor.forefootVoltage) Heel: \(bleDataProcessor.heelVoltage)"
+        print("\(bleDataProcessor.forefootVoltage) \(bleDataProcessor.heelVoltage)")
+    }
+    
+    
+    //MARK: - Data Processor Callback
+    
+    func didFinishDataProcessing(withReturn returnValue: BLEDataProcessorReturn) {
+        
+        if returnValue == .didTakeStep {
+            cadenceMetrics.incrementSteps()
+        }
+    }
+    
+    
     //MARK: - Modify the UI Methods
+    
+    func showAlert(title: String, message: String, extraAlertAction: UIAlertAction? = nil) {
+        
+        alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        if let extraAction = extraAlertAction {
+            let exitAction = UIAlertAction(title: "Exit Tracking", style: .default) { (exitAction) in
+                self.dismiss(animated: true, completion: nil)
+            }
+            alert?.addAction(exitAction)
+            alert?.addAction(extraAction)
+        } else {
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alert?.addAction(okAction)
+        }
+        present(alert!, animated: true, completion: nil)
+    }
+    
     
     //Called when Cadence timer expiers
     func didUpdateCadenceValues() {
-        
         updateUI()
     }
     
@@ -69,22 +148,40 @@ class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     }
     
     
+    func setPauseState() {
+        
+        cadenceMetrics.runTimer.invalidate()
+        isTimerPaused = true
+        cadenceBLEManager.turnOffNotifications()
+        pauseButton.setTitle("Resume", for: .normal)
+    }
+    
+    
+    func setRunState() {
+        
+        cadenceMetrics.initializeTimer()
+        isTimerPaused = false
+        cadenceBLEManager.getNotifications()
+        pauseButton.setTitle("Pause", for: .normal)
+    }
+    
+    
     //MARK: - Pressed button methods
     
     @IBAction func stopButtonPressed(_ sender: UIButton) {
         
         let alert = UIAlertController(title: "Stop Tracking?", message: "Your data will be lost", preferredStyle: .alert)
-
-        let addAction = UIAlertAction(title: "Stop", style: .default) { (addAction) in
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
+        let stopAction = UIAlertAction(title: "Stop Tracking", style: .default) { (addAction) in
             self.cadenceMetrics.runTimer.invalidate()
             self.cadenceBLEManager.turnOffNotifications()
             self.dismiss(animated: true, completion: nil)
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
-        
         alert.addAction(cancelAction)
-        alert.addAction(addAction)
+        alert.addAction(stopAction)
         
         alert.preferredAction = alert.actions[1]
         
@@ -95,48 +192,9 @@ class CadenceViewController: UIViewController, CadenceMetricsDelegate {
     @IBAction func pauseButtonPressed(_ sender: UIButton) {
         
         if isTimerPaused == false {
-            
-            cadenceMetrics.runTimer.invalidate()
-            isTimerPaused = true
-            cadenceBLEManager.turnOffNotifications()
-            pauseButton.setTitle("Resume", for: .normal)
-            
+            setPauseState()
         } else {
-            
-            cadenceMetrics.initializeTimer()
-            isTimerPaused = false
-            cadenceBLEManager.getNotifications()
-            pauseButton.setTitle("Pause", for: .normal)
-        }
-    }
-    
-    
-}
-
-
-//MARK: - Bluetooth Peripheral Delegate Extension Methods
-
-extension CadenceViewController: CBPeripheralDelegate {
-    
-    func peripheral(
-        _ peripheral: CBPeripheral,
-        didUpdateValueFor characteristic: CBCharacteristic,
-        error: Error?) {
-        
-        if error != nil {
-            print("Error updating value \(error!)")
-            dataLabel.text = "Error updating value \(error!)"
-            return
-        }
-        
-        if let foundData = characteristic.value {
-            
-            if characteristic.uuid == PeripheralDevice.fsrDataCharacteristicUUID {
-                
-                bleDataProcessor.processNewData(updatedData: foundData)
-                dataLabel.text = "Forefoot: \(bleDataProcessor.forefootVoltage) Heel: \(bleDataProcessor.heelVoltage)"
-                print("\(bleDataProcessor.forefootVoltage) \(bleDataProcessor.heelVoltage)")
-            }
+            setRunState()
         }
     }
     

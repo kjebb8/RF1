@@ -9,7 +9,13 @@
 import Foundation
 
 protocol BLEDataProcessorDelegate {
-    func didTakeStep()
+    func didFinishDataProcessing(withReturn returnValue: BLEDataProcessorReturn)
+}
+
+enum BLEDataProcessorReturn {
+    
+    case didTakeStep
+    case noActionRequired
 }
 
 
@@ -17,11 +23,13 @@ class BLEDataProcessor {
     
     private var fsrDataArray = [Int16]()
     
-    private var processorDelegate: BLEDataProcessorDelegate?
+    private var delegateVC: BLEDataProcessorDelegate?
     
-    var forefootVoltage: Int = 0
+    var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
-    var heelVoltage: Int = 0
+    var heelVoltage: Int = 0 //Could make private if not printing out to label
+    
+    private var bleDataProcessorReturn: BLEDataProcessorReturn = .noActionRequired
     
     private var newForefootDown: Bool = false
     private var oldForefootDown: Bool = false
@@ -31,9 +39,10 @@ class BLEDataProcessor {
     
     init(delegate: BLEDataProcessorDelegate) {
         
-        processorDelegate = delegate
+        delegateVC = delegate
         initializeFsrDataArray()
     }
+    
     
     private func initializeFsrDataArray() {
         
@@ -52,7 +61,12 @@ class BLEDataProcessor {
         newHeelDown = heelVoltage > 2500 ? true : false
         
         if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) {
-            processorDelegate?.didTakeStep()
+            
+            bleDataProcessorReturn = .didTakeStep
+            delegateVC?.didFinishDataProcessing(withReturn: bleDataProcessorReturn)
+            
+        } else {
+            bleDataProcessorReturn = .noActionRequired
         }
         
         oldForefootDown = newForefootDown

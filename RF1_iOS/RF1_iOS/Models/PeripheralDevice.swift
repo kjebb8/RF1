@@ -18,5 +18,5 @@ struct PeripheralDevice {
     
     static let numberOfSensors: Int = 2
     
-    static let restoreIdentifier: String = "BLE.Restore.Info.PeripheralDevice"
+//    static let restoreIdentifier: String = "BLE.Restore.Info.PeripheralDevice"
 }
