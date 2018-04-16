@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 protocol BLEDataProcessorDelegate {
     func didFinishDataProcessing(withReturn returnValue: BLEDataProcessorReturn)
@@ -39,6 +40,7 @@ class BLEDataProcessor {
         
         delegateVC = delegate
         initializeFsrDataArray()
+//        clearRealm()
     }
     
     
@@ -80,6 +82,43 @@ class BLEDataProcessor {
         
         forefootVoltage = Int(fsrDataArray[0])
         heelVoltage = Int(fsrDataArray[1])
+        
+        logData(forefootVoltage, heelVoltage)
+    }
+    
+    
+    
+    //MARK: - Realm Content
+    
+    let realm = try! Realm()
+    
+    var fsrDataLog: Results<FSRData>?
+    
+    var dataLogIndex: Int = 0
+    
+    func logData(_ forefootVoltage: Int, _ heelVoltage: Int) {
+        
+        dataLogIndex += 1
+        let newFSRData = FSRData()
+        newFSRData.forefootVoltageData = forefootVoltage
+        newFSRData.heelVoltageData = heelVoltage
+        newFSRData.sampleIndex = dataLogIndex
+
+        do {
+            try realm.write {
+                realm.add(newFSRData)
+            }
+        } catch {
+            print("Error saving context \(error)")
+        }
+    }
+    
+    
+    func clearRealm() {
+        
+        try! realm.write {
+            realm.deleteAll()
+        }
     }
     
     
