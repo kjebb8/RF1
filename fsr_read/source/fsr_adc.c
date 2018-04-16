@@ -260,7 +260,7 @@ void fsr_adc_sample_end(void)
 
 }
 
-////When flag set to true, notify the new adc result. Function is called from main() loop
+//When flag set to true, notify the new adc result. Function is called from main() loop
 void check_saadc_done_sample(void)
 {
     if (m_done_sample == true)
