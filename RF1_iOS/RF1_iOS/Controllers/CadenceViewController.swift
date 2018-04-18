@@ -11,7 +11,7 @@ import CoreBluetooth
 
 class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProcessorDelegate, CadenceMetricsDelegate {
     
-    var cadenceBLEManager: BLEManager!
+    var bleManager: BLEManager!
     
     var bleDataProcessor: BLEDataProcessor!
     
@@ -46,7 +46,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
     
     
     override func viewDidAppear(_ animated: Bool) {
-        cadenceBLEManager.setDelegate(to: self) //This calls back with .connected state, which calls setRunState()
+        bleManager.setDelegate(to: self) //This calls back with .connected state, which calls setRunState()
     }
     
     
@@ -73,7 +73,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
             if addReconnectAction {
                 
                 let reconnectAction = UIAlertAction(title: "Reconnect", style: .default) { (exitAction) in
-                    self.cadenceBLEManager.startScan()
+                    self.bleManager.startScan()
                 }
                 
                 alert?.addAction(reconnectAction)
@@ -107,7 +107,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
         
         cadenceMetrics.runTimer.invalidate()
         isTimerPaused = true
-        cadenceBLEManager.turnOffNotifications()
+        bleManager.turnOffNotifications()
         pauseButton.setTitle("Resume", for: .normal)
     }
     
@@ -116,7 +116,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
         
         cadenceMetrics.initializeTimer()
         isTimerPaused = false
-        cadenceBLEManager.getNotifications()
+        bleManager.getNotifications()
         pauseButton.setTitle("Pause", for: .normal)
     }
     
@@ -160,7 +160,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
             showAlert(title: "Failed to Connect", message: "Make sure device is on and try again", addExitAction: true, addReconnectAction: true)
             
         case .disconnected:
-            cadenceBLEManager.startScan()
+            bleManager.startScan()
             
         case .bleTurnedOff:
             showAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")

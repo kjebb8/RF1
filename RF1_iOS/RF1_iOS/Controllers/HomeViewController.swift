@@ -11,7 +11,7 @@ import CoreBluetooth
 
 class HomeViewController: UIViewController, BLEManagerDelegate {
     
-    var homeBLEManager: BLEManager!
+    var bleManager: BLEManager!
 
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var statusButton: UIButton!
@@ -29,7 +29,7 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     
     override func viewDidAppear(_ animated: Bool) { //Called every time the view is displayed
-        homeBLEManager.setDelegate(to: self)
+        bleManager.setDelegate(to: self)
     }
     
     
@@ -149,21 +149,21 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     
     func didReceiveBLEData(data: Data) {
-        self.homeBLEManager.turnOffNotifications() //Don't want notifications on the home screen
+        self.bleManager.turnOffNotifications() //Don't want notifications on the home screen
     }
     
     
     //MARK: - Button Pressed Methods
     
     @IBAction func statusButtonPressed(_ sender: UIButton) {
-        homeBLEManager.startScan() //Only enabled when ready to connect
+        bleManager.startScan() //Only enabled when ready to connect
     }
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToCadence" {
             let destinationVC = segue.destination as! CadenceViewController
-            destinationVC.cadenceBLEManager = homeBLEManager
+            destinationVC.bleManager = bleManager
         }
     }
     

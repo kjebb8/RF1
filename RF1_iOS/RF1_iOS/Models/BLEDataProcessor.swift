@@ -36,11 +36,19 @@ class BLEDataProcessor {
     private var newHeelDown: Bool = false
     private var oldHeelDown: Bool = false
     
+    private var logRawData: Bool = false
+    private var clearRawData: Bool = false
+    
     init(delegate: BLEDataProcessorDelegate) {
         
         delegateVC = delegate
         initializeFsrDataArray()
-//        clearRealm()
+        
+        if logRawData {
+            
+            setUpRealm()
+            if clearRawData {clearRealm()}
+        }
     }
     
     
@@ -83,30 +91,36 @@ class BLEDataProcessor {
         forefootVoltage = Int(fsrDataArray[0])
         heelVoltage = Int(fsrDataArray[1])
         
-        logData(forefootVoltage, heelVoltage)
+        if logRawData {logData(forefootVoltage, heelVoltage)}
     }
     
     
     
     //MARK: - Realm Content
     
-    let realm = try! Realm()
+    private var realm: Realm?
     
-    var fsrDataLog: Results<FSRData>?
+    private var fsrDataLog: Results<FSRData>?
     
-    var dataLogIndex: Int = 0
+    private var dataLogIndex: Int?
     
-    func logData(_ forefootVoltage: Int, _ heelVoltage: Int) {
+    private func setUpRealm() {
         
-        dataLogIndex += 1
+        realm = try! Realm()
+        dataLogIndex = 0
+    }
+    
+    private func logData(_ forefootVoltage: Int, _ heelVoltage: Int) {
+        
+        dataLogIndex! += 1
         let newFSRData = FSRData()
         newFSRData.forefootVoltageData = forefootVoltage
         newFSRData.heelVoltageData = heelVoltage
-        newFSRData.sampleIndex = dataLogIndex
+        newFSRData.sampleIndex = dataLogIndex!
 
         do {
-            try realm.write {
-                realm.add(newFSRData)
+            try realm?.write {
+                realm?.add(newFSRData)
             }
         } catch {
             print("Error saving context \(error)")
@@ -114,10 +128,10 @@ class BLEDataProcessor {
     }
     
     
-    func clearRealm() {
+    private func clearRealm() {
         
-        try! realm.write {
-            realm.deleteAll()
+        try! realm?.write {
+            realm?.deleteAll()
         }
     }
     

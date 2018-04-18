@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         if let HomeViewController = window?.rootViewController as? HomeViewController {
-            HomeViewController.homeBLEManager = BLEManager()
+            HomeViewController.bleManager = BLEManager()
         }
         
         return true
