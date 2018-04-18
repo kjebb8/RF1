@@ -16,9 +16,8 @@
 		C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031BE93206301CC00CEA165 /* PeripheralDevice.swift */; };
 		C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* CadenceViewController.swift */; };
 		C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE35206AA88300CD8D04 /* BLEManager.swift */; };
-		C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */; };
+		C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
-		C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09656F7207580FE00798064 /* CadenceStringValues.swift */; };
 		C09E8027207457310089BD3A /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09E8026207457310089BD3A /* AlertManager.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
 		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
@@ -38,9 +37,8 @@
 		C031BE93206301CC00CEA165 /* PeripheralDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDevice.swift; sourceTree = "<group>"; };
 		C062129B205B2E2C008937C7 /* CadenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceViewController.swift; sourceTree = "<group>"; };
 		C067BE35206AA88300CD8D04 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
-		C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataProcessor.swift; sourceTree = "<group>"; };
+		C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataManager.swift; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
-		C09656F7207580FE00798064 /* CadenceStringValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStringValues.swift; sourceTree = "<group>"; };
 		C09E8026207457310089BD3A /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
 		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +96,7 @@
 			children = (
 				C01FBB92205D6C1700B250E6 /* Extensions */,
 				C00A81AB205C632F004F4867 /* Models */,
+				C050E3BF2087CECC001B7F5F /* Metrics */,
 				C067BE34206AA84B00CD8D04 /* Mangers */,
 				C00A81AA205C632A004F4867 /* Views */,
 				C00A81A8205C631D004F4867 /* Controllers */,
@@ -130,10 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
-				C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */,
 				C0B25B862085020F00B4189B /* FSRData.swift */,
-				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
-				C09656F7207580FE00798064 /* CadenceStringValues.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -146,10 +142,19 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		C050E3BF2087CECC001B7F5F /* Metrics */ = {
+			isa = PBXGroup;
+			children = (
+				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
+			);
+			path = Metrics;
+			sourceTree = "<group>";
+		};
 		C067BE34206AA84B00CD8D04 /* Mangers */ = {
 			isa = PBXGroup;
 			children = (
 				C067BE35206AA88300CD8D04 /* BLEManager.swift */,
+				C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */,
 				C09E8026207457310089BD3A /* AlertManager.swift */,
 			);
 			path = Mangers;
@@ -292,8 +297,7 @@
 				C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */,
 				C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
-				C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */,
-				C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */,
+				C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */,
 				C0B25B872085020F00B4189B /* FSRData.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
 				C09E8027207457310089BD3A /* AlertManager.swift in Sources */,

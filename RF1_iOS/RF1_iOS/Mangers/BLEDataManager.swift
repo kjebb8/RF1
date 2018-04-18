@@ -9,22 +9,22 @@
 import Foundation
 import RealmSwift
 
-protocol BLEDataProcessorDelegate {
-    func didFinishDataProcessing(withReturn returnValue: BLEDataProcessorReturn)
+protocol BLEDataManagerDelegate {
+    func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn)
 }
 
-enum BLEDataProcessorReturn {
+enum BLEDataManagerReturn {
     
     case didTakeStep
     case noActionRequired
 }
 
 
-class BLEDataProcessor {
+class BLEDataManager {
     
     private var fsrDataArray = [Int16]()
     
-    private var delegateVC: BLEDataProcessorDelegate?
+    private var delegateVC: BLEDataManagerDelegate?
     
     var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
@@ -39,7 +39,7 @@ class BLEDataProcessor {
     private var logRawData: Bool = false
     private var clearRawData: Bool = false
     
-    init(delegate: BLEDataProcessorDelegate) {
+    init(delegate: BLEDataManagerDelegate) {
         
         delegateVC = delegate
         initializeFsrDataArray()
@@ -60,7 +60,7 @@ class BLEDataProcessor {
     }
     
     
-    func processNewData(updatedData data: Data) {
+    func processNewData(updatedData data: Data) { //Public Access
         
         saveFsrData(dataToBeSaved: data)
         

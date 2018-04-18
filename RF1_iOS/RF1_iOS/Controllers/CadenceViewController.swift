@@ -9,19 +9,22 @@
 import UIKit
 import CoreBluetooth
 
-class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProcessorDelegate, CadenceMetricsDelegate {
+class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
     var bleManager: BLEManager!
     
-    var bleDataProcessor: BLEDataProcessor!
+    var bleDataManager: BLEDataManager!
     
-    var cadenceMetrics: CadenceMetrics!
+    var cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
     
     var isTimerPaused: Bool = false
     
     var localBLEState: BLEState = .connected
     
     var alert: UIAlertController?
+    
+    var runTime: Int = 0 //In seconds
+    var runTimer = Timer()
     
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
@@ -39,9 +42,9 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
         pauseButton.setTitleColor(UIColor.darkGray, for: .disabled)
         pauseButton.setTitleColor(UIColor.lightGray, for: .normal)
         
-        bleDataProcessor = BLEDataProcessor(delegate: self)
+        bleDataManager = BLEDataManager(delegate: self)
         
-        cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20, delegate: self) //Automatically calls back with zeroed cadence data
+        updateUICadenceValues()
     }
     
     
@@ -53,6 +56,37 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    
+    //MARK: - Timer Methods
+    
+    func initializeTimer() {
+        
+        runTimer = Timer.scheduledTimer(
+            timeInterval: 1, //Goes off every second
+            target: self,
+            selector: (#selector(CadenceViewController.timerIntervalTick)),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    
+    @objc func timerIntervalTick() {
+        
+        runTime += 1
+        cadenceMetrics.updateCadence(atTimeInMinutes: runTime)
+        updateUICadenceValues()
+    }
+    
+    
+    func getFormattedTimeString() -> (String) {
+        
+        if runTime.hours >= 1 {
+            return String(format: "%i:%02i:%02i", runTime.hours, runTime.minutes, runTime.seconds)
+        } else {
+            return String(format: "%i:%02i", runTime.minutes, runTime.seconds)
+        }
     }
     
     
@@ -105,7 +139,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
     
     func setPauseState() {
         
-        cadenceMetrics.runTimer.invalidate()
+        runTimer.invalidate()
         isTimerPaused = true
         bleManager.turnOffNotifications()
         pauseButton.setTitle("Resume", for: .normal)
@@ -114,31 +148,22 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
     
     func setRunState() {
         
-        cadenceMetrics.initializeTimer()
+        initializeTimer()
         isTimerPaused = false
         bleManager.getNotifications()
         pauseButton.setTitle("Pause", for: .normal)
     }
     
     
-    //MARK: - Data Processor Callback
-    
-    func didFinishDataProcessing(withReturn returnValue: BLEDataProcessorReturn) {
+    func updateUICadenceValues() {
         
-        if returnValue == .didTakeStep {
-            cadenceMetrics.incrementSteps()
-        }
-    }
-    
-    
-    //MARK: - Cadence Metrics Callback
-
-    func didUpdateCadenceValues(with cadenceStringValues: CadenceStringValues) { //Called when initialized, when runTimer expiers or when step is taken
-
+        let cadenceStringValues = cadenceMetrics.getCadenceStringValues()
+        
         shortCadenceLabel.text = cadenceStringValues.shortCadenceString
         avgCadenceLabel.text = cadenceStringValues.averageCadenceString
-        timeLabel.text = cadenceStringValues.timeString
         stepsLabel.text = cadenceStringValues.stepsString
+        
+        timeLabel.text = getFormattedTimeString()
     }
     
     
@@ -197,9 +222,20 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataProces
     
     func didReceiveBLEData(data: Data) {
         
-        bleDataProcessor.processNewData(updatedData: data)
-        dataLabel.text = "Forefoot: \(bleDataProcessor.forefootVoltage) Heel: \(bleDataProcessor.heelVoltage)"
-        print("\(bleDataProcessor.forefootVoltage) \(bleDataProcessor.heelVoltage)")
+        bleDataManager.processNewData(updatedData: data)
+        dataLabel.text = "Forefoot: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
+        print("\(bleDataManager.forefootVoltage) \(bleDataManager.heelVoltage)")
+    }
+    
+    
+    //MARK: - Data Manager Callback
+    
+    func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn) {
+        
+        if returnValue == .didTakeStep {
+            cadenceMetrics.incrementSteps()
+            updateUICadenceValues()
+        }
     }
     
     
