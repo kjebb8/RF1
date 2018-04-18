@@ -1,0 +1,6 @@
+framework module Pods_RF1_iOS {
+  umbrella header "Pods-RF1_iOS-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -20,9 +20,13 @@
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
 		C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09656F7207580FE00798064 /* CadenceStringValues.swift */; };
 		C09E8027207457310089BD3A /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09E8026207457310089BD3A /* AlertManager.swift */; };
+		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
+		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E30B4327F64DB3166D6CEF5 /* Pods-RF1_iOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RF1_iOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS.debug.xcconfig"; sourceTree = "<group>"; };
+		941A6C943C0E71ED90CF8F54 /* Pods-RF1_iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RF1_iOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS.release.xcconfig"; sourceTree = "<group>"; };
 		C005F2652057174F006A14CB /* RF1_iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RF1_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C005F2682057174F006A14CB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C005F26A2057174F006A14CB /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
@@ -38,6 +42,8 @@
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
 		C09656F7207580FE00798064 /* CadenceStringValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStringValues.swift; sourceTree = "<group>"; };
 		C09E8026207457310089BD3A /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
+		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,17 +51,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		39640E18A82C649702356D2E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B3FA0A38D07B54BB02207E8A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6E30B4327F64DB3166D6CEF5 /* Pods-RF1_iOS.debug.xcconfig */,
+				941A6C943C0E71ED90CF8F54 /* Pods-RF1_iOS.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C005F25C2057174F006A14CB = {
 			isa = PBXGroup;
 			children = (
 				C005F2672057174F006A14CB /* RF1_iOS */,
 				C005F2662057174F006A14CB /* Products */,
+				B3FA0A38D07B54BB02207E8A /* Pods */,
+				39640E18A82C649702356D2E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -105,6 +131,7 @@
 			children = (
 				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
 				C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */,
+				C0B25B862085020F00B4189B /* FSRData.swift */,
 				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
 				C09656F7207580FE00798064 /* CadenceStringValues.swift */,
 			);
@@ -135,9 +162,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C005F2772057174F006A14CB /* Build configuration list for PBXNativeTarget "RF1_iOS" */;
 			buildPhases = (
+				2B64FFD941C409CB78A7AF61 /* [CP] Check Pods Manifest.lock */,
 				C005F2612057174F006A14CB /* Sources */,
 				C005F2622057174F006A14CB /* Frameworks */,
 				C005F2632057174F006A14CB /* Resources */,
+				36E0A24DB4D4CEACF94F8D9C /* [CP] Embed Pods Frameworks */,
+				01751CD18FE488B0367A63AF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -195,6 +225,62 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		01751CD18FE488B0367A63AF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2B64FFD941C409CB78A7AF61 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RF1_iOS-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		36E0A24DB4D4CEACF94F8D9C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
+				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C005F2612057174F006A14CB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -208,6 +294,7 @@
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
 				C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */,
 				C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */,
+				C0B25B872085020F00B4189B /* FSRData.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
 				C09E8027207457310089BD3A /* AlertManager.swift in Sources */,
 			);
@@ -348,6 +435,7 @@
 		};
 		C005F2782057174F006A14CB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6E30B4327F64DB3166D6CEF5 /* Pods-RF1_iOS.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -363,6 +451,7 @@
 		};
 		C005F2792057174F006A14CB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 941A6C943C0E71ED90CF8F54 /* Pods-RF1_iOS.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
