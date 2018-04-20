@@ -20,6 +20,9 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bleManager = BLEManager()
+        print("New BLE Manger")
+        
         statusButton.setTitleColor(UIColor.darkGray, for: .disabled)
         statusButton.setTitleColor(UIColor.white, for: .normal)
         
@@ -162,7 +165,7 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToCadence" {
-            let destinationVC = segue.destination as! CadenceViewController
+            let destinationVC = segue.destination as! TrackViewController
             destinationVC.bleManager = bleManager
         }
     }

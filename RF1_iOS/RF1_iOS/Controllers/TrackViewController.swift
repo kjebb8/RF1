@@ -9,13 +9,13 @@
 import UIKit
 import CoreBluetooth
 
-class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
+class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
     var bleManager: BLEManager!
     
     var bleDataManager: BLEDataManager!
     
-    var cadenceMetrics = CadenceMetrics(timeForShortCadenceInSeconds: 20)
+    var cadenceMetrics = CadenceMetrics()
     
     var isTimerPaused: Bool = false
     
@@ -66,7 +66,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataManage
         runTimer = Timer.scheduledTimer(
             timeInterval: 1, //Goes off every second
             target: self,
-            selector: (#selector(CadenceViewController.timerIntervalTick)),
+            selector: (#selector(TrackViewController.timerIntervalTick)),
             userInfo: nil,
             repeats: true)
     }
@@ -75,7 +75,7 @@ class CadenceViewController: UIViewController, BLEManagerDelegate, BLEDataManage
     @objc func timerIntervalTick() {
         
         runTime += 1
-        cadenceMetrics.updateCadence(atTimeInMinutes: runTime)
+        cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
         updateUICadenceValues()
     }
     

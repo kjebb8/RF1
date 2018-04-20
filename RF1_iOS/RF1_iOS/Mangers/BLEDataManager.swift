@@ -37,7 +37,7 @@ class BLEDataManager {
     private var oldHeelDown: Bool = false
     
     private var logRawData: Bool = false
-    private var clearRawData: Bool = false
+    private var clearRawData: Bool = false //BIG RED BUTTON
     
     init(delegate: BLEDataManagerDelegate) {
         
@@ -99,8 +99,6 @@ class BLEDataManager {
     //MARK: - Realm Content
     
     private var realm: Realm?
-    
-    private var fsrDataLog: Results<FSRData>?
     
     private var dataLogIndex: Int?
     

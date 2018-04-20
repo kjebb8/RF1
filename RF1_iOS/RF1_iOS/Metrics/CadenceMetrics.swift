@@ -10,46 +10,60 @@ import Foundation
 
 class CadenceMetrics {
     
-    private var intervalTime: Int //Set to 20s usually
-    private var intervalTimeSteps: [Int] = [0] //Holds most recent 20s worth of step data
-    private var intervalTimeStepsIndex: Int = 0 //Current index of the last value in the intervalTimeSteps array (between 0 and 19)
-
-    private var shortCadence: Double = 0 //Cadence for the most recent 20 seconds
-    private var averageCadence: Double = 0 //Cadence for entire run
+    private var recentCadenceIntervalTime: Int = 20 //Set to 20s usually
+    private var recentCadenceIntervalTimeSteps: [Int] = [0] //Holds most recent 20s worth of step data
+    private var recentCadence: Double = 0 //Cadence for the most recent 20 seconds
     
     private var totalSteps: Int = 0
+    private var averageCadence: Double = 0 //Cadence for entire run
     
-    init(timeForShortCadenceInSeconds timeInSeconds: Int) {
-        intervalTime = timeInSeconds
-    }
+    private var cadenceIntervalLogTime: Int = 5 //5 second batches
+    private var cadenceIntervalSteps: Int = 0 //Counts the steps in the current 5s interval
+    private var cadenceIntervalLog = [Double]() //Each entry has cadence for 5s intervals
     
     
     //MARK: - Public Access Methods
     
     func incrementSteps() { //Called from View Controller when dataProcessor returns that a step was taken
         
-        intervalTimeSteps[intervalTimeStepsIndex] += 2
+        recentCadenceIntervalTimeSteps[recentCadenceIntervalTimeSteps.count - 1] += 2
         totalSteps += 2
+        cadenceIntervalSteps += 2
     }
     
     
-    func updateCadence(atTimeInMinutes currentTime: Int) {
+    func updateCadence(atTimeInSeconds currentTime: Int) { //Assumes function is called every second
 
-        shortCadence = Double(intervalTimeSteps.reduce(0, +)) / intervalTimeSteps.count.inMinutes //.inMinutes converts to Double
+        recentCadence = Double(recentCadenceIntervalTimeSteps.reduce(0, +)) / recentCadenceIntervalTimeSteps.count.inMinutes //.inMinutes converts to Double
         averageCadence = Double(totalSteps) /  currentTime.inMinutes
         
-        intervalTimeSteps.append(0)
+        recentCadenceIntervalTimeSteps.append(0)
         
-        if intervalTimeSteps.count <= intervalTime {
-            intervalTimeStepsIndex += 1
-        } else {
-            intervalTimeSteps.remove(at: 0) //Removes the oldest value so that only 20s of data is collected
+        if recentCadenceIntervalTimeSteps.count > recentCadenceIntervalTime {
+            recentCadenceIntervalTimeSteps.remove(at: 0) //Removes the oldest value so that only 20s of data is collected
         }
+        
+        if currentTime % cadenceIntervalLogTime == 0 {
+            
+            cadenceIntervalLog.append(Double(cadenceIntervalSteps) / cadenceIntervalLogTime.inMinutes)
+            cadenceIntervalSteps = 0
+            print(cadenceIntervalLog)
+        }
+        
     }
     
     
     func getCadenceStringValues() -> (CadenceStringValues) {
-        return CadenceStringValues(shortCadence, averageCadence, totalSteps)
+        return CadenceStringValues(recentCadence, averageCadence, totalSteps)
+    }
+    
+    
+    func saveCadenceData(forRunTime runTime: Int) -> (cadenceData: CadenceData, cadenceLog: [Double]) {
+        
+        let cadenceData = CadenceData()
+        cadenceData.averageCadence = averageCadence
+        
+        return(cadenceData, cadenceIntervalLog)
     }
     
     
