@@ -8,8 +8,11 @@
 
 import UIKit
 import CoreBluetooth
+import RealmSwift
 
 class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
+    
+    let realm = try! Realm()
     
     var bleManager: BLEManager!
     
@@ -25,6 +28,8 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
+    
+    let date = Date()
     
     @IBOutlet weak var shortCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
@@ -80,7 +85,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     }
     
     
-    func getFormattedTimeString() -> (String) {
+    func getFormattedRunTimeString() -> (String) {
         
         if runTime.hours >= 1 {
             return String(format: "%i:%02i:%02i", runTime.hours, runTime.minutes, runTime.seconds)
@@ -98,15 +103,18 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         if addExitAction {
             
-            let exitAction = UIAlertAction(title: "Exit Tracking", style: .default) { (exitAction) in
+            let exitSaveAction = UIAlertAction(title: "Exit and Save", style: .default) { (exitSaveAction) in
+                
+                self.saveData()
+                
                 self.dismiss(animated: true, completion: nil)
             }
             
-            alert?.addAction(exitAction)
+            alert?.addAction(exitSaveAction)
             
             if addReconnectAction {
                 
-                let reconnectAction = UIAlertAction(title: "Reconnect", style: .default) { (exitAction) in
+                let reconnectAction = UIAlertAction(title: "Reconnect", style: .default) { (reconnectAction) in
                     self.bleManager.startScan()
                 }
                 
@@ -114,14 +122,14 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                 
             } else {
                 
-                let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (cancelAction) in
+                let continueAction = UIAlertAction(title: "Continue Tracking", style: .cancel) { (continueAction) in
                     
                     if self.localBLEState == .connected { //Protecting against running when BLE turned off
                         self.setRunState()
                     }
                 }
                 
-                alert?.addAction(cancelAction)
+                alert?.addAction(continueAction)
             }
             
         } else {
@@ -163,7 +171,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         avgCadenceLabel.text = cadenceStringValues.averageCadenceString
         stepsLabel.text = cadenceStringValues.stepsString
         
-        timeLabel.text = getFormattedTimeString()
+        timeLabel.text = getFormattedRunTimeString()
     }
     
     
@@ -257,5 +265,44 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         }
     }
     
+    
+    
+    //MARK: - Saving Date Functions
+    
+    func saveData() {
+        
+        let newRunLogEntry = RunLogEntry()
+        
+        newRunLogEntry.date = self.getDateString()
+        newRunLogEntry.startTime = self.getStartTimeString()
+        newRunLogEntry.runDuration = self.getFormattedRunTimeString()
+        
+        let newCadenceData = self.cadenceMetrics.getCadenceDataForSaving(forRunTime: self.runTime)
+        
+        newRunLogEntry.cadenceData = newCadenceData
+        
+        do {
+            try self.realm.write {
+                self.realm.add(newRunLogEntry)
+            }
+        } catch {
+            print("Error saving context \(error)")
+        }
+    }
+    
+    func getDateString() -> (String) {
+        
+        let formatterDate = DateFormatter()
+        formatterDate.dateFormat = "dd.MM.yyyy"
+        return formatterDate.string(from: date)
+    }
+    
+    
+    func getStartTimeString() -> (String) {
+        
+        let formatterTime = DateFormatter()
+        formatterTime.dateFormat = "HH:mm"
+        return formatterTime.string(from: date)
+    }
     
 }

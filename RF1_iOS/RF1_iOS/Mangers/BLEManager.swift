@@ -158,7 +158,6 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             
             if peripheralName == PeripheralDevice.deviceName {
                 
-                scanTimer.invalidate()
                 centralManager.stopScan()
                 
                 fsrPeripheral = peripheral
@@ -174,6 +173,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         _ central: CBCentralManager,
         didConnect peripheral: CBPeripheral) {
         
+        scanTimer.invalidate()
         peripheral.discoverServices([PeripheralDevice.fsrServiceUUID])
     }
     
@@ -183,6 +183,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         didFailToConnect peripheral: CBPeripheral,
         error: Error?) {
         
+        scanTimer.invalidate()
         fsrPeripheral = nil
         bleState = .notConnected
         delegateVC?.updateUIForBLEState(bleState)

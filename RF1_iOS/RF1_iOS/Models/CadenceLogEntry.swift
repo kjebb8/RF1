@@ -11,5 +11,5 @@ import RealmSwift
 
 class CadenceLogEntry: Object {
     
-    @objc dynamic var cadenceIntervalValue: Int = 0
+    @objc dynamic var cadenceIntervalValue: Double = 0
 }
