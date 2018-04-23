@@ -17,21 +17,18 @@
 #include "softdevice_handler.h"
 
 #include "app_timer.h"
-#include "app_button.h"
 #include "app_util_platform.h"
 
 #include "sdk_config.h"
-#include "bsp.h"
-#include "bsp_btn_ble.h"
-#include "pca10040.h"
-#include "nrf_gpio.h"
-
-#define NRF_LOG_MODULE_NAME "FSR APP"
-#include "nrf_log.h"
-#include "nrf_log_ctrl.h"
-#include "counter.h"
 
 //#define ADC_PRINT
+
+#ifdef ADC_PRINT
+    #define NRF_LOG_MODULE_NAME "FSR APP"
+    #include "nrf_log.h"
+    #include "nrf_log_ctrl.h"
+    #include "counter.h"
+#endif
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT 0                                           /**< Include the service_changed characteristic. If not enabled, the server's database cannot be changed for the lifetime of the device. */
 
@@ -47,7 +44,7 @@
 #define DEVICE_NAME                     "FSR_APP"                               /**< Name of device. Will be included in the advertising data. */
 
 #define APP_ADV_INTERVAL                64                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */
-#define APP_ADV_TIMEOUT_IN_SECONDS      180                                         /**< The advertising timeout (in units of seconds). */
+#define APP_ADV_TIMEOUT_IN_SECONDS      60                                         /**< The advertising timeout (in units of seconds). */
 
 #define APP_TIMER_PRESCALER             0                                           /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE         4                                           /**< Size of timer operation queues. */
@@ -59,6 +56,12 @@
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000, APP_TIMER_PRESCALER)  /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER) /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
 #define MAX_CONN_PARAMS_UPDATE_COUNT    3                                           /**< Number of attempts before giving up the connection parameter negotiation. */
+
+//From PCA10040
+#define NRF_CLOCK_LFCLKSRC      {.source        = NRF_CLOCK_LF_SRC_XTAL,            \
+                                 .rc_ctiv       = 0,                                \
+                                 .rc_temp_ctiv  = 0,                                \
+                                 .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM}
 
 static uint16_t                         m_conn_handle = BLE_CONN_HANDLE_INVALID;    /**< Handle of the current connection. */
 static ble_fsrs_t                       m_fsrs;                                      /**< Structure to identify the Nordic UART Service. */
@@ -105,14 +108,10 @@ void data_subscr_handler(ble_fsrs_t * p_fsrs, bool is_data_subscr)
 {
     if (is_data_subscr)
     {
-        nrf_gpio_pin_set(LED_3);
-        nrf_gpio_pin_clear(LED_4);
         fsr_adc_sample_begin();
     }
     else
     {
-        nrf_gpio_pin_set(LED_4);
-        nrf_gpio_pin_clear(LED_3);
         fsr_adc_sample_end();
     }
 }
@@ -202,12 +201,7 @@ static void conn_params_init(void)
  */
 static void sleep_mode_enter(void)
 {
-    uint32_t err_code = bsp_indication_set(BSP_INDICATE_IDLE);
-    APP_ERROR_CHECK(err_code);
-
-    // Prepare wakeup buttons.
-    err_code = bsp_btn_ble_sleep_mode_prepare();
-    APP_ERROR_CHECK(err_code);
+    uint32_t err_code;
 
     // Go to system-off mode (this function will not return; wakeup will cause a reset).
     err_code = sd_power_system_off();
@@ -223,13 +217,9 @@ static void sleep_mode_enter(void)
  */
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 {
-    uint32_t err_code;
-
     switch (ble_adv_evt)
     {
         case BLE_ADV_EVT_FAST:
-            err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
-            APP_ERROR_CHECK(err_code);
             break;
         case BLE_ADV_EVT_IDLE:
             sleep_mode_enter();
@@ -251,20 +241,12 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
     switch (p_ble_evt->header.evt_id)
     {
         case BLE_GAP_EVT_CONNECTED:
-            err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            nrf_gpio_pin_set(LED_4);
-            nrf_gpio_pin_clear(LED_3);
             break; // BLE_GAP_EVT_CONNECTED
 
         case BLE_GAP_EVT_DISCONNECTED:
-            err_code = bsp_indication_set(BSP_INDICATE_IDLE);
-            APP_ERROR_CHECK(err_code);
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
             fsr_adc_sample_end();
-            nrf_gpio_pin_set(LED_3);
-            nrf_gpio_pin_set(LED_4);
             break; // BLE_GAP_EVT_DISCONNECTED
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -356,8 +338,6 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     on_ble_evt(p_ble_evt);
     ble_fsrs_on_ble_evt(&m_fsrs, p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
-
 }
 
 
@@ -395,44 +375,6 @@ static void ble_stack_init(void)
     // Subscribe for BLE events.
     err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
     APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for handling events from the BSP module.
- *
- * @param[in]   event   Event generated by button press.
- */
-void bsp_event_handler(bsp_event_t event)
-{
-    uint32_t err_code;
-    switch (event)
-    {
-        case BSP_EVENT_SLEEP:
-            sleep_mode_enter();
-            break;
-
-        case BSP_EVENT_DISCONNECT:
-            err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            if (err_code != NRF_ERROR_INVALID_STATE)
-            {
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BSP_EVENT_WHITELIST_OFF:
-            if (m_conn_handle == BLE_CONN_HANDLE_INVALID)
-            {
-                err_code = ble_advertising_restart_without_whitelist();
-                if (err_code != NRF_ERROR_INVALID_STATE)
-                {
-                    APP_ERROR_CHECK(err_code);
-                }
-            }
-            break;
-
-        default:
-            break;
-    }
 }
 
 // Prints out and notifies the calculated mV ACD values (one value per enabled ADC pin)
@@ -490,42 +432,14 @@ static void advertising_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Function for initializing buttons and leds.
- *
- * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
- */
-static void buttons_leds_init(bool * p_erase_bonds)
-{
-    bsp_event_t startup_event;
-
-    uint32_t err_code = bsp_init(BSP_INIT_LED | BSP_INIT_BUTTONS,
-                                 APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),
-                                 bsp_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = bsp_btn_ble_init(NULL, &startup_event);
-    APP_ERROR_CHECK(err_code);
-
-    *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
-}
-
-//Initialize the LEDs to show if notifications are on or off
-static void gpio_leds_init(void)
-{
-    nrf_gpio_cfg_output(LED_3);
-    nrf_gpio_cfg_output(LED_4);
-
-    nrf_gpio_pin_set(LED_3);
-    nrf_gpio_pin_set(LED_4);
-}
-
 /**
  * @brief Function called from main function
  */
 void fsr_ble_init(void)
 {
     uint32_t err_code;
+
+#ifdef ADC_PRINT
 
 #if NRF_LOG_USES_TIMESTAMP==1
     counter_init();
@@ -538,16 +452,14 @@ void fsr_ble_init(void)
 #endif
     NRF_LOG_INFO("Start reading some FSR!\r\n");
 
-    bool erase_bonds;
+#endif
 
     // Initialize.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
 
-    buttons_leds_init(&erase_bonds);
     ble_stack_init();
     gap_params_init();
     services_init();
-    gpio_leds_init();
 
     fsr_adc_init(&m_adc_init);
 
