@@ -280,10 +280,10 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 - (void)insertObjects:(id<NSFastEnumeration>)objects atIndexes:(NSIndexSet *)indexes {
     changeArray(self, NSKeyValueChangeInsertion, indexes, ^{
         NSUInteger index = [indexes firstIndex];
-        RLMAccessorContext context(_realm, *_objectInfo);
+        RLMAccessorContext context(self->_realm, *self->_objectInfo);
         for (id obj in objects) {
             RLMArrayValidateMatchingObjectType(self, obj);
-            _backingList.insert(context, index, obj);
+            self->_backingList.insert(context, index, obj);
             index = [indexes indexGreaterThanIndex:index];
         }
     });
@@ -292,39 +292,39 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
 
 - (void)removeObjectAtIndex:(NSUInteger)index {
     changeArray(self, NSKeyValueChangeRemoval, index, ^{
-        _backingList.remove(index);
+        self->_backingList.remove(index);
     });
 }
 
 - (void)removeObjectsAtIndexes:(NSIndexSet *)indexes {
     changeArray(self, NSKeyValueChangeRemoval, indexes, ^{
         [indexes enumerateIndexesWithOptions:NSEnumerationReverse usingBlock:^(NSUInteger idx, BOOL *) {
-            _backingList.remove(idx);
+            self->_backingList.remove(idx);
         }];
     });
 }
 
 - (void)addObjectsFromArray:(NSArray *)array {
     changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(self.count, array.count), ^{
-        RLMAccessorContext context(_realm, *_objectInfo);
+        RLMAccessorContext context(self->_realm, *self->_objectInfo);
         for (id obj in array) {
             RLMArrayValidateMatchingObjectType(self, obj);
-            _backingList.add(context, obj);
+            self->_backingList.add(context, obj);
         }
     });
 }
 
 - (void)removeAllObjects {
     changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, self.count), ^{
-        _backingList.remove_all();
+        self->_backingList.remove_all();
     });
 }
 
 - (void)replaceObjectAtIndex:(NSUInteger)index withObject:(id)object {
     RLMArrayValidateMatchingObjectType(self, object);
     changeArray(self, NSKeyValueChangeReplacement, index, ^{
-        RLMAccessorContext context(_realm, *_objectInfo);
-        _backingList.set(context, index, object);
+        RLMAccessorContext context(self->_realm, *self->_objectInfo);
+        self->_backingList.set(context, index, object);
     });
 }
 
@@ -332,13 +332,13 @@ static void RLMInsertObject(RLMManagedArray *ar, id object, NSUInteger index) {
     auto start = std::min(sourceIndex, destinationIndex);
     auto len = std::max(sourceIndex, destinationIndex) - start + 1;
     changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^{
-        _backingList.move(sourceIndex, destinationIndex);
+        self->_backingList.move(sourceIndex, destinationIndex);
     });
 }
 
 - (void)exchangeObjectAtIndex:(NSUInteger)index1 withObjectAtIndex:(NSUInteger)index2 {
     changeArray(self, NSKeyValueChangeReplacement, ^{
-        _backingList.swap(index1, index2);
+        self->_backingList.swap(index1, index2);
     }, [=] {
         NSMutableIndexSet *set = [[NSMutableIndexSet alloc] initWithIndex:index1];
         [set addIndex:index2];

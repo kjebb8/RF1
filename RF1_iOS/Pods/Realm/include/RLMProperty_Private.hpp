@@ -18,16 +18,12 @@
 
 #import <Realm/RLMProperty_Private.h>
 
-namespace realm {
-    struct Property;
-}
-
-@class RLMSchema;
+#import "property.hpp"
 
 @interface RLMProperty ()
 
 + (instancetype)propertyForObjectStoreProperty:(const realm::Property&)property;
 
-- (realm::Property)objectStoreCopy:(RLMSchema *)schema;
+- (realm::Property)objectStoreCopy;
 
 @end

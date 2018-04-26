@@ -134,8 +134,9 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             delegateVC?.updateForBLEEvent(.bleTurnedOff)
             
         } else if central.state == .poweredOn {
-            
-            startScan()
+
+//            startScan()
+            return
             
         } else {
             

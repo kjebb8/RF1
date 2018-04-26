@@ -292,16 +292,18 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     func getDateString() -> (String) {
         
-        let formatterDate = DateFormatter()
-        formatterDate.dateFormat = "dd.MM.yyyy"
-        return formatterDate.string(from: date)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_US")
+        return dateFormatter.string(from: date)
     }
     
     
     func getStartTimeString() -> (String) {
         
         let formatterTime = DateFormatter()
-        formatterTime.dateFormat = "HH:mm"
+        formatterTime.dateFormat = "hh:mm a"
         return formatterTime.string(from: date)
     }
     

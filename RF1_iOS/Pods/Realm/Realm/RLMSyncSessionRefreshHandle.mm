@@ -118,7 +118,7 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
         NSDate *fireDate = [RLMSyncSessionRefreshHandle fireDateForTokenExpirationDate:dateWhenTokenExpires
                                                                                nowDate:[NSDate date]];
         if (!fireDate) {
-            unregisterRefreshHandle(_user, _path);
+            unregisterRefreshHandle(self->_user, self->_path);
             return;
         }
         self.timer = [[NSTimer alloc] initWithFireDate:fireDate
@@ -210,9 +210,6 @@ static const NSTimeInterval RLMRefreshBuffer = 10;
     }
     if (!nextTryDate) {
         // This error isn't a network failure error. Just invalidate the refresh handle and stop.
-        if (_strongSession) {
-            _strongSession->log_out();
-        }
         unregisterRefreshHandle(_user, _path);
         [self invalidate];
         return;

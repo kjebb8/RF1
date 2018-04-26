@@ -33,7 +33,6 @@
 #import "RLMUtil.hpp"
 
 #import "object.hpp"
-#import "object_schema.hpp"
 #import "shared_realm.hpp"
 
 using namespace realm;
@@ -248,7 +247,7 @@ id RLMCreateManagedAccessor(Class cls, __unsafe_unretained RLMRealm *realm, RLMC
     NSMutableString *mString = [NSMutableString stringWithFormat:@"%@ {\n", baseClassName];
 
     for (RLMProperty *property in _objectSchema.properties) {
-        id object = _realm ? RLMDynamicGetByName(self, property.name, true) : [self valueForKey:property.name];
+        id object = RLMObjectBaseObjectForKeyedSubscript(self, property.name);
         NSString *sub;
         if ([object respondsToSelector:@selector(descriptionWithMaxDepth:)]) {
             sub = [object descriptionWithMaxDepth:depth - 1];
@@ -312,10 +311,6 @@ id RLMCreateManagedAccessor(Class cls, __unsafe_unretained RLMRealm *realm, RLMC
 }
 
 + (NSString *)_realmObjectName {
-    return nil;
-}
-
-+ (NSDictionary *)_realmColumnNames {
     return nil;
 }
 

@@ -37,7 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 + (BOOL)shouldIncludeInDefaultSchema;
 
 + (nullable NSString *)_realmObjectName;
-+ (nullable NSDictionary<NSString *, NSString *> *)_realmColumnNames;
 
 @end
 

@@ -28,10 +28,6 @@ namespace realm {
 namespace sync {
 
 struct ChangesetParser {
-    /// Throws BadChangesetError if parsing fails.
-    ///
-    /// FIXME: Consider using std::error_code instead of throwing exceptions on
-    /// parse errors.
     void parse(_impl::NoCopyInputStream&, InstructionHandler&);
 private:
     struct State;

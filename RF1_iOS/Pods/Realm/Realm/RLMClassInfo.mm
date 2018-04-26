@@ -102,8 +102,7 @@ RLMClassInfo& RLMSchemaInfo::operator[](NSString *name) {
 RLMSchemaInfo::RLMSchemaInfo(RLMRealm *realm) {
     RLMSchema *rlmSchema = realm.schema;
     realm::Schema const& schema = realm->_realm->schema();
-    // rlmSchema can be larger due to multiple classes backed by one table
-    REALM_ASSERT(rlmSchema.objectSchema.count >= schema.size());
+    REALM_ASSERT(rlmSchema.objectSchema.count == schema.size());
 
     m_objects.reserve(schema.size());
     for (RLMObjectSchema *rlmObjectSchema in rlmSchema.objectSchema) {
