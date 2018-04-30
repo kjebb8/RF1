@@ -13,7 +13,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     var bleManager: BLEManager!
 
-    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var statusButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
     
@@ -58,7 +57,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForScanningState() {
         
         print("Scanning...")
-        statusLabel.text = "Scanning..."
         statusButton.isEnabled = false
         statusButton.setTitle("Scanning...", for: .disabled)
         startButton.isEnabled = false
@@ -68,7 +66,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForConnectedState() {
         
         print("Connected!")
-        statusLabel.text = "Connected!"
         statusButton.isEnabled = false
         statusButton.setTitle("Connected!", for: .disabled)
         startButton.isEnabled = true
@@ -78,7 +75,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForNotConnectedState() {
             
         print("Not Connected")
-        statusLabel.text = "Not Connected"
         statusButton.isEnabled = true
         statusButton.setTitle("Connect", for: .normal)
         startButton.isEnabled = false
@@ -88,7 +84,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForBLEOff() {
         
         print("Bluetooth Off")
-        statusLabel.text = "Bluetooth Off"
         statusButton.isEnabled = false
         statusButton.setTitle("Turn On Bluetooth", for: .disabled)
         startButton.isEnabled = false
@@ -98,7 +93,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     func updateForBLEUnavailable() {
         
         print("Bluetooth Unavailable")
-        statusLabel.text = "Bluetooth Unavailable"
         statusButton.isEnabled = false
         statusButton.setTitle("Bluetooth Unavailable", for: .disabled)
         startButton.isEnabled = false
@@ -121,10 +115,13 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
             showAlert(title: "Failed to Connect", message: "Make sure device is on and try again")
         
         case .disconnected:
-            showAlert(title: "Disconnected from Device", message: "Please reconnect to proceed")
+            showAlert(title: "Disconnected from Device", message: "Please reconnect to start tracking")
         
         case .bleTurnedOff:
             showAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")
+            
+        case .bleTurnedOn:
+            updateForNotConnectedState()
         }
     }
     

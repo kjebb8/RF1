@@ -22,6 +22,7 @@ enum BLEEvent {
     case failedToConnect
     case disconnected
     case bleTurnedOff
+    case bleTurnedOn
 }
 
 
@@ -134,8 +135,8 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             delegateVC?.updateForBLEEvent(.bleTurnedOff)
             
         } else if central.state == .poweredOn {
-
-//            startScan()
+            
+            delegateVC?.updateForBLEEvent(.bleTurnedOn)
             return
             
         } else {

@@ -27,6 +27,7 @@
 		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
 		C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590D208A5A49001CAF23 /* CadenceData.swift */; };
 		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
+		C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F82C942093847900930934 /* CadenceParameters.swift */; };
 		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,7 @@
 		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
 		C0EC590D208A5A49001CAF23 /* CadenceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceData.swift; sourceTree = "<group>"; };
 		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
+		C0F82C942093847900930934 /* CadenceParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceParameters.swift; sourceTree = "<group>"; };
 		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -165,6 +167,7 @@
 		C050E3BF2087CECC001B7F5F /* Metrics */ = {
 			isa = PBXGroup;
 			children = (
+				C0F82C942093847900930934 /* CadenceParameters.swift */,
 				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
 			);
 			path = Metrics;
@@ -336,6 +339,7 @@
 				C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */,
 				C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */,
 				C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */,
+				C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */,
 				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
 				C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */,
 				C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */,

@@ -12,15 +12,15 @@ import RealmSwift
 
 class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
-    let realm = try! Realm()
-    
     var bleManager: BLEManager!
     
     var bleDataManager: BLEDataManager!
     
     var cadenceMetrics = CadenceMetrics()
     
-    var isTimerPaused: Bool = false
+    var inRunState: Bool = false
+    
+    var timePausedInRunState: Bool = false
     
     var localBLEState: BLEState = .connected
     
@@ -29,6 +29,8 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
     
+    var stepInLastSecond: Bool = false
+    
     let date = Date()
     
     @IBOutlet weak var shortCadenceLabel: UILabel!
@@ -36,9 +38,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
     
-    @IBOutlet weak var stopButton: UIButton!
     @IBOutlet weak var pauseButton: UIButton!
     
+    @IBOutlet weak var hintLabel: UILabel!
     @IBOutlet weak var dataLabel: UILabel!
     
     override func viewDidLoad() {
@@ -48,6 +50,8 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         pauseButton.setTitleColor(UIColor.lightGray, for: .normal)
         
         bleDataManager = BLEDataManager(delegate: self)
+        
+        hintLabel.text = ""
         
         updateUICadenceValues()
     }
@@ -79,9 +83,17 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     @objc func timerIntervalTick() {
         
-        runTime += 1
-        cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
-        updateUICadenceValues()
+        if stepInLastSecond {
+            
+            stepInLastSecond = false
+            runTime += 1
+            cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
+            updateUICadenceValues()
+        } else {
+            timePausedInRunState = true
+            runTimer.invalidate()
+            hintLabel.text = "Start Running to Begin!"
+        }
     }
     
     
@@ -125,7 +137,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                 let continueAction = UIAlertAction(title: "Continue Tracking", style: .cancel) { (continueAction) in
                     
                     if self.localBLEState == .connected { //Protecting against running when BLE turned off
-                        self.setRunState()
+                        if (self.inRunState) {self.initializeTimer(); self.bleManager.getNotifications()} //Restore state
                     }
                 }
                 
@@ -147,17 +159,18 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     func setPauseState() {
         
+        hintLabel.text = ""
         runTimer.invalidate()
-        isTimerPaused = true
-        bleManager.turnOffNotifications()
+        inRunState = false
         pauseButton.setTitle("Resume", for: .normal)
+        bleManager.turnOffNotifications()
     }
     
     
     func setRunState() {
         
         initializeTimer()
-        isTimerPaused = false
+        inRunState = true
         bleManager.getNotifications()
         pauseButton.setTitle("Pause", for: .normal)
     }
@@ -197,6 +210,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
             
         case .bleTurnedOff:
             showAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")
+            
+        case .bleTurnedOn:
+            bleManager.startScan()
         }
     }
     
@@ -241,6 +257,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn) {
         
         if returnValue == .didTakeStep {
+    
+            stepInLastSecond = true
+            if timePausedInRunState {setRunState(); timePausedInRunState = false ; hintLabel.text = ""}
             cadenceMetrics.incrementSteps()
             updateUICadenceValues()
         }
@@ -249,16 +268,16 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     //MARK: - Button Pressed Methods
     
-    @IBAction func stopButtonPressed(_ sender: UIButton) {
+    @IBAction func exitButtonPressed(_ sender: UIButton) {
         
-        setPauseState()
+        if inRunState {runTimer.invalidate(); bleManager.turnOffNotifications()} //To preserve the state if user continues
         showAlert(title: "Stop Tracking?", message: "Your data will be lost", addExitAction: true)
     }
     
     
     @IBAction func pauseButtonPressed(_ sender: UIButton) {
         
-        if isTimerPaused == false {
+        if inRunState {
             setPauseState()
         } else {
             setRunState()
@@ -282,8 +301,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         newRunLogEntry.cadenceData = newCadenceData
         
         do {
-            try self.realm.write {
-                self.realm.add(newRunLogEntry)
+            let realm = try! Realm()
+            try realm.write {
+                realm.add(newRunLogEntry)
             }
         } catch {
             print("Error saving context \(error)")

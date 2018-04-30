@@ -10,14 +10,12 @@ import Foundation
 
 class CadenceMetrics {
     
-    private var recentCadenceTime: Int = 20 //Set to 20s usually
     private var recentCadenceSteps: [Int] = [0] //Holds most recent 20s worth of step data
     private var recentCadence: Double = 0 //Cadence for the most recent 20 seconds
     
     private var totalSteps: Int = 0
     private var averageCadence: Double = 0 //Cadence for entire run
     
-    private var cadenceLogTime: Int = 5 //5 second batches
     private var cadenceLogSteps: Int = 0 //Counts the steps in the current 5s interval
     private var cadenceLog = [Double]() //Each entry has cadence for 5s intervals
     
@@ -39,13 +37,13 @@ class CadenceMetrics {
         
         recentCadenceSteps.append(0)
         
-        if recentCadenceSteps.count > recentCadenceTime {
+        if recentCadenceSteps.count > CadenceParameters.recentCadenceTime {
             recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only 20s of data is collected
         }
         
-        if currentTime % cadenceLogTime == 0 {
+        if currentTime % CadenceParameters.cadenceLogTime == 0 {
             
-            cadenceLog.append(Double(cadenceLogSteps) / cadenceLogTime.inMinutes)
+            cadenceLog.append(Double(cadenceLogSteps) / CadenceParameters.cadenceLogTime.inMinutes)
             cadenceLogSteps = 0
         }
         
@@ -62,7 +60,7 @@ class CadenceMetrics {
         let newCadenceData = CadenceData()
         newCadenceData.averageCadence = averageCadence
         
-        let remainingTime = runTime % cadenceLogTime
+        let remainingTime = runTime % CadenceParameters.cadenceLogTime
         if remainingTime != 0 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data
         
         for data in cadenceLog {

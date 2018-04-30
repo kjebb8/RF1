@@ -10,14 +10,13 @@ import UIKit
 import RealmSwift
 
 class HistoryTableViewController: UITableViewController {
-
-    let realm = try! Realm()
     
     var runLog: Results<RunLogEntry>?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loadRunLog()
         tableView.register(UINib(nibName: "RunLogCell", bundle: nil), forCellReuseIdentifier: "customRunLogCell")
     }
     
@@ -74,6 +73,8 @@ class HistoryTableViewController: UITableViewController {
     //MARK: - Realm Data Management Methods
     
     func loadRunLog() {
+        
+        let realm = try! Realm()
         runLog = realm.objects(RunLogEntry.self)
         tableView.reloadData()
     }
