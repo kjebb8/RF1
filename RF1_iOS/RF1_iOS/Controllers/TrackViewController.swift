@@ -29,11 +29,12 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
     
-    var stepInLastSecond: Bool = false
+    var stepInLastSecond: Bool = false //If no steps in last second, pause the timer
     
     let date = Date()
     
-    @IBOutlet weak var shortCadenceLabel: UILabel!
+    @IBOutlet weak var recentCadenceTitle: UILabel!
+    @IBOutlet weak var recentCadenceLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
@@ -51,6 +52,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         bleDataManager = BLEDataManager(delegate: self)
         
+        recentCadenceTitle.text = "\(CadenceParameters.recentCadenceTime)s Cadence"
         hintLabel.text = ""
         
         updateUICadenceValues()
@@ -89,7 +91,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
             runTime += 1
             cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
             updateUICadenceValues()
+            
         } else {
+            
             timePausedInRunState = true
             runTimer.invalidate()
             hintLabel.text = "Start Running to Begin!"
@@ -115,14 +119,24 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         if addExitAction {
             
-            let exitSaveAction = UIAlertAction(title: "Exit and Save", style: .default) { (exitSaveAction) in
+            if runTime >= 5 { //Don't save if less than 5 seconds recorded
                 
-                self.saveData()
+                let exitSaveAction = UIAlertAction(title: "Exit and Save", style: .default) { (exitSaveAction) in
+                    
+                    self.saveData()
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+                alert?.addAction(exitSaveAction)
                 
-                self.dismiss(animated: true, completion: nil)
+            } else {
+                
+                let exitAction = UIAlertAction(title: "Exit", style: .default) { (exitSaveAction) in
+                    
+                    self.dismiss(animated: true, completion: nil)
+                }
+                alert?.addAction(exitAction)
             }
-            
-            alert?.addAction(exitSaveAction)
             
             if addReconnectAction {
                 
@@ -132,7 +146,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                 
                 alert?.addAction(reconnectAction)
                 
-            } else {
+            } else { //If not giving the reconnect option, give the continue option
                 
                 let continueAction = UIAlertAction(title: "Continue Tracking", style: .cancel) { (continueAction) in
                     
@@ -144,7 +158,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                 alert?.addAction(continueAction)
             }
             
-        } else {
+        } else { //If not giving exit option, then the only option will be Ok option
             
             if localBLEState != .scanning { //If scanning, don't want to be able to dismiss the alert
                 
@@ -180,7 +194,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         let cadenceStringValues = cadenceMetrics.getCadenceStringValues()
         
-        shortCadenceLabel.text = cadenceStringValues.shortCadenceString
+        recentCadenceLabel.text = cadenceStringValues.recentCadenceString
         avgCadenceLabel.text = cadenceStringValues.averageCadenceString
         stepsLabel.text = cadenceStringValues.stepsString
         
@@ -259,7 +273,14 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         if returnValue == .didTakeStep {
     
             stepInLastSecond = true
-            if timePausedInRunState {setRunState(); timePausedInRunState = false ; hintLabel.text = ""}
+            
+            if timePausedInRunState {
+                
+                timePausedInRunState = false
+                initializeTimer()
+                hintLabel.text = ""
+            }
+            
             cadenceMetrics.incrementSteps()
             updateUICadenceValues()
         }
@@ -270,7 +291,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     
     @IBAction func exitButtonPressed(_ sender: UIButton) {
         
-        if inRunState {runTimer.invalidate(); bleManager.turnOffNotifications()} //To preserve the state if user continues
+        if inRunState {runTimer.invalidate(); bleManager.turnOffNotifications()} //To preserve the state if user continues but stop updates while alert is up
         showAlert(title: "Stop Tracking?", message: "Your data will be lost", addExitAction: true)
     }
     
@@ -283,7 +304,6 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
             setRunState()
         }
     }
-    
     
     
     //MARK: - Saving Date Functions

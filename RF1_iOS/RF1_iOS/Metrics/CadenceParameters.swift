@@ -10,6 +10,6 @@ import Foundation
 
 struct CadenceParameters {
     
-    static let recentCadenceTime: Int = 20 //Seconds used for findhing most recent cadence measurement
+    static let recentCadenceTime: Int = 20 //Seconds used for finding most recent cadence measurement
     static let cadenceLogTime: Int = 20 //Seconds between data points for historical data
 }

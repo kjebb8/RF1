@@ -7,13 +7,17 @@
 //
 
 import UIKit
+import Charts
 
 class CustomRunLogCell: UITableViewCell {
     
     @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet weak var cadenceLabel: UILabel!
     
+    @IBOutlet weak var chartView: LineChartView!
+
     override func awakeFromNib() {
         super.awakeFromNib()
     }

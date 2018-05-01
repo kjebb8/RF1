@@ -10,14 +10,14 @@ import Foundation
 
 class CadenceMetrics {
     
-    private var recentCadenceSteps: [Int] = [0] //Holds most recent 20s worth of step data
-    private var recentCadence: Double = 0 //Cadence for the most recent 20 seconds
+    private var recentCadenceSteps: [Int] = [0] //Holds most recent step data within time given by cadence parameters
+    private var recentCadence: Double = 0 //Cadence for the most recent step data
     
     private var totalSteps: Int = 0
     private var averageCadence: Double = 0 //Cadence for entire run
     
-    private var cadenceLogSteps: Int = 0 //Counts the steps in the current 5s interval
-    private var cadenceLog = [Double]() //Each entry has cadence for 5s intervals
+    private var cadenceLogSteps: Int = 0 //Counts the steps in the current log interval time
+    private var cadenceLog = [Double]() //Each entry has cadence for a given interval time period
     
     
     //MARK: - Public Access Methods
@@ -38,7 +38,7 @@ class CadenceMetrics {
         recentCadenceSteps.append(0)
         
         if recentCadenceSteps.count > CadenceParameters.recentCadenceTime {
-            recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only 20s of data is collected
+            recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only a certian time period is included
         }
         
         if currentTime % CadenceParameters.cadenceLogTime == 0 {
@@ -61,7 +61,7 @@ class CadenceMetrics {
         newCadenceData.averageCadence = averageCadence
         
         let remainingTime = runTime % CadenceParameters.cadenceLogTime
-        if remainingTime != 0 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data
+        if remainingTime >= 5 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data if longer than 5 seconds (for accuracy)
         
         for data in cadenceLog {
             
@@ -81,14 +81,14 @@ class CadenceMetrics {
 
 class CadenceStringValues {
     
-    var shortCadenceString: String
+    var recentCadenceString: String
     var averageCadenceString: String
     var stepsString: String
     
-    init(_ shortCadence: Double, _ averageCadence: Double, _ steps: Int) {
+    init(_ recentCadence: Double, _ averageCadence: Double, _ steps: Int) {
         
-        shortCadenceString = String((Int(shortCadence.rounded())))
-        averageCadenceString = String(Int(averageCadence.rounded()))
+        recentCadenceString = recentCadence.roundedIntString
+        averageCadenceString = averageCadence.roundedIntString
         stepsString = String(steps)
     }
     

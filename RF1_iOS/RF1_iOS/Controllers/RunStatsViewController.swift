@@ -30,12 +30,13 @@ class RunStatsViewController: UIViewController {
     
     func showCadenceInfo() {
         
-        avgCadenceLabel.text = "Avg. Cadence: " + String((Int(selectedRun!.cadenceData!.averageCadence.rounded()))) + " steps/min"
+        avgCadenceLabel.text = "Avg. Cadence: " + selectedRun!.cadenceData!.averageCadence.roundedIntString + " steps/min"
         
         if let cadenceLog = selectedRun?.cadenceData?.cadenceLog {
         
             var cadenceDataEntries = [ChartDataEntry]()
-        
+            cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue))
+            
             for i in 0..<cadenceLog.count {
                 
                 let cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
@@ -72,7 +73,14 @@ class RunStatsViewController: UIViewController {
         chartView.rightAxis.labelTextColor = .white
         chartView.legend.textColor = .white
         
-        chartView.animate(xAxisDuration: 1.5)
+        var animateTime: Double = 0
+        
+        if chartDataEntries.count >= 30 && chartDataEntries.count < 90 {
+            animateTime = Double(chartDataEntries.count) / 90 * 1.5 //0.5s for 10 mins to 1.5s for 30 mins (assuming data every 20 seconds)
+        } else if chartDataEntries.count >= 90 {
+            animateTime = 1.5 //1.5s if longer than 30 mins (assuming data every 20 seconds)
+        }
+        chartView.animate(xAxisDuration: animateTime)
         
         let chartData = LineChartData(dataSet: chartDataSet)
         chartView.data = chartData

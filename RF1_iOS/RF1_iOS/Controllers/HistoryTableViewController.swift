@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import Charts
 
 class HistoryTableViewController: UITableViewController {
     
@@ -18,6 +19,7 @@ class HistoryTableViewController: UITableViewController {
         
         loadRunLog()
         tableView.register(UINib(nibName: "RunLogCell", bundle: nil), forCellReuseIdentifier: "customRunLogCell")
+        tableView.rowHeight = 130
     }
     
     
@@ -45,11 +47,53 @@ class HistoryTableViewController: UITableViewController {
         
          if let runEntry = runLog?[indexPath.row] {
             
-            cell.dateLabel.text = "Date: " + runEntry.date
-            cell.startTimeLabel.text = "Start Time: " + runEntry.startTime
-            cell.durationLabel.text = "Duration: " + runEntry.runDuration
-            cell.layer.borderWidth = 1.0
-            cell.layer.borderColor = UIColor.white.cgColor
+            cell.dateLabel.text = runEntry.date
+            cell.durationLabel.text = runEntry.runDuration
+            cell.timeLabel.text = runEntry.startTime
+            cell.cadenceLabel.text = runEntry.cadenceData!.averageCadence.roundedIntString
+            cell.layer.borderWidth = 5
+            cell.layer.borderColor = UIColor.black.cgColor
+            
+            
+            if let cadenceLog = runEntry.cadenceData?.cadenceLog {
+                
+                var cadenceDataEntries = [ChartDataEntry]()
+                cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue))
+                
+                for i in 0..<cadenceLog.count {
+                    
+                    let cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+                    cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
+                }
+                
+                let chartDataSet = LineChartDataSet(values: cadenceDataEntries, label: "Cadence (steps/min)")
+                
+                chartDataSet.setColor(UIColor.cyan) //Colour of line
+                chartDataSet.lineWidth = 1
+                chartDataSet.drawValuesEnabled = false //Doesn't come up if too many points
+                chartDataSet.drawCirclesEnabled = false
+                chartDataSet.mode = .cubicBezier //Makes curves smooth
+                
+                let gradientColors = [ChartColorTemplates.colorFromString("#005454").cgColor,
+                                      UIColor.cyan.cgColor]
+                
+                let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
+                chartDataSet.fillAlpha = 0.8
+                chartDataSet.fill = Fill(linearGradient: gradient, angle: 90)
+                chartDataSet.drawFilledEnabled = true //Fill under the curve
+                
+                cell.chartView.chartDescription = nil //Label in bottom right corner
+                cell.chartView.xAxis.drawLabelsEnabled = false
+                cell.chartView.leftAxis.drawLabelsEnabled = false
+                cell.chartView.rightAxis.drawLabelsEnabled = false
+                cell.chartView.legend.enabled = false
+                
+                let chartData = LineChartData(dataSet: chartDataSet)
+                cell.chartView.data = chartData
+            }
+            
+            
+            
         }
         
         return cell

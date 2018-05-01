@@ -35,24 +35,13 @@
         <scene sceneID="LZo-Dq-s0B">
             <objects>
                 <tableViewController id="3NU-Uc-wPq" customClass="HistoryTableViewController" customModule="RF1_iOS" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IaB-1p-ggK">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="IaB-1p-ggK">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="separatorColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <color key="sectionIndexColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFit" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="runCell" id="w9H-rj-czv">
-                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="w9H-rj-czv" id="kii-4q-Fys">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </tableViewCellContentView>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableViewCell>
-                        </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="3NU-Uc-wPq" id="0Tb-TJ-pIn"/>
                             <outlet property="delegate" destination="3NU-Uc-wPq" id="mTM-26-0Ce"/>
@@ -78,12 +67,12 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Avg. Cadence = 999 steps/min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="ucf-Ra-U3H" userLabel="AvgCadenceLabel">
                                 <rect key="frame" x="20" y="84" width="335" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GGO-sg-Pw9" customClass="LineChartView" customModule="Charts">
                                 <rect key="frame" x="20" y="144" width="335" height="454"/>
-                                <color key="backgroundColor" red="0.38823529411764707" green="0.38431372549019605" blue="0.38431372549019605" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -206,7 +195,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fwv-CE-q5l" userLabel="20s Cadence Label Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fwv-CE-q5l" userLabel="Recent Cadence Label Container">
                                 <rect key="frame" x="0.0" y="40" width="375" height="45"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20s Cadence" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="19" translatesAutoresizingMaskIntoConstraints="NO" id="DXj-lB-gtl">
@@ -222,10 +211,10 @@
                                     <constraint firstItem="DXj-lB-gtl" firstAttribute="top" secondItem="fwv-CE-q5l" secondAttribute="top" constant="5" id="x7a-cB-uFo"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQu-Jd-4An" userLabel="20s Cadence Value Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQu-Jd-4An" userLabel="Recent Cadence Value Container">
                                 <rect key="frame" x="0.0" y="85" width="375" height="112"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="80" translatesAutoresizingMaskIntoConstraints="NO" id="t6x-0S-HF0" userLabel="20s Cadence Value">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="80" translatesAutoresizingMaskIntoConstraints="NO" id="t6x-0S-HF0" userLabel="Recent Cadence Value">
                                         <rect key="frame" x="70.5" y="-25" width="234" height="142"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="140"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -445,7 +434,8 @@
                         <outlet property="dataLabel" destination="rrX-Ew-hHH" id="mec-K9-n5r"/>
                         <outlet property="hintLabel" destination="GwP-oN-DZj" id="0N4-Qz-J0y"/>
                         <outlet property="pauseButton" destination="T0n-6F-fpw" id="tzJ-fs-xOM"/>
-                        <outlet property="shortCadenceLabel" destination="t6x-0S-HF0" id="KyQ-8z-iNO"/>
+                        <outlet property="recentCadenceLabel" destination="t6x-0S-HF0" id="V2o-cf-I19"/>
+                        <outlet property="recentCadenceTitle" destination="DXj-lB-gtl" id="jMS-3t-dxk"/>
                         <outlet property="stepsLabel" destination="vkm-LL-KNS" id="Dve-42-6hv"/>
                         <outlet property="timeLabel" destination="afN-mH-Lu7" id="Yg9-Sk-OzF"/>
                     </connections>
