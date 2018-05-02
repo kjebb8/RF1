@@ -14,6 +14,8 @@ class HistoryTableViewController: UITableViewController {
     
     var runLog: Results<RunLogEntry>?
     
+    //var chartsManager = ChartsManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,46 +56,17 @@ class HistoryTableViewController: UITableViewController {
             cell.layer.borderWidth = 5
             cell.layer.borderColor = UIColor.black.cgColor
             
-            
-            if let cadenceLog = runEntry.cadenceData?.cadenceLog {
+            if let runCadenceData = runEntry.cadenceData {
                 
-                var cadenceDataEntries = [ChartDataEntry]()
-                cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue))
-                
-                for i in 0..<cadenceLog.count {
-                    
-                    let cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
-                    cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
-                }
-                
-                let chartDataSet = LineChartDataSet(values: cadenceDataEntries, label: "Cadence (steps/min)")
-                
-                chartDataSet.setColor(UIColor.cyan) //Colour of line
-                chartDataSet.lineWidth = 1
-                chartDataSet.drawValuesEnabled = false //Doesn't come up if too many points
-                chartDataSet.drawCirclesEnabled = false
-                chartDataSet.mode = .cubicBezier //Makes curves smooth
-                
-                let gradientColors = [ChartColorTemplates.colorFromString("#005454").cgColor,
-                                      UIColor.cyan.cgColor]
-                
-                let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
-                chartDataSet.fillAlpha = 0.8
-                chartDataSet.fill = Fill(linearGradient: gradient, angle: 90)
-                chartDataSet.drawFilledEnabled = true //Fill under the curve
+                let cadenceChartData = getFormattedCadenceChartData(forCadenceData: runCadenceData)
                 
                 cell.chartView.chartDescription = nil //Label in bottom right corner
                 cell.chartView.xAxis.drawLabelsEnabled = false
                 cell.chartView.leftAxis.drawLabelsEnabled = false
                 cell.chartView.rightAxis.drawLabelsEnabled = false
                 cell.chartView.legend.enabled = false
-                
-                let chartData = LineChartData(dataSet: chartDataSet)
-                cell.chartView.data = chartData
+                cell.chartView.data = cadenceChartData
             }
-            
-            
-            
         }
         
         return cell
@@ -106,6 +79,7 @@ class HistoryTableViewController: UITableViewController {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         let destinationVC = segue.destination as! RunStatsViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {

@@ -18,8 +18,8 @@ class RunStatsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        showCadenceInfo()
+    
+        displayUICadenceInfo()
     }
 
     override func didReceiveMemoryWarning() {
@@ -28,43 +28,19 @@ class RunStatsViewController: UIViewController {
     }
     
     
-    func showCadenceInfo() {
+    func displayUICadenceInfo() {
         
-        avgCadenceLabel.text = "Avg. Cadence: " + selectedRun!.cadenceData!.averageCadence.roundedIntString + " steps/min"
-        
-        if let cadenceLog = selectedRun?.cadenceData?.cadenceLog {
-        
-            var cadenceDataEntries = [ChartDataEntry]()
-            cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue))
+        if let runCadenceData = selectedRun?.cadenceData {
             
-            for i in 0..<cadenceLog.count {
-                
-                let cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
-                cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
-            }
-        
-            setChart(withData: cadenceDataEntries, dataLabel: "Cadence (steps/min)")
+            avgCadenceLabel.text = "Avg. Cadence: " + runCadenceData.averageCadence.roundedIntString + " steps/min"
+            
+            let cadenceChartData = getFormattedCadenceChartData(forCadenceData: runCadenceData)
+            customizeChartView(forChartData: cadenceChartData)
         }
     }
 
     
-    func setChart(withData chartDataEntries: [ChartDataEntry], dataLabel: String) {
-        
-        let chartDataSet = LineChartDataSet(values: chartDataEntries, label: dataLabel)
-        
-        chartDataSet.setColor(UIColor.cyan) //Colour of line
-        chartDataSet.lineWidth = 1
-        chartDataSet.drawValuesEnabled = false //Doesn't come up if too many points
-        chartDataSet.drawCirclesEnabled = false
-        chartDataSet.mode = .cubicBezier //Makes curves smooth
-        
-        let gradientColors = [ChartColorTemplates.colorFromString("#005454").cgColor,
-                              UIColor.cyan.cgColor]
-        
-        let gradient = CGGradient(colorsSpace: nil, colors: gradientColors as CFArray, locations: nil)!
-        chartDataSet.fillAlpha = 0.8
-        chartDataSet.fill = Fill(linearGradient: gradient, angle: 90)
-        chartDataSet.drawFilledEnabled = true //Fill under the curve
+    func customizeChartView(forChartData chartData: LineChartData) {
         
         chartView.chartDescription = nil //Label in bottom right corner
         chartView.xAxis.labelPosition = .bottom
@@ -75,14 +51,16 @@ class RunStatsViewController: UIViewController {
         
         var animateTime: Double = 0
         
-        if chartDataEntries.count >= 30 && chartDataEntries.count < 90 {
-            animateTime = Double(chartDataEntries.count) / 90 * 1.5 //0.5s for 10 mins to 1.5s for 30 mins (assuming data every 20 seconds)
-        } else if chartDataEntries.count >= 90 {
+        let numDataPoints = chartData.entryCount
+        print(numDataPoints)
+        
+        if numDataPoints >= 30 && numDataPoints < 90 {
+            animateTime = Double(numDataPoints) / 90 * 1.5 //0.5s for 10 mins to 1.5s for 30 mins (assuming data every 20 seconds)
+        } else if numDataPoints >= 90 {
             animateTime = 1.5 //1.5s if longer than 30 mins (assuming data every 20 seconds)
         }
-        chartView.animate(xAxisDuration: animateTime)
         
-        let chartData = LineChartData(dataSet: chartDataSet)
+        chartView.animate(xAxisDuration: animateTime)
         chartView.data = chartData
         
         let avgCadenceLine = ChartLimitLine(limit: (selectedRun?.cadenceData?.averageCadence)! , label: "Avg. Cadence")

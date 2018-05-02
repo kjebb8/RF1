@@ -22,7 +22,7 @@
                         <rect key="frame" x="250" y="0.0" width="125" height="155.5"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap For Stats" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6qn-lh-Ddt">
-                                <rect key="frame" x="8" y="129.5" width="109" height="18"/>
+                                <rect key="frame" x="0.0" y="129.5" width="117" height="18"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="18" id="435-Nv-viK"/>
                                 </constraints>
@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2WO-9T-YIQ" customClass="LineChartView" customModule="Charts">
-                                <rect key="frame" x="8" y="8" width="109" height="117"/>
+                                <rect key="frame" x="0.0" y="8" width="117" height="117"/>
                                 <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                         </subviews>
@@ -40,8 +40,8 @@
                             <constraint firstItem="6qn-lh-Ddt" firstAttribute="top" secondItem="2WO-9T-YIQ" secondAttribute="bottom" constant="4.5" id="Joy-LC-wiC"/>
                             <constraint firstAttribute="trailing" secondItem="2WO-9T-YIQ" secondAttribute="trailing" constant="8" id="VFB-0W-S9D"/>
                             <constraint firstItem="2WO-9T-YIQ" firstAttribute="top" secondItem="rtj-YS-hzw" secondAttribute="top" constant="8" id="crK-ep-J7o"/>
-                            <constraint firstItem="2WO-9T-YIQ" firstAttribute="leading" secondItem="rtj-YS-hzw" secondAttribute="leading" constant="8" id="d3u-DG-p5A"/>
-                            <constraint firstItem="6qn-lh-Ddt" firstAttribute="leading" secondItem="rtj-YS-hzw" secondAttribute="leading" constant="8" id="qQm-dq-oiE"/>
+                            <constraint firstItem="2WO-9T-YIQ" firstAttribute="leading" secondItem="rtj-YS-hzw" secondAttribute="leading" id="d3u-DG-p5A"/>
+                            <constraint firstItem="6qn-lh-Ddt" firstAttribute="leading" secondItem="rtj-YS-hzw" secondAttribute="leading" id="qQm-dq-oiE"/>
                             <constraint firstAttribute="bottom" secondItem="6qn-lh-Ddt" secondAttribute="bottom" constant="8" id="xEE-pg-MM4"/>
                         </constraints>
                     </view>

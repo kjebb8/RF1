@@ -127,6 +127,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                     
                     self.dismiss(animated: true, completion: nil)
                 }
+                
                 alert?.addAction(exitSaveAction)
                 
             } else {
@@ -135,6 +136,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                     
                     self.dismiss(animated: true, completion: nil)
                 }
+                
                 alert?.addAction(exitAction)
             }
             
@@ -321,10 +323,13 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         newRunLogEntry.cadenceData = newCadenceData
         
         do {
+            
             let realm = try! Realm()
+            
             try realm.write {
                 realm.add(newRunLogEntry)
             }
+            
         } catch {
             print("Error saving context \(error)")
         }

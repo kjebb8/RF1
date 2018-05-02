@@ -23,8 +23,8 @@
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
 		C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */; };
 		C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */; };
-		C09E8027207457310089BD3A /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09E8026207457310089BD3A /* AlertManager.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
+		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
 		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
 		C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590D208A5A49001CAF23 /* CadenceData.swift */; };
 		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
@@ -53,8 +53,8 @@
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
 		C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatsViewController.swift; sourceTree = "<group>"; };
-		C09E8026207457310089BD3A /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
+		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
 		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
 		C0EC590D208A5A49001CAF23 /* CadenceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceData.swift; sourceTree = "<group>"; };
 		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
@@ -114,6 +114,7 @@
 			children = (
 				C01FBB92205D6C1700B250E6 /* Extensions */,
 				C0EC590A208A4D40001CAF23 /* Device Info */,
+				C0C24998209A3716000C6B14 /* Public Modules */,
 				C00A81AB205C632F004F4867 /* Realm Models */,
 				C050E3BF2087CECC001B7F5F /* Metrics */,
 				C067BE34206AA84B00CD8D04 /* Mangers */,
@@ -181,7 +182,6 @@
 			children = (
 				C067BE35206AA88300CD8D04 /* BLEManager.swift */,
 				C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */,
-				C09E8026207457310089BD3A /* AlertManager.swift */,
 			);
 			path = Mangers;
 			sourceTree = "<group>";
@@ -193,6 +193,14 @@
 				C069E49320922D1400A00329 /* RunLogCell.xib */,
 			);
 			path = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		C0C24998209A3716000C6B14 /* Public Modules */ = {
+			isa = PBXGroup;
+			children = (
+				C0C24996209A15D6000C6B14 /* ChartsModule.swift */,
+			);
+			path = "Public Modules";
 			sourceTree = "<group>";
 		};
 		C0EC590A208A4D40001CAF23 /* Device Info */ = {
@@ -339,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */,
 				C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */,
 				C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */,
 				C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */,
@@ -356,7 +365,6 @@
 				C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */,
 				C0B25B872085020F00B4189B /* FSRData.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
-				C09E8027207457310089BD3A /* AlertManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
