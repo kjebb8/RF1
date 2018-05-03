@@ -93,7 +93,6 @@ static inline NSString *RLMTypeToString(RLMPropertyType type) {
 @property (nonatomic, copy, nullable) NSString *objectClassName;
 
 // private properties
-@property (nonatomic, readwrite) NSString *columnName;
 @property (nonatomic, assign) NSUInteger index;
 @property (nonatomic, assign) BOOL isPrimary;
 @property (nonatomic, assign) Ivar swiftIvar;

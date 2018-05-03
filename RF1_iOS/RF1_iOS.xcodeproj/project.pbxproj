@@ -12,15 +12,25 @@
 		C005F26E2057174F006A14CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C005F26C2057174F006A14CB /* Main.storyboard */; };
 		C005F2702057174F006A14CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C005F26F2057174F006A14CB /* Assets.xcassets */; };
 		C005F2732057174F006A14CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C005F2712057174F006A14CB /* LaunchScreen.storyboard */; };
-		C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FBB93205D6C3700B250E6 /* TimeFunctionExtensions.swift */; };
+		C00D738420990EE10041AABB /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C00D738320990EE10041AABB /* DoubleExtension.swift */; };
+		C01FBB94205D6C3700B250E6 /* IntExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FBB93205D6C3700B250E6 /* IntExtensions.swift */; };
 		C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = C031BE93206301CC00CEA165 /* PeripheralDevice.swift */; };
-		C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* CadenceViewController.swift */; };
+		C062129C205B2E2C008937C7 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* TrackViewController.swift */; };
 		C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE35206AA88300CD8D04 /* BLEManager.swift */; };
-		C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */; };
+		C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */; };
+		C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */; };
+		C0685A71209B75D90060FC5C /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0685A70209B75D90060FC5C /* BaseTableViewController.swift */; };
+		C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069E49120922C3100A00329 /* CustomRunLogCell.swift */; };
+		C069E49420922D1400A00329 /* RunLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069E49320922D1400A00329 /* RunLogCell.xib */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
-		C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09656F7207580FE00798064 /* CadenceStringValues.swift */; };
-		C09E8027207457310089BD3A /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09E8026207457310089BD3A /* AlertManager.swift */; };
+		C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */; };
+		C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
+		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
+		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
+		C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590D208A5A49001CAF23 /* CadenceData.swift */; };
+		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
+		C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F82C942093847900930934 /* CadenceParameters.swift */; };
 		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -34,15 +44,25 @@
 		C005F26F2057174F006A14CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C005F2722057174F006A14CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C005F2742057174F006A14CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C01FBB93205D6C3700B250E6 /* TimeFunctionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeFunctionExtensions.swift; sourceTree = "<group>"; };
+		C00D738320990EE10041AABB /* DoubleExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
+		C01FBB93205D6C3700B250E6 /* IntExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtensions.swift; sourceTree = "<group>"; };
 		C031BE93206301CC00CEA165 /* PeripheralDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralDevice.swift; sourceTree = "<group>"; };
-		C062129B205B2E2C008937C7 /* CadenceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceViewController.swift; sourceTree = "<group>"; };
+		C062129B205B2E2C008937C7 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
 		C067BE35206AA88300CD8D04 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
-		C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataProcessor.swift; sourceTree = "<group>"; };
+		C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataManager.swift; sourceTree = "<group>"; };
+		C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		C0685A70209B75D90060FC5C /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
+		C069E49120922C3100A00329 /* CustomRunLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRunLogCell.swift; sourceTree = "<group>"; };
+		C069E49320922D1400A00329 /* RunLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RunLogCell.xib; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
-		C09656F7207580FE00798064 /* CadenceStringValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceStringValues.swift; sourceTree = "<group>"; };
-		C09E8026207457310089BD3A /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
+		C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatsViewController.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
+		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
+		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
+		C0EC590D208A5A49001CAF23 /* CadenceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceData.swift; sourceTree = "<group>"; };
+		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
+		C0F82C942093847900930934 /* CadenceParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceParameters.swift; sourceTree = "<group>"; };
 		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -97,7 +117,10 @@
 			isa = PBXGroup;
 			children = (
 				C01FBB92205D6C1700B250E6 /* Extensions */,
-				C00A81AB205C632F004F4867 /* Models */,
+				C0EC590A208A4D40001CAF23 /* Device Info */,
+				C0C24998209A3716000C6B14 /* Public Modules */,
+				C00A81AB205C632F004F4867 /* Realm Models */,
+				C050E3BF2087CECC001B7F5F /* Metrics */,
 				C067BE34206AA84B00CD8D04 /* Mangers */,
 				C00A81AA205C632A004F4867 /* Views */,
 				C00A81A8205C631D004F4867 /* Controllers */,
@@ -113,7 +136,11 @@
 			children = (
 				C005F2682057174F006A14CB /* AppDelegate.swift */,
 				C005F26A2057174F006A14CB /* HomeViewController.swift */,
-				C062129B205B2E2C008937C7 /* CadenceViewController.swift */,
+				C062129B205B2E2C008937C7 /* TrackViewController.swift */,
+				C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */,
+				C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */,
+				C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */,
+				C0685A70209B75D90060FC5C /* BaseTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -122,37 +149,72 @@
 			isa = PBXGroup;
 			children = (
 				C005F26C2057174F006A14CB /* Main.storyboard */,
+				C069E49020922BFF00A00329 /* Custom Cells */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		C00A81AB205C632F004F4867 /* Models */ = {
+		C00A81AB205C632F004F4867 /* Realm Models */ = {
 			isa = PBXGroup;
 			children = (
-				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
-				C067BE37206AAC3700CD8D04 /* BLEDataProcessor.swift */,
 				C0B25B862085020F00B4189B /* FSRData.swift */,
-				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
-				C09656F7207580FE00798064 /* CadenceStringValues.swift */,
+				C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */,
+				C0EC590D208A5A49001CAF23 /* CadenceData.swift */,
+				C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */,
 			);
-			path = Models;
+			path = "Realm Models";
 			sourceTree = "<group>";
 		};
 		C01FBB92205D6C1700B250E6 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C01FBB93205D6C3700B250E6 /* TimeFunctionExtensions.swift */,
+				C01FBB93205D6C3700B250E6 /* IntExtensions.swift */,
+				C00D738320990EE10041AABB /* DoubleExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C050E3BF2087CECC001B7F5F /* Metrics */ = {
+			isa = PBXGroup;
+			children = (
+				C0F82C942093847900930934 /* CadenceParameters.swift */,
+				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
+			);
+			path = Metrics;
 			sourceTree = "<group>";
 		};
 		C067BE34206AA84B00CD8D04 /* Mangers */ = {
 			isa = PBXGroup;
 			children = (
 				C067BE35206AA88300CD8D04 /* BLEManager.swift */,
-				C09E8026207457310089BD3A /* AlertManager.swift */,
+				C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */,
 			);
 			path = Mangers;
+			sourceTree = "<group>";
+		};
+		C069E49020922BFF00A00329 /* Custom Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C069E49120922C3100A00329 /* CustomRunLogCell.swift */,
+				C069E49320922D1400A00329 /* RunLogCell.xib */,
+			);
+			path = "Custom Cells";
+			sourceTree = "<group>";
+		};
+		C0C24998209A3716000C6B14 /* Public Modules */ = {
+			isa = PBXGroup;
+			children = (
+				C0C24996209A15D6000C6B14 /* ChartsModule.swift */,
+			);
+			path = "Public Modules";
+			sourceTree = "<group>";
+		};
+		C0EC590A208A4D40001CAF23 /* Device Info */ = {
+			isa = PBXGroup;
+			children = (
+				C031BE93206301CC00CEA165 /* PeripheralDevice.swift */,
+			);
+			path = "Device Info";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,6 +281,7 @@
 			files = (
 				C005F2732057174F006A14CB /* LaunchScreen.storyboard in Resources */,
 				C005F2702057174F006A14CB /* Assets.xcassets in Resources */,
+				C069E49420922D1400A00329 /* RunLogCell.xib in Resources */,
 				C005F26E2057174F006A14CB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -266,11 +329,15 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-RF1_iOS/Pods-RF1_iOS-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Charts/Charts.framework",
+				"${BUILT_PRODUCTS_DIR}/ChartsRealm/ChartsRealm.framework",
 				"${BUILT_PRODUCTS_DIR}/Realm/Realm.framework",
 				"${BUILT_PRODUCTS_DIR}/RealmSwift/RealmSwift.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Charts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChartsRealm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RealmSwift.framework",
 			);
@@ -286,17 +353,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */,
 				C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */,
+				C0685A71209B75D90060FC5C /* BaseTableViewController.swift in Sources */,
 				C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */,
+				C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */,
+				C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */,
+				C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */,
+				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
+				C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */,
+				C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */,
+				C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */,
 				C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */,
-				C062129C205B2E2C008937C7 /* CadenceViewController.swift in Sources */,
-				C01FBB94205D6C3700B250E6 /* TimeFunctionExtensions.swift in Sources */,
+				C062129C205B2E2C008937C7 /* TrackViewController.swift in Sources */,
+				C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */,
+				C01FBB94205D6C3700B250E6 /* IntExtensions.swift in Sources */,
+				C00D738420990EE10041AABB /* DoubleExtension.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
-				C067BE38206AAC3700CD8D04 /* BLEDataProcessor.swift in Sources */,
-				C09656F8207580FE00798064 /* CadenceStringValues.swift in Sources */,
+				C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */,
 				C0B25B872085020F00B4189B /* FSRData.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,
-				C09E8027207457310089BD3A /* AlertManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

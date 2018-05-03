@@ -44,7 +44,7 @@ namespace sync {
 // protocol-breaking change!
 #define REALM_FOR_EACH_INSTRUCTION_TYPE(X) \
     X(SelectTable) \
-    X(SelectField) \
+    X(SelectContainer) \
     X(AddTable) \
     X(EraseTable) \
     X(CreateObject) \
@@ -56,21 +56,14 @@ namespace sync {
     X(ClearTable) \
     X(AddColumn) \
     X(EraseColumn) \
-    X(ArraySet) \
-    X(ArrayInsert) \
-    X(ArrayMove) \
-    X(ArraySwap) \
-    X(ArrayErase) \
-    X(ArrayClear) \
+    X(ContainerSet) \
+    X(ContainerInsert) \
+    X(ContainerMove) \
+    X(ContainerSwap) \
+    X(ContainerErase) \
+    X(ContainerClear) \
 
-
-enum class ContainerType {
-    None = 0,
-    Reserved0 = 1,
-    Array = 2,
-    Set = 3,
-    Dictionary = 4,
-};
+enum class ContainerType { none=0, links=1, array=2, dict=3 };
 
 struct Instruction {
     // Base classes for instructions with common fields. They enable the merge
@@ -103,9 +96,9 @@ struct Instruction {
     Type type;
 
     template <class F>
-    auto visit(F&& lambda);
+    void visit(F&& lambda);
     template <class F>
-    auto visit(F&& lambda) const;
+    void visit(F&& lambda) const;
 
     template <class T> T& get_as()
     {
@@ -208,7 +201,7 @@ struct Instruction::SelectTable {
     InternString table;
 };
 
-struct Instruction::SelectField
+struct Instruction::SelectContainer
     : Instruction::FieldInstructionBase
 {
     InternString link_target_table;
@@ -267,13 +260,13 @@ struct Instruction::EraseSubstring
 struct Instruction::ClearTable {
 };
 
-struct Instruction::ArraySet {
+struct Instruction::ContainerSet {
     Instruction::Payload payload;
     uint32_t ndx;
     uint32_t prior_size;
 };
 
-struct Instruction::ArrayInsert {
+struct Instruction::ContainerInsert {
     // payload carries the value in case of LinkList
     // payload is empty in case of Array, Dict or any other container type
     Instruction::Payload payload;
@@ -281,26 +274,25 @@ struct Instruction::ArrayInsert {
     uint32_t prior_size;
 };
 
-struct Instruction::ArrayMove {
+struct Instruction::ContainerMove {
     uint32_t ndx_1;
     uint32_t ndx_2;
 };
 
-struct Instruction::ArrayErase {
+struct Instruction::ContainerErase {
     uint32_t ndx;
     uint32_t prior_size;
     bool implicit_nullify;
 };
 
-struct Instruction::ArraySwap {
+struct Instruction::ContainerSwap {
     uint32_t ndx_1;
     uint32_t ndx_2;
 };
 
-struct Instruction::ArrayClear {
+struct Instruction::ContainerClear {
     uint32_t prior_size;
 };
-
 
 // If container_type != ContainerType::none, creates a subtable:
 // +---+---+-------+
@@ -373,7 +365,7 @@ Instruction::Instruction(T instr): type(GetInstructionType<T>::value)
 }
 
 template <class F>
-auto Instruction::visit(F&& lambda)
+void Instruction::visit(F&& lambda)
 {
     switch (type) {
 #define REALM_VISIT_INSTRUCTION(X) \
@@ -385,9 +377,9 @@ auto Instruction::visit(F&& lambda)
 }
 
 template <class F>
-auto Instruction::visit(F&& lambda) const
+void Instruction::visit(F&& lambda) const
 {
-    return const_cast<Instruction*>(this)->visit(std::forward<F>(lambda));
+    const_cast<Instruction*>(this)->visit(std::forward<F>(lambda));
 }
 
 std::ostream& operator<<(std::ostream&, Instruction::Type);

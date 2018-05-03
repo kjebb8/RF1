@@ -64,7 +64,6 @@ public:
     void create_object_with_primary_key(const Table*, ObjectID, StringData);
     void create_object_with_primary_key(const Table*, ObjectID, int_fast64_t);
     void create_object_with_primary_key(const Table*, ObjectID, realm::util::None);
-    void prepare_erase_table(StringData table_name);
     //@}
 
     // TrivialReplication interface:
@@ -134,14 +133,13 @@ private:
     };
 
     // FIXME: The base class already caches this.
-    ConstTableRef m_selected_table;
+    const Table* m_selected_table = nullptr;
     TableBehavior m_selected_table_behavior; // cache
-    ConstLinkViewRef m_selected_link_list = nullptr;
+    const LinkView* m_selected_link_list = nullptr;
 
     // Consistency checks:
     std::string m_table_being_created;
     std::string m_table_being_created_primary_key;
-    std::string m_table_being_erased;
     util::Optional<ObjectID> m_object_being_created;
 
     void unsupported_instruction(); // Throws TransformError
@@ -187,8 +185,7 @@ public:
         bridge.set_short_circuit(true);
     }
 
-    ~TempShortCircuitReplication()
-    {
+    ~TempShortCircuitReplication() {
         m_bridge.set_short_circuit(m_was_short_circuited);
     }
 private:

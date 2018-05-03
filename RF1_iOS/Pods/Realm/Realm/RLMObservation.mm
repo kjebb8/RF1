@@ -280,7 +280,7 @@ void RLMClearTable(RLMClassInfo &objectSchema) {
     }
 
     RLMTrackDeletions(objectSchema.realm, ^{
-        Results(objectSchema.realm->_realm, *objectSchema.table()).clear();
+        objectSchema.table()->clear();
 
         for (auto info : objectSchema.observedObjects) {
             info->prepareForInvalidation();

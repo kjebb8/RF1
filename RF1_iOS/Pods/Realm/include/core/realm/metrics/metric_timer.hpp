@@ -37,7 +37,7 @@ public:
     MetricTimerResult();
     ~MetricTimerResult();
     double get_elapsed_seconds() const;
-    void report_seconds(double time);
+    virtual void report_seconds(double time);
 protected:
     double m_elapsed_seconds;
 };

@@ -22,6 +22,7 @@ enum BLEEvent {
     case failedToConnect
     case disconnected
     case bleTurnedOff
+    case bleTurnedOn
 }
 
 
@@ -105,7 +106,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     
-    func getNotifications() {
+    func turnOnNotifications() {
         
         if let characteristic = fsrCharacteristic {
             fsrPeripheral?.setNotifyValue(true, for: characteristic)
@@ -135,7 +136,8 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             
         } else if central.state == .poweredOn {
             
-            startScan()
+            delegateVC?.updateForBLEEvent(.bleTurnedOn)
+            return
             
         } else {
             
@@ -158,7 +160,6 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
             
             if peripheralName == PeripheralDevice.deviceName {
                 
-                scanTimer.invalidate()
                 centralManager.stopScan()
                 
                 fsrPeripheral = peripheral
@@ -174,6 +175,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         _ central: CBCentralManager,
         didConnect peripheral: CBPeripheral) {
         
+        scanTimer.invalidate()
         peripheral.discoverServices([PeripheralDevice.fsrServiceUUID])
     }
     
@@ -183,6 +185,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         didFailToConnect peripheral: CBPeripheral,
         error: Error?) {
         
+        scanTimer.invalidate()
         fsrPeripheral = nil
         bleState = .notConnected
         delegateVC?.updateUIForBLEState(bleState)

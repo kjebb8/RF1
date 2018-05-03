@@ -199,11 +199,8 @@ RLMLinkingObjects *getLinkingObjects(__unsafe_unretained RLMObjectBase *const ob
                                      __unsafe_unretained RLMProperty *const property) {
     RLMVerifyAttached(obj);
     auto& objectInfo = obj->_realm->_info[property.objectClassName];
-    auto& linkOrigin = obj->_info->objectSchema->computed_properties[property.index].link_origin_property_name;
-    auto linkingProperty = objectInfo.objectSchema->property_for_name(linkOrigin);
-    auto backlinkView = obj->_row.get_table()->get_backlink_view(obj->_row.get_index(),
-                                                                 objectInfo.table(),
-                                                                 linkingProperty->table_column);
+    auto linkingProperty = objectInfo.objectSchema->property_for_name(property.linkOriginPropertyName.UTF8String);
+    auto backlinkView = obj->_row.get_table()->get_backlink_view(obj->_row.get_index(), objectInfo.table(), linkingProperty->table_column);
     realm::Results results(obj->_realm->_realm, std::move(backlinkView));
     return [RLMLinkingObjects resultsWithObjectInfo:objectInfo results:std::move(results)];
 }
@@ -549,7 +546,7 @@ void RLMDynamicSet(__unsafe_unretained RLMObjectBase *const obj,
     realm::Object o(obj->_info->realm->_realm, *obj->_info->objectSchema, obj->_row);
     RLMAccessorContext c(obj);
     translateError([&] {
-        o.set_property_value(c, prop.columnName.UTF8String, val ?: NSNull.null, false);
+        o.set_property_value(c, prop.name.UTF8String, val ?: NSNull.null, false);
     });
 }
 
@@ -557,7 +554,7 @@ id RLMDynamicGet(__unsafe_unretained RLMObjectBase *const obj, __unsafe_unretain
     realm::Object o(obj->_realm->_realm, *obj->_info->objectSchema, obj->_row);
     RLMAccessorContext c(obj);
     c.currentProperty = prop;
-    return RLMCoerceToNil(o.get_property_value<id>(c, prop.columnName.UTF8String));
+    return RLMCoerceToNil(o.get_property_value<id>(c, prop.name.UTF8String));
 }
 
 id RLMDynamicGetByName(__unsafe_unretained RLMObjectBase *const obj,
@@ -757,7 +754,7 @@ realm::RowExpr RLMAccessorContext::unbox(__unsafe_unretained id const v, bool cr
 void RLMAccessorContext::will_change(realm::Row const& row, realm::Property const& prop) {
     _observationInfo = RLMGetObservationInfo(nullptr, row.get_index(), _info);
     if (_observationInfo) {
-        _kvoPropertyName = _info.propertyForTableColumn(prop.table_column).name;
+        _kvoPropertyName = @(prop.name.c_str());
         _observationInfo->willChange(_kvoPropertyName);
     }
 }

@@ -7,5 +7,7 @@ target 'RF1_iOS' do
 
   # Pods for RF1_iOS
 pod 'RealmSwift'
+pod 'Charts'
+pod 'ChartsRealm'
 
 end

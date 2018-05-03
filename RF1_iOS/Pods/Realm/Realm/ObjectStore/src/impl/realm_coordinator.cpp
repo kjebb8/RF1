@@ -28,7 +28,6 @@
 #include "schema.hpp"
 
 #if REALM_ENABLE_SYNC
-#include "sync/impl/work_queue.hpp"
 #include "sync/sync_config.hpp"
 #include "sync/sync_manager.hpp"
 #include "sync/sync_session.hpp"
@@ -233,7 +232,7 @@ std::shared_ptr<Realm> RealmCoordinator::get_realm(Realm::Config config)
                 throw RealmFileException(RealmFileException::Kind::AccessError, get_path(), ex.code().message(), "");
             }
         }
-        m_weak_realm_notifiers.emplace_back(realm, realm->config().cache);
+        m_weak_realm_notifiers.emplace_back(realm, m_config.cache);
     }
 
     if (realm->config().sync_config)
@@ -299,12 +298,7 @@ void RealmCoordinator::advance_schema_cache(uint64_t previous, uint64_t next)
     m_schema_transaction_version_max = std::max(next, m_schema_transaction_version_max);
 }
 
-RealmCoordinator::RealmCoordinator()
-#if REALM_ENABLE_SYNC
-: m_partial_sync_work_queue(std::make_unique<partial_sync::WorkQueue>())
-#endif
-{
-}
+RealmCoordinator::RealmCoordinator() = default;
 
 RealmCoordinator::~RealmCoordinator()
 {
@@ -795,12 +789,8 @@ void RealmCoordinator::advance_to_ready(Realm& realm)
             // While there is a newer version, notifications are for the current
             // version so just deliver them without advancing
             if (*version == current_version) {
-                if (realm.m_binding_context)
-                    realm.m_binding_context->will_send_notifications();
                 notifiers.deliver(*sg);
                 notifiers.after_advance();
-                if (realm.m_binding_context)
-                    realm.m_binding_context->did_send_notifications();
                 return;
             }
         }
@@ -864,22 +854,15 @@ void RealmCoordinator::process_available_async(Realm& realm)
     if (notifiers.empty())
         return;
 
-    if (realm.m_binding_context)
-        realm.m_binding_context->will_send_notifications();
-
     if (auto error = m_async_error) {
         lock.unlock();
         for (auto& notifier : notifiers)
             notifier->deliver_error(m_async_error);
-        if (realm.m_binding_context)
-            realm.m_binding_context->did_send_notifications();
         return;
     }
 
     bool in_read = realm.is_in_read_transaction();
     auto& sg = Realm::Internal::get_shared_group(realm);
-    if (!sg) // i.e. the Realm was closed in a callback above
-        return;
     auto version = sg->get_version_of_current_transaction();
     auto package = [&](auto& notifier) {
         return !(notifier->has_run() && (!in_read || notifier->version() == version) && notifier->package_for_delivery());
@@ -900,9 +883,6 @@ void RealmCoordinator::process_available_async(Realm& realm)
     // but still call the change callbacks
     for (auto& notifier : notifiers)
         notifier->after_advance();
-
-    if (realm.m_binding_context)
-        realm.m_binding_context->did_send_notifications();
 }
 
 void RealmCoordinator::set_transaction_callback(std::function<void(VersionID, VersionID)> fn)
@@ -910,10 +890,3 @@ void RealmCoordinator::set_transaction_callback(std::function<void(VersionID, Ve
     create_sync_session();
     m_transaction_callback = std::move(fn);
 }
-
-#if REALM_ENABLE_SYNC
-partial_sync::WorkQueue& RealmCoordinator::partial_sync_work_queue()
-{
-    return *m_partial_sync_work_queue;
-}
-#endif

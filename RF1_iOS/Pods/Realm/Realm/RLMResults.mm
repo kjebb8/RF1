@@ -151,10 +151,7 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 
 - (NSString *)objectClassName {
     return translateRLMResultsErrors([&] {
-        if (_info && _results.get_type() == realm::PropertyType::Object) {
-            return _info->rlmObjectSchema.className;
-        }
-        return (NSString *)nil;
+        return RLMStringDataToNSString(_results.get_object_type());
     });
 }
 
@@ -259,9 +256,6 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 }
 
 - (id)valueForKey:(NSString *)key {
-    if (!_info) {
-        return @[];
-    }
     return translateRLMResultsErrors([&] {
         return RLMCollectionValueForKey(_results, key, _realm, *_info);
     });
@@ -509,8 +503,4 @@ static inline void RLMResultsValidateInWriteTransaction(__unsafe_unretained RLMR
 @end
 
 @implementation RLMLinkingObjects
-- (NSString *)description {
-    return RLMDescriptionWithMaxDepth(@"RLMLinkingObjects", self, RLMDescriptionMaxDepth);
-}
 @end
-
