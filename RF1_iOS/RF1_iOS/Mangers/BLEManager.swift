@@ -106,7 +106,7 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     }
     
     
-    func getNotifications() {
+    func turnOnNotifications() {
         
         if let characteristic = fsrCharacteristic {
             fsrPeripheral?.setNotifyValue(true, for: characteristic)

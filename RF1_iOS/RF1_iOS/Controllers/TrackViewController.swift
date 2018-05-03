@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 import RealmSwift
 
-class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerDelegate {
+class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
     var bleManager: BLEManager!
     
@@ -50,17 +50,14 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         pauseButton.setTitleColor(UIColor.darkGray, for: .disabled)
         pauseButton.setTitleColor(UIColor.lightGray, for: .normal)
         
+        bleManager.setDelegate(to: self)
+        
         bleDataManager = BLEDataManager(delegate: self)
         
         recentCadenceTitle.text = "\(CadenceParameters.recentCadenceTime)s Cadence"
         hintLabel.text = ""
         
         updateUICadenceValues()
-    }
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        bleManager.setDelegate(to: self) //This calls back with .connected state, which calls setRunState()
     }
     
     
@@ -101,19 +98,9 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     }
     
     
-    func getFormattedRunTimeString() -> (String) {
-        
-        if runTime.hours >= 1 {
-            return String(format: "%i:%02i:%02i", runTime.hours, runTime.minutes, runTime.seconds)
-        } else {
-            return String(format: "%i:%02i", runTime.minutes, runTime.seconds)
-        }
-    }
-    
-    
     //MARK: - UI Modification Methods
     
-    func showAlert(title: String, message: String, addExitAction: Bool = false, addReconnectAction: Bool = false) {
+    func showCustomAlert(title: String, message: String, addExitAction: Bool = false, addReconnectAction: Bool = false) { //Different from super class method
         
         alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
@@ -153,7 +140,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
                 let continueAction = UIAlertAction(title: "Continue Tracking", style: .cancel) { (continueAction) in
                     
                     if self.localBLEState == .connected { //Protecting against running when BLE turned off
-                        if (self.inRunState) {self.initializeTimer(); self.bleManager.getNotifications()} //Restore state
+                        if (self.inRunState) {self.initializeTimer(); self.bleManager.turnOnNotifications()} //Restore state
                     }
                 }
                 
@@ -162,7 +149,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
             
         } else { //If not giving exit option, then the only option will be Ok option
             
-            if localBLEState != .scanning { //If scanning, don't want to be able to dismiss the alert
+            if localBLEState != .scanning { //If scanning, don't want to be able to dismiss the alert (locks the screen)
                 
                 let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
                 alert?.addAction(okAction)
@@ -187,7 +174,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         initializeTimer()
         inRunState = true
-        bleManager.getNotifications()
+        bleManager.turnOnNotifications()
         pauseButton.setTitle("Pause", for: .normal)
     }
     
@@ -200,7 +187,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         avgCadenceLabel.text = cadenceStringValues.averageCadenceString
         stepsLabel.text = cadenceStringValues.stepsString
         
-        timeLabel.text = getFormattedRunTimeString()
+        timeLabel.text = runTime.getFormattedRunTimeString()
     }
     
     
@@ -213,19 +200,19 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         switch bleEvent {
             
         case .scanStarted:
-            showAlert(title: "Scanning", message: "Scanning for nearby device")
+            showCustomAlert(title: "Scanning", message: "Scanning for nearby device")
         
         case .scanTimeOut:
-            showAlert(title: "No Device Found", message: "Make sure device is on and try again", addExitAction: true, addReconnectAction: true)
+            showCustomAlert(title: "No Device Found", message: "Make sure device is on and try again", addExitAction: true, addReconnectAction: true)
             
         case .failedToConnect:
-            showAlert(title: "Failed to Connect", message: "Make sure device is on and try again", addExitAction: true, addReconnectAction: true)
+            showCustomAlert(title: "Failed to Connect", message: "Make sure device is on and try again", addExitAction: true, addReconnectAction: true)
             
         case .disconnected:
             bleManager.startScan()
             
         case .bleTurnedOff:
-            showAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")
+            showCustomAlert(title: "Bluetooth Turned Off", message: "Please enable Bluetooth to proceed")
             
         case .bleTurnedOn:
             bleManager.startScan()
@@ -294,7 +281,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
     @IBAction func exitButtonPressed(_ sender: UIButton) {
         
         if inRunState {runTimer.invalidate(); bleManager.turnOffNotifications()} //To preserve the state if user continues but stop updates while alert is up
-        showAlert(title: "Stop Tracking?", message: "Your data will be lost", addExitAction: true)
+        showCustomAlert(title: "Stop Tracking?", message: "Your data will be lost", addExitAction: true)
     }
     
     
@@ -316,7 +303,7 @@ class TrackViewController: UIViewController, BLEManagerDelegate, BLEDataManagerD
         
         newRunLogEntry.date = self.getDateString()
         newRunLogEntry.startTime = self.getStartTimeString()
-        newRunLogEntry.runDuration = self.getFormattedRunTimeString()
+        newRunLogEntry.runDuration = self.runTime
         
         let newCadenceData = self.cadenceMetrics.getCadenceDataForSaving(forRunTime: self.runTime)
         

@@ -8,7 +8,7 @@
 
 import Foundation
 
-//MARK: - Extension for Int time conversions
+//MARK: - Extension for time conversions
 
 extension Int {
     
@@ -17,4 +17,13 @@ extension Int {
     var hours: Int {return self / 3600}
     var minutes: Int {return self / 60 % 60}
     var seconds: Int {return self % 60}
+    
+    func getFormattedRunTimeString() -> (String) {
+        
+        if self.hours >= 1 {
+            return String(format: "%i:%02i:%02i", self.hours, self.minutes, self.seconds)
+        } else {
+            return String(format: "%i:%02i", self.minutes, self.seconds)
+        }
+    }
 }

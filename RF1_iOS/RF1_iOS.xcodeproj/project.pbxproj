@@ -18,6 +18,8 @@
 		C062129C205B2E2C008937C7 /* TrackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C062129B205B2E2C008937C7 /* TrackViewController.swift */; };
 		C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE35206AA88300CD8D04 /* BLEManager.swift */; };
 		C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */; };
+		C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */; };
+		C0685A71209B75D90060FC5C /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0685A70209B75D90060FC5C /* BaseTableViewController.swift */; };
 		C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C069E49120922C3100A00329 /* CustomRunLogCell.swift */; };
 		C069E49420922D1400A00329 /* RunLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069E49320922D1400A00329 /* RunLogCell.xib */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
@@ -48,6 +50,8 @@
 		C062129B205B2E2C008937C7 /* TrackViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackViewController.swift; sourceTree = "<group>"; };
 		C067BE35206AA88300CD8D04 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		C067BE37206AAC3700CD8D04 /* BLEDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDataManager.swift; sourceTree = "<group>"; };
+		C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		C0685A70209B75D90060FC5C /* BaseTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		C069E49120922C3100A00329 /* CustomRunLogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRunLogCell.swift; sourceTree = "<group>"; };
 		C069E49320922D1400A00329 /* RunLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RunLogCell.xib; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
@@ -135,6 +139,8 @@
 				C062129B205B2E2C008937C7 /* TrackViewController.swift */,
 				C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */,
 				C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */,
+				C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */,
+				C0685A70209B75D90060FC5C /* BaseTableViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -349,8 +355,10 @@
 			files = (
 				C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */,
 				C005F26B2057174F006A14CB /* HomeViewController.swift in Sources */,
+				C0685A71209B75D90060FC5C /* BaseTableViewController.swift in Sources */,
 				C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */,
 				C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */,
+				C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */,
 				C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */,
 				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
 				C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */,

@@ -9,7 +9,7 @@
 import UIKit
 import CoreBluetooth
 
-class HomeViewController: UIViewController, BLEManagerDelegate {
+class HomeViewController: BaseViewController, BLEManagerDelegate {
     
     var bleManager: BLEManager!
 
@@ -42,17 +42,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
     
     
     //MARK: - UI Modification Methods
-    
-    func showAlert(title: String, message: String) {
-        
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        
-        let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
-        alert.addAction(okAction)
-
-        present(alert, animated: true, completion: nil)
-    }
-    
     
     func updateForScanningState() {
         
@@ -167,6 +156,6 @@ class HomeViewController: UIViewController, BLEManagerDelegate {
         }
     }
     
-
+    
 }
 

@@ -13,7 +13,7 @@ class RunLogEntry: Object {
     
     @objc dynamic var date: String = ""
     @objc dynamic var startTime: String = ""
-    @objc dynamic var runDuration: String = ""
+    @objc dynamic var runDuration: Int = 0 //In seconds
     
     @objc dynamic var cadenceData: CadenceData?
 }

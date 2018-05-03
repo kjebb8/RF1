@@ -9,7 +9,7 @@
 import UIKit
 import Charts
 
-class RunStatsViewController: UIViewController {
+class RunStatsViewController: BaseViewController {
     
     var selectedRun: RunLogEntry?
 
@@ -30,11 +30,11 @@ class RunStatsViewController: UIViewController {
     
     func displayUICadenceInfo() {
         
-        if let runCadenceData = selectedRun?.cadenceData {
+        if let runEntry = selectedRun {
             
-            avgCadenceLabel.text = "Avg. Cadence: " + runCadenceData.averageCadence.roundedIntString + " steps/min"
+            avgCadenceLabel.text = "Avg. Cadence: " + (runEntry.cadenceData?.averageCadence.roundedIntString)! + " steps/min"
             
-            let cadenceChartData = getFormattedCadenceChartData(forCadenceData: runCadenceData)
+            let cadenceChartData = getFormattedCadenceChartData(forEntry: runEntry)
             customizeChartView(forChartData: cadenceChartData)
         }
     }

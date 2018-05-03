@@ -41,7 +41,7 @@ class CadenceMetrics {
             recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only a certian time period is included
         }
         
-        if currentTime % CadenceParameters.cadenceLogTime == 0 {
+        if currentTime % CadenceParameters.cadenceLogTime == 0 {  //Add a value to the cadence log
             
             cadenceLog.append(Double(cadenceLogSteps) / CadenceParameters.cadenceLogTime.inMinutes)
             cadenceLogSteps = 0
@@ -51,7 +51,7 @@ class CadenceMetrics {
     
     
     func getCadenceStringValues() -> (CadenceStringValues) {
-        return CadenceStringValues(recentCadence, averageCadence, totalSteps)
+        return CadenceStringValues(recentCadence, averageCadence, totalSteps) //See class below
     }
     
     

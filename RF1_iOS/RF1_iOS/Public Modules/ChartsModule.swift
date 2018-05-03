@@ -12,17 +12,24 @@ import Charts
 
 //MARK: - Cadence Chart
 
-func getFormattedCadenceChartData(forCadenceData cadenceData: CadenceData) -> LineChartData {
+func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry) -> LineChartData {
     
+    guard let cadenceLog = runEntry.cadenceData?.cadenceLog else {fatalError()}
+        
     var cadenceDataEntries = [ChartDataEntry]()
-    
-    let cadenceLog = cadenceData.cadenceLog
-    
+
     cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue)) //Initial value
     
     for i in 0..<cadenceLog.count {
     
-        let cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+        var cadenceTime: Double = 0
+        
+        if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
+            cadenceTime = runEntry.runDuration.inMinutes
+        } else {
+            cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+        }
+        
         cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
     }
     
