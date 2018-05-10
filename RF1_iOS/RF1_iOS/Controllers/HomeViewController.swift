@@ -150,7 +150,7 @@ class HomeViewController: BaseViewController, BLEManagerDelegate {
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToCadence" {
+        if segue.identifier == "goToTracking" {
             let destinationVC = segue.destination as! TrackViewController
             destinationVC.bleManager = bleManager
         }

@@ -26,15 +26,15 @@ class BLEDataManager {
     
     private var delegateVC: BLEDataManagerDelegate?
     
-    var forefootVoltage: Int = 0 //Could make private if not printing out to label
-    
     var heelVoltage: Int = 0 //Could make private if not printing out to label
     
-    private var newForefootDown: Bool = false
-    private var oldForefootDown: Bool = false
+    var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
     private var newHeelDown: Bool = false
     private var oldHeelDown: Bool = false
+    
+    private var newForefootDown: Bool = false
+    private var oldForefootDown: Bool = false
     
     private var logRawData: Bool = false
     private var clearRawData: Bool = false //BIG RED BUTTON
@@ -88,8 +88,8 @@ class BLEDataManager {
             }
         }
         
-        forefootVoltage = Int(fsrDataArray[0])
-        heelVoltage = Int(fsrDataArray[1])
+        heelVoltage = Int(fsrDataArray[0])
+        forefootVoltage = Int(fsrDataArray[1])
         
         if logRawData {logData(forefootVoltage, heelVoltage)}
     }
@@ -112,8 +112,8 @@ class BLEDataManager {
         
         dataLogIndex! += 1
         let newFSRData = FSRData()
-        newFSRData.forefootVoltageData = forefootVoltage
         newFSRData.heelVoltageData = heelVoltage
+        newFSRData.forefootVoltageData = forefootVoltage
         newFSRData.sampleIndex = dataLogIndex!
 
         do {

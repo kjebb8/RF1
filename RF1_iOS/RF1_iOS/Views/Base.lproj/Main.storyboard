@@ -134,7 +134,7 @@
                                             <color key="titleColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <segue destination="RSW-ar-ZXi" kind="show" identifier="goToCadence" id="GZy-Db-4cp"/>
+                                            <segue destination="RSW-ar-ZXi" kind="show" identifier="goToTracking" id="GZy-Db-4cp"/>
                                         </connections>
                                     </button>
                                 </subviews>

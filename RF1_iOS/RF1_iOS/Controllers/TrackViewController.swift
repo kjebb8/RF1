@@ -12,24 +12,25 @@ import RealmSwift
 
 class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
-    var bleManager: BLEManager!
+    var bleManager: BLEManager! //Handles the BLE connection and reports back with events or changes in state
     
-    var bleDataManager: BLEDataManager!
+    var bleDataManager: BLEDataManager! //Handles the incoming BLE notification data and reports back with run-related events
     
-    var cadenceMetrics = CadenceMetrics()
+    var cadenceMetrics = CadenceMetrics() //Holds the properties and mehtods used to track user's cadence
     
-    var inRunState: Bool = false
+    var inRunState: Bool = false //Reflects whether notifications are being recieved from the peripheral
     
-    var timePausedInRunState: Bool = false
+    var timePausedInRunState: Bool = false //Reflects whether the timer should stop automatically because the user stopped moving but notifications are still on to see when they begin running again
     
-    var localBLEState: BLEState = .connected
+    var localBLEState: BLEState = .connected //Keeps the BLE state so it can be used anywhere in the class
     
     var alert: UIAlertController?
     
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
     
-    var stepInLastSecond: Bool = false //If no steps in last second, pause the timer
+    var runStopTimeInterval = 0.5
+    var runStopTimer = Timer() //Used to determine if the user stops moving to turn off the runTimer (makes sure cadence data is clean)
     
     let date = Date()
     
@@ -69,32 +70,42 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     //MARK: - Timer Methods
     
-    func initializeTimer() {
+    func initializeRunTimer() {
         
         runTimer = Timer.scheduledTimer(
             timeInterval: 1, //Goes off every second
             target: self,
-            selector: (#selector(TrackViewController.timerIntervalTick)),
+            selector: (#selector(TrackViewController.runTimerIntervalTick)),
             userInfo: nil,
             repeats: true)
     }
     
     
-    @objc func timerIntervalTick() {
+    func initializeRunStopTimer() {
         
-        if stepInLastSecond {
-            
-            stepInLastSecond = false
-            runTime += 1
-            cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
-            updateUICadenceValues()
-            
-        } else {
-            
-            timePausedInRunState = true
-            runTimer.invalidate()
-            hintLabel.text = "Start Running to Begin!"
-        }
+        runStopTimer = Timer.scheduledTimer(
+            timeInterval: runStopTimeInterval, //Interval time is 0.5s when the view loads or when setRunState is called. While running, the interval is 1.4s. If a step is taken before 0.6s in current second, the time will increment once. If step was after 0.6, the time will increment twice.
+            target: self,
+            selector: (#selector(TrackViewController.runStopTimerIntervalTick)),
+            userInfo: nil,
+            repeats: false)
+    }
+    
+    
+    @objc func runTimerIntervalTick() {
+        
+        runTime += 1
+        cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
+        updateUICadenceValues()
+    }
+    
+    
+    @objc func runStopTimerIntervalTick() {
+        
+        timePausedInRunState = true
+        runTimer.invalidate()
+        runStopTimer.invalidate()
+        hintLabel.text = "Start Running to Begin!"
     }
     
     
@@ -106,7 +117,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         if addExitAction {
             
-            if runTime >= 5 { //Don't save if less than 5 seconds recorded
+            if runTime >= 5 { //Don't save if less than 5 seconds total recorded
                 
                 let exitSaveAction = UIAlertAction(title: "Exit and Save", style: .default) { (exitSaveAction) in
                     
@@ -140,7 +151,13 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
                 let continueAction = UIAlertAction(title: "Continue Tracking", style: .cancel) { (continueAction) in
                     
                     if self.localBLEState == .connected { //Protecting against running when BLE turned off
-                        if (self.inRunState) {self.initializeTimer(); self.bleManager.turnOnNotifications()} //Restore state
+                        
+                        if (self.inRunState) { //Restore state
+                            
+                            self.initializeRunTimer()
+                            self.initializeRunStopTimer()
+                            self.bleManager.turnOnNotifications()
+                        }
                     }
                 }
                 
@@ -164,7 +181,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         hintLabel.text = ""
         runTimer.invalidate()
+        runStopTimer.invalidate()
         inRunState = false
+        timePausedInRunState = false //Must be false if inRunState is false
         pauseButton.setTitle("Resume", for: .normal)
         bleManager.turnOffNotifications()
     }
@@ -172,7 +191,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     func setRunState() {
         
-        initializeTimer()
+        initializeRunTimer()
+        runStopTimeInterval = 0.5
+        initializeRunStopTimer()
         inRunState = true
         bleManager.turnOnNotifications()
         pauseButton.setTitle("Pause", for: .normal)
@@ -260,16 +281,20 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn) {
         
         if returnValue == .didTakeStep {
-    
-            stepInLastSecond = true
             
             if timePausedInRunState {
                 
                 timePausedInRunState = false
-                initializeTimer()
+                initializeRunTimer()
                 hintLabel.text = ""
+                
+            } else {
+                
+                runStopTimer.invalidate()
             }
             
+            runStopTimeInterval = 1.4
+            initializeRunStopTimer() //Start a new timer for 1.4 seconds
             cadenceMetrics.incrementSteps()
             updateUICadenceValues()
         }
@@ -280,7 +305,13 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     @IBAction func exitButtonPressed(_ sender: UIButton) {
         
-        if inRunState {runTimer.invalidate(); bleManager.turnOffNotifications()} //To preserve the state if user continues but stop updates while alert is up
+        if inRunState { //To preserve the state if user continues but stop updates while alert is up
+            
+            runTimer.invalidate()
+            runStopTimer.invalidate()
+            bleManager.turnOffNotifications()
+        }
+        
         showCustomAlert(title: "Stop Tracking?", message: "Your data will be lost", addExitAction: true)
     }
     
