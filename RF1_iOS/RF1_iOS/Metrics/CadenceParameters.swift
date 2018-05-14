@@ -12,4 +12,5 @@ struct CadenceParameters {
     
     static let recentCadenceTime: Int = 20 //Seconds used for finding most recent cadence measurement
     static let cadenceLogTime: Int = 20 //Seconds between data points for historical data
+    static let cadenceMovingAverageTime: Int = 120 //Seconds included in moving average calculation. Needs to be an even multiple of cadenceLogTime (6x not 5x)
 }
