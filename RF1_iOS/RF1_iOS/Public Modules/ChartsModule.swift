@@ -44,13 +44,13 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
         
             if requiredMetrics.includeCadenceRawData {
                 
-                cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+//                cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
                 
-//                if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
-//                    cadenceTime = runEntry.runDuration.inMinutes
-//                } else {
-//                    cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
-//                }
+                if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
+                    cadenceTime = runEntry.runDuration.inMinutes
+                } else {
+                    cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+                }
                 
                 cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
             }
