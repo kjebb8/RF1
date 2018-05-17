@@ -53,8 +53,9 @@ class HistoryTableViewController: BaseTableViewController {
             cell.cadenceLabel.text = runEntry.cadenceData?.averageCadence.roundedIntString
             cell.layer.borderWidth = 5
             cell.layer.borderColor = UIColor.black.cgColor
-                
-            let cadenceChartData = getFormattedCadenceChartData(forEntry: runEntry)
+            
+            let requiredMetrics = RequiredMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true)
+            let cadenceChartData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: requiredMetrics)
             
             cell.chartView.chartDescription = nil //Label in bottom right corner
             cell.chartView.xAxis.drawLabelsEnabled = false
@@ -75,7 +76,7 @@ class HistoryTableViewController: BaseTableViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
-        let destinationVC = segue.destination as! RunStatsViewController
+        let destinationVC = segue.destination as! RunStatsTableViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
             destinationVC.selectedRun = runLog?[indexPath.row]

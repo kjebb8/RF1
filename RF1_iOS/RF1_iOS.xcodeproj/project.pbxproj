@@ -24,9 +24,11 @@
 		C069E49420922D1400A00329 /* RunLogCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C069E49320922D1400A00329 /* RunLogCell.xib */; };
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
 		C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */; };
-		C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */; };
+		C08AAE862090E8610022A5C3 /* RunStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE852090E8610022A5C3 /* RunStatsTableViewController.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
 		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
+		C0D98F4F20A9E6FF001031B1 /* MetricCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */; };
+		C0D98F5120A9E7A7001031B1 /* CustomMetricCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */; };
 		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
 		C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590D208A5A49001CAF23 /* CadenceData.swift */; };
 		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
@@ -56,9 +58,11 @@
 		C069E49320922D1400A00329 /* RunLogCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RunLogCell.xib; sourceTree = "<group>"; };
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
 		C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
-		C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatsViewController.swift; sourceTree = "<group>"; };
+		C08AAE852090E8610022A5C3 /* RunStatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatsTableViewController.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
 		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
+		C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MetricCell.xib; sourceTree = "<group>"; };
+		C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMetricCell.swift; sourceTree = "<group>"; };
 		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
 		C0EC590D208A5A49001CAF23 /* CadenceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceData.swift; sourceTree = "<group>"; };
 		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
@@ -138,7 +142,7 @@
 				C005F26A2057174F006A14CB /* HomeViewController.swift */,
 				C062129B205B2E2C008937C7 /* TrackViewController.swift */,
 				C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */,
-				C08AAE852090E8610022A5C3 /* RunStatsViewController.swift */,
+				C08AAE852090E8610022A5C3 /* RunStatsTableViewController.swift */,
 				C0685A6E209B5F7D0060FC5C /* BaseViewController.swift */,
 				C0685A70209B75D90060FC5C /* BaseTableViewController.swift */,
 			);
@@ -197,6 +201,8 @@
 			children = (
 				C069E49120922C3100A00329 /* CustomRunLogCell.swift */,
 				C069E49320922D1400A00329 /* RunLogCell.xib */,
+				C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */,
+				C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */,
 			);
 			path = "Custom Cells";
 			sourceTree = "<group>";
@@ -280,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C005F2732057174F006A14CB /* LaunchScreen.storyboard in Resources */,
+				C0D98F4F20A9E6FF001031B1 /* MetricCell.xib in Resources */,
 				C005F2702057174F006A14CB /* Assets.xcassets in Resources */,
 				C069E49420922D1400A00329 /* RunLogCell.xib in Resources */,
 				C005F26E2057174F006A14CB /* Main.storyboard in Resources */,
@@ -361,11 +368,12 @@
 				C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */,
 				C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */,
 				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
-				C08AAE862090E8610022A5C3 /* RunStatsViewController.swift in Sources */,
+				C08AAE862090E8610022A5C3 /* RunStatsTableViewController.swift in Sources */,
 				C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */,
 				C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */,
 				C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */,
 				C062129C205B2E2C008937C7 /* TrackViewController.swift in Sources */,
+				C0D98F5120A9E7A7001031B1 /* CustomMetricCell.swift in Sources */,
 				C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */,
 				C01FBB94205D6C3700B250E6 /* IntExtensions.swift in Sources */,
 				C00D738420990EE10041AABB /* DoubleExtension.swift in Sources */,

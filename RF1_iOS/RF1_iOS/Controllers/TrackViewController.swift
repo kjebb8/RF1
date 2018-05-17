@@ -84,7 +84,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func initializeRunStopTimer() {
         
         runStopTimer = Timer.scheduledTimer(
-            timeInterval: runStopTimeInterval, //Interval time is 0.5s when the view loads or when setRunState is called. While running, the interval is 1.4s. If a step is taken before 0.6s in current second, the time will increment once. If step was after 0.6, the time will increment twice.
+            timeInterval: runStopTimeInterval, //Interval time is 0.5s when setRunState is called (including when the view loads). While running, the interval is 1.4s. If a step is taken before 0.6s in current second, the time will increment once. If step was after 0.6, the time will increment twice.
             target: self,
             selector: (#selector(TrackViewController.runStopTimerIntervalTick)),
             userInfo: nil,

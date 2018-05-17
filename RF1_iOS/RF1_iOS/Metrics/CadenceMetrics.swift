@@ -46,7 +46,6 @@ class CadenceMetrics {
             cadenceLog.append(Double(cadenceLogSteps) / CadenceParameters.cadenceLogTime.inMinutes)
             cadenceLogSteps = 0
         }
-        
     }
     
     
@@ -58,9 +57,11 @@ class CadenceMetrics {
     func getCadenceDataForSaving(forRunTime runTime: Int) -> (CadenceData) {
         
         let newCadenceData = CadenceData()
+        
         newCadenceData.averageCadence = averageCadence
         
         let remainingTime = runTime % CadenceParameters.cadenceLogTime
+        
         if remainingTime >= 5 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data if longer than 5 seconds (for accuracy)
         
         for data in cadenceLog {
