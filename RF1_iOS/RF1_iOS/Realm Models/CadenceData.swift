@@ -11,7 +11,7 @@ import RealmSwift
 
 class CadenceData: Object {
     
-    @objc dynamic var averageCadence: Double = 0
+    @objc dynamic var averageCadence: Double = 0 //Can eventually remove this and where it saves to Realm
     
     let cadenceLog = List<CadenceLogEntry>()
 }

@@ -58,7 +58,7 @@ class CadenceMetrics {
         
         let newCadenceData = CadenceData()
         
-        newCadenceData.averageCadence = averageCadence
+//        newCadenceData.averageCadence = averageCadence
         
         let remainingTime = runTime % CadenceParameters.cadenceLogTime
         

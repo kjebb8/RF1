@@ -25,6 +25,8 @@ class CustomMetricCell: UITableViewCell {
     
     @IBOutlet weak var movingAverageSwitch: UISwitch!
     
+    @IBOutlet weak var walkingDataSwitch: UISwitch!
+    
     var delegateVC: MetricCellDelegate?
     
     var cellRow: Int = 0
@@ -37,6 +39,7 @@ class CustomMetricCell: UITableViewCell {
     @IBAction func dataSwitched(_ sender: UISwitch) {
         
         delegateVC?.loadNewChart(withMetrics: RequiredMetrics(includeCadenceRawData: rawDataSwitch.isOn,
-                                                              includeCadenceMovingAverage: movingAverageSwitch.isOn), atRow: cellRow)
+                                                              includeCadenceMovingAverage: movingAverageSwitch.isOn,
+                                                              includeWalkingData: walkingDataSwitch.isOn), atRow: cellRow)
     }
 }

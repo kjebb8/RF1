@@ -13,16 +13,21 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
     
     var selectedRun: RunLogEntry?
     
+    var specificAverageCadence: Double = 0
+    
+    //Initial state of charts
     var chartMetrics = [RequiredMetrics(includeCadenceRawData: false,
-                                        includeCadenceMovingAverage: true),
+                                        includeCadenceMovingAverage: true,
+                                        includeWalkingData: true),
                         RequiredMetrics(includeCadenceRawData: false,
-                                        includeCadenceMovingAverage: true)]
+                                        includeCadenceMovingAverage: true,
+                                        includeWalkingData: true)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
         tableView.register(UINib(nibName: "MetricCell", bundle: nil), forCellReuseIdentifier: "customMetricCell")
-        tableView.rowHeight = 500
+        tableView.rowHeight = 510
     }
     
 
@@ -53,9 +58,13 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
             
             cell.cellRow = indexPath.row
             
-            cell.averageStatLabel.text = "Avg. Cadence: " + (runEntry.cadenceData?.averageCadence.roundedIntString)! + " steps/min"
+            let returnData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: chartMetrics[indexPath.row])
             
-            let cadenceChartData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: chartMetrics[indexPath.row])
+            let cadenceChartData = returnData.chartData
+            
+            specificAverageCadence = returnData.averageCadence
+            
+            cell.averageStatLabel.text = "Avg. Cadence: " + specificAverageCadence.roundedIntString + " steps/min"
             
             customizeChartView(forChartData: cadenceChartData, usingChartView: cell.chartView)
         }
@@ -80,16 +89,14 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
         if numDataPoints >= 45 && numDataPoints < 90 {
             animateTime = Double(numDataPoints) / 90 * 1.0 //0.5s for 15 mins to 1.0s for 30 mins (assuming data every 20 seconds)
         } else if numDataPoints >= 90 {
-            animateTime = 1.0 //1.5s if longer than 30 mins (assuming data every 20 seconds)
+            animateTime = 1.0 //1.0s if longer than 30 mins (assuming data every 20 seconds)
         }
         
         chartView.animate(xAxisDuration: animateTime)
         chartView.data = chartData
         
-//        let avgCadenceLine = ChartLimitLine(limit: (selectedRun?.cadenceData?.averageCadence)! , label: "Avg. Cadence")
-        let avgCadenceLine = ChartLimitLine(limit: (selectedRun?.cadenceData?.averageCadence)!)
-//        avgCadenceLine.valueTextColor = .white
-//        avgCadenceLine.labelPosition = .rightTop //Relative to line position
+        chartView.rightAxis.removeAllLimitLines()
+        let avgCadenceLine = ChartLimitLine(limit: specificAverageCadence)
         avgCadenceLine.lineDashLengths = [5]
         avgCadenceLine.lineColor = .yellow
         chartView.rightAxis.addLimitLine(avgCadenceLine)
