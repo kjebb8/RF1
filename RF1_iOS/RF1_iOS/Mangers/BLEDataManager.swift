@@ -27,8 +27,10 @@ class BLEDataManager {
     private var delegateVC: BLEDataManagerDelegate?
     
     var heelVoltage: Int = 0 //Could make private if not printing out to label
-    
     var forefootVoltage: Int = 0 //Could make private if not printing out to label
+    
+    private var heelVoltageCouple: [Int] = [0,0]
+    private var forefootVoltageCouple: [Int] = [0,0]
     
     private var newHeelDown: Bool = false
     private var oldHeelDown: Bool = false
@@ -36,8 +38,11 @@ class BLEDataManager {
     private var newForefootDown: Bool = false
     private var oldForefootDown: Bool = false
     
+    private let upperMVLimit: Int = 2900
+    private let lowerMVLimit: Int = 2700
+    
     private var logRawData: Bool = false
-    private var clearRawData: Bool = false //BIG RED BUTTON
+    private var clearRawData: Bool = false //BIG RED BUTTON for FSR Data. Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
     
     init(delegate: BLEDataManagerDelegate) {
         
@@ -64,16 +69,30 @@ class BLEDataManager {
         
         saveFsrData(dataToBeSaved: data)
         
-        newForefootDown = forefootVoltage > 2500 ? true : false
-
-        newHeelDown = heelVoltage > 2500 ? true : false
+        heelVoltageCouple.remove(at: 0)
+        heelVoltageCouple.append(heelVoltage)
+        
+        forefootVoltageCouple.remove(at: 0)
+        forefootVoltageCouple.append(forefootVoltage)
+        
+        if oldHeelDown && (heelVoltageCouple[0] < lowerMVLimit) && (heelVoltageCouple[1] < lowerMVLimit) {
+            newHeelDown = false
+        } else if !oldHeelDown && ((heelVoltageCouple[0] > upperMVLimit) || (heelVoltageCouple[1] > upperMVLimit)) {
+            newHeelDown = true
+        }
+     
+        if oldForefootDown && (forefootVoltageCouple[0] < lowerMVLimit) && (forefootVoltageCouple[1] < lowerMVLimit) {
+            newForefootDown = false
+        } else if !oldForefootDown && ((forefootVoltageCouple[0] > upperMVLimit) || (forefootVoltageCouple[1] > upperMVLimit)) {
+            newForefootDown = true
+        }
         
         if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) { //When foot lifts up after stepping
             delegateVC?.didFinishDataProcessing(withReturn: .didTakeStep)
         }
         
-        oldForefootDown = newForefootDown
         oldHeelDown = newHeelDown
+        oldForefootDown = newForefootDown
     }
     
     
@@ -126,10 +145,17 @@ class BLEDataManager {
     }
     
     
-    private func clearRealm() {
+    private func clearRealm() { //Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
         
-        try! realm?.write {
-            realm?.deleteAll()
+        let oldData: Results<FSRData> = realm!.objects(FSRData.self)
+        for fsrResult in oldData {
+            do {
+                try realm?.write {
+                    realm?.delete(fsrResult)
+                }
+            } catch {
+                print("Error deleting \(error)")
+            }
         }
     }
     
