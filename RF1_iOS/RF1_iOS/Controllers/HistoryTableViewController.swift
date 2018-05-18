@@ -46,16 +46,12 @@ class HistoryTableViewController: BaseTableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customRunLogCell", for: indexPath) as! CustomRunLogCell
 
          if let runEntry = runLog?[indexPath.row] {
-        
-            cell.dateLabel.text = runEntry.date
-            cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
-            cell.timeLabel.text = runEntry.startTime
-            cell.cadenceLabel.text = runEntry.cadenceData?.averageCadence.roundedIntString
-            cell.layer.borderWidth = 5
-            cell.layer.borderColor = UIColor.black.cgColor
             
-            let requiredMetrics = RequiredMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true)
-            let cadenceChartData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: requiredMetrics)
+            let requiredMetrics = RequiredMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true, includeWalkingData: true)
+            let returnData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: requiredMetrics)
+            
+            let cadenceChartData = returnData.chartData
+            let specificAverageCadence = returnData.averageCadence
             
             cell.chartView.chartDescription = nil //Label in bottom right corner
             cell.chartView.xAxis.drawLabelsEnabled = false
@@ -63,6 +59,13 @@ class HistoryTableViewController: BaseTableViewController {
             cell.chartView.rightAxis.drawLabelsEnabled = false
             cell.chartView.legend.enabled = false
             cell.chartView.data = cadenceChartData
+            
+            cell.dateLabel.text = runEntry.date
+            cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
+            cell.timeLabel.text = runEntry.startTime
+            cell.cadenceLabel.text = specificAverageCadence.roundedIntString
+            cell.layer.borderWidth = 5
+            cell.layer.borderColor = UIColor.black.cgColor
         }
         
         return cell

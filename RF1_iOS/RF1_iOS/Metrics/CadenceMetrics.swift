@@ -16,8 +16,13 @@ class CadenceMetrics {
     private var totalSteps: Int = 0
     private var averageCadence: Double = 0 //Cadence for entire run
     
-    private var cadenceLogSteps: Int = 0 //Counts the steps in the current log interval time
+    private var cadenceLogSteps: Double = 0 //Counts the steps in the current log interval time. Counts fractions of a step for accuracy
     private var cadenceLog = [Double]() //Each entry has cadence for a given interval time period
+    
+    private var timeBetweenLastSteps: Double = 0 //in seconds, Measures how much time between consecutive steps
+    private var timeSinceLastStep: Double = 0 //in seconds, Measures the elapsed time since the last step was taken
+    private var stepSubtractionValue: Double = 0 //Amount of steps needed to be subtracted because a fraction of a step was added to the previous time interval
+    var stepTimer = Timer()
     
     
     //MARK: - Public Access Methods
@@ -27,6 +32,14 @@ class CadenceMetrics {
         recentCadenceSteps[recentCadenceSteps.count - 1] += 2
         totalSteps += 2
         cadenceLogSteps += 2
+        
+        if stepSubtractionValue > 0 { //If most of the step occured in the previous interval, subtract that fraction from this interval
+            cadenceLogSteps -= stepSubtractionValue
+            stepSubtractionValue = 0
+        }
+        
+        timeBetweenLastSteps = timeSinceLastStep
+        timeSinceLastStep = 0
     }
     
     
@@ -43,7 +56,16 @@ class CadenceMetrics {
         
         if currentTime % CadenceParameters.cadenceLogTime == 0 {  //Add a value to the cadence log
             
-            cadenceLog.append(Double(cadenceLogSteps) / CadenceParameters.cadenceLogTime.inMinutes)
+            var steps = Double(cadenceLogSteps)
+            
+            if timeBetweenLastSteps > 0 && timeBetweenLastSteps < 2.0 && steps != 0 {
+                
+                let stepFraction = min((timeSinceLastStep / timeBetweenLastSteps), 0.95) //Fraction of next step taken in current interval
+                steps += 2 * (stepFraction)
+                stepSubtractionValue = 2 * (stepFraction)
+            }
+            
+            cadenceLog.append(steps / CadenceParameters.cadenceLogTime.inMinutes)
             cadenceLogSteps = 0
         }
     }
@@ -58,7 +80,7 @@ class CadenceMetrics {
         
         let newCadenceData = CadenceData()
         
-        newCadenceData.averageCadence = averageCadence
+//        newCadenceData.averageCadence = averageCadence
         
         let remainingTime = runTime % CadenceParameters.cadenceLogTime
         
@@ -72,6 +94,24 @@ class CadenceMetrics {
         }
         
         return(newCadenceData)
+    }
+    
+    
+    //MARK: - Step Timing Methods
+    
+    func initializeStepTimer() { //Follows the runTimer in TrackViewController
+        
+        stepTimer = Timer.scheduledTimer(
+            timeInterval: 0.05, //Goes off every second 10ms
+            target: self,
+            selector: (#selector(CadenceMetrics.stepTimerIntervalTick)),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    
+    @objc private func stepTimerIntervalTick() {
+        timeSinceLastStep += 0.05
     }
     
     

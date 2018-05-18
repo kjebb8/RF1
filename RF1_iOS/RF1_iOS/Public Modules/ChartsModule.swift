@@ -15,14 +15,19 @@ struct RequiredMetrics {
     
     var includeCadenceRawData: Bool = false
     var includeCadenceMovingAverage: Bool = false
+    var includeWalkingData: Bool = false
 }
 
 
 //MARK: - Cadence Chart
 
-func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics requiredMetrics: RequiredMetrics) -> LineChartData {
+func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics requiredMetrics: RequiredMetrics) -> (chartData: LineChartData, averageCadence: Double) {
     
     guard let cadenceLog = runEntry.cadenceData?.cadenceLog else {fatalError()}
+    
+    let walkingThreshold: Double = 130 //Cadence below the threshold is considered walking
+    
+    var allCadenceValues = [Double]() //For calculating the average cadence for the particular data displayed on the chart
     
     var cadenceDataEntries = [ChartDataEntry]()
     
@@ -30,35 +35,42 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
     var simpleMAValuesArray = [Double]()
     var simpleMA: Double = 0
     var simpleMADataEntries = [ChartDataEntry]()
-    
-    if requiredMetrics.includeCadenceRawData {
-        cadenceDataEntries.append(ChartDataEntry(x: 0, y: cadenceLog[0].cadenceIntervalValue)) //Initial value
-    }
-    
 
     if requiredMetrics.includeCadenceRawData || requiredMetrics.includeCadenceMovingAverage {
+        
+        var cadenceTimeIntervals: Int = 0 //How many cadence values are being used
     
         for i in 0..<cadenceLog.count {
+            
+            let cadenceValue = cadenceLog[i].cadenceIntervalValue
+            
+            if !requiredMetrics.includeWalkingData {
+                if cadenceValue < walkingThreshold {continue} //Skip loop iteration if walking
+            }
+            
+            cadenceTimeIntervals += 1
+            
+            allCadenceValues.append(cadenceValue)
             
             var cadenceTime: Double = 0
         
             if requiredMetrics.includeCadenceRawData {
                 
-//                cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
+                cadenceTime = (Double(cadenceTimeIntervals * CadenceParameters.cadenceLogTime) -  Double(CadenceParameters.cadenceLogTime) / 2.0) / 60.0
+
+//                if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
+//                    cadenceTime = runEntry.runDuration.inMinutes
+//                } else {
+//                    cadenceTime = (Double(cadenceTimeIntervals * CadenceParameters.cadenceLogTime) -  Double(CadenceParameters.cadenceLogTime) / 2.0) / 60.0
+//                }
                 
-                if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
-                    cadenceTime = runEntry.runDuration.inMinutes
-                } else {
-                    cadenceTime = (Double((i + 1) * CadenceParameters.cadenceLogTime) / 60.0)
-                }
-                
-                cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceLog[i].cadenceIntervalValue))
+                cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceValue))
             }
             
             
             if requiredMetrics.includeCadenceMovingAverage {
             
-                simpleMAValuesArray.append(cadenceLog[i].cadenceIntervalValue)
+                simpleMAValuesArray.append(cadenceValue)
                 
                 if simpleMAValuesArray.count > numberOfSimpleMAValues {
                     simpleMAValuesArray.remove(at: 0)
@@ -66,10 +78,10 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
                 
                 let numberOfRawValuesBetweenDataPoints: Int = numberOfSimpleMAValues / 2 //Determines the frequency of simpleMA data points using modulus
                 
-                if (i + 1) % numberOfRawValuesBetweenDataPoints == 0 && simpleMAValuesArray.count == numberOfSimpleMAValues { //SimpleMA using data on either side
+                if cadenceTimeIntervals % numberOfRawValuesBetweenDataPoints == 0 && simpleMAValuesArray.count == numberOfSimpleMAValues { //SimpleMA using data on either side
                 
-                    cadenceTime = ((Double(i) + 1 - Double(numberOfRawValuesBetweenDataPoints)) * Double(CadenceParameters.cadenceLogTime)) / 60.0 //SimpleMA using data on either side
-                    simpleMA = simpleMAValuesArray.reduce(0, +) / Double(simpleMAValuesArray.count)
+                    cadenceTime = ((Double(cadenceTimeIntervals - numberOfRawValuesBetweenDataPoints)) * Double(CadenceParameters.cadenceLogTime)) / 60.0 //SimpleMA using data on either side
+                    simpleMA = simpleMAValuesArray.reduce(0, +) / Double(numberOfSimpleMAValues)
                     simpleMADataEntries.append(ChartDataEntry(x: cadenceTime, y: simpleMA))
                 }
             }
@@ -116,23 +128,9 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
         simpleMADataSet.drawFilledEnabled = true //Fill under the curve
     }
     
-    return LineChartData(dataSets: [cadenceDataSet, simpleMADataSet])
+    let chartData = LineChartData(dataSets: [cadenceDataSet, simpleMADataSet])
+    
+    let averageCadence = allCadenceValues.count != 0 ? allCadenceValues.reduce(0, +) / Double(allCadenceValues.count) : 0
+
+    return (chartData, averageCadence)
 }
-
-
-//MARK: - Extra Stuff That was Removed
-
-//    var cumulativeMA: Double = cadenceLog[0].cadenceIntervalValue
-//    var cumulativeMADataEntries = [ChartDataEntry]()
-//    cumulativeMADataEntries.append(ChartDataEntry(x: 0, y: cumulativeMA)) //Initial value
-//        cumulativeMA = (cumulativeMA * Double(i + 1) + cadenceLog[i].cadenceIntervalValue) / Double(i + 2)
-//        cumulativeMADataEntries.append(ChartDataEntry(x: cadenceTime, y: cumulativeMA))
-//    let cumulativeMADataSet = LineChartDataSet(values: cumulativeMADataEntries, label: "Cumulative Moving Average")
-//    cumulativeMADataSet.setColor(UIColor.red) //Colour of line
-//    cumulativeMADataSet.lineWidth = 1
-//    cumulativeMADataSet.drawValuesEnabled = false //Doesn't come up if too many points
-//    cumulativeMADataSet.drawCirclesEnabled = false
-//    cumulativeMADataSet.mode = .cubicBezier //Makes curves smooth
-
-//        if (i + 1) % Int(numberOfRawValuesBetweenDataPoints) == 0 { //SimpleMA using only previous data
-

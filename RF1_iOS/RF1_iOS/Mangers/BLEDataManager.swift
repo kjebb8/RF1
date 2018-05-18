@@ -87,7 +87,7 @@ class BLEDataManager {
             newForefootDown = true
         }
         
-        if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) { //When foot lifts up after stepping
+        if (oldHeelDown || oldForefootDown) && (!newHeelDown && !newForefootDown) { //When foot lifts up after stepping
             delegateVC?.didFinishDataProcessing(withReturn: .didTakeStep)
         }
         
