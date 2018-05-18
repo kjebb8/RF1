@@ -130,6 +130,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
                         if (self.inRunState) { //Restore state
                             
                             self.initializeRunTimer()
+                            self.cadenceMetrics.initializeStepTimer()
                             self.bleManager.turnOnNotifications()
                         }
                     }
@@ -154,6 +155,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func setPauseState() {
         
         runTimer.invalidate()
+        cadenceMetrics.stepTimer.invalidate()
         inRunState = false
         bleManager.turnOffNotifications()
         pauseButton.setTitle("Resume", for: .normal)
@@ -163,6 +165,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func setRunState() {
         
         initializeRunTimer()
+        cadenceMetrics.initializeStepTimer()
         inRunState = true
         bleManager.turnOnNotifications()
         pauseButton.setTitle("Pause", for: .normal)
@@ -241,7 +244,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         bleDataManager.processNewData(updatedData: data)
         dataLabel.text = "Forefoot: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
-        print("\(bleDataManager.forefootVoltage) \(bleDataManager.heelVoltage)")
+//        print("\(bleDataManager.forefootVoltage) \(bleDataManager.heelVoltage)")
     }
     
     
@@ -264,6 +267,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         if inRunState { //To preserve the state if user continues but stop updates while alert is up
             
             runTimer.invalidate()
+            cadenceMetrics.stepTimer.invalidate()
             bleManager.turnOffNotifications()
         }
         
