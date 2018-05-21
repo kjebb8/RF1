@@ -18,6 +18,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     var cadenceMetrics = CadenceMetrics() //Holds the properties and mehtods used to track user's cadence
     
+    var footstrikeMetrics = FootstrikeMetrics() ////Holds the properties and mehtods used to track user's footstrike characteristics
+    
     var inRunState: Bool = false //Reflects whether the timer is paused by user or not
     
     var localBLEState: BLEState = .connected //Keeps the BLE state so it can be used anywhere in the class
@@ -31,7 +33,10 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     @IBOutlet weak var recentCadenceTitle: UILabel!
     @IBOutlet weak var recentCadenceLabel: UILabel!
+    @IBOutlet weak var recentFootstrikeTitle: UILabel!
+    @IBOutlet weak var recentFootstrikeLabel: UILabel!
     @IBOutlet weak var avgCadenceLabel: UILabel!
+    @IBOutlet weak var avgFootstrikeLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var stepsLabel: UILabel!
     
@@ -50,10 +55,11 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         bleDataManager = BLEDataManager(delegate: self)
         
-        recentCadenceTitle.text = "\(CadenceParameters.recentCadenceTime)s Cadence"
+//        recentCadenceTitle.text = "\(MetricParameters.recentCadenceTime)s Cadence"
         hintLabel.text = ""
         
         updateUICadenceValues()
+        updateUIFootstrikeValues()
     }
     
     
@@ -81,6 +87,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         runTime += 1
         cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
         updateUICadenceValues()
+        
+        if runTime % MetricParameters.metricLogTime == 0 {footstrikeMetrics.updateFootstrikeLog()}
     }
     
     
@@ -184,6 +192,15 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     }
     
     
+    func updateUIFootstrikeValues() {
+        
+        let footstrikeStringValues = footstrikeMetrics.getFootstrikeStringValues()
+        
+        recentFootstrikeLabel.text = "Fore: " + footstrikeStringValues.recentForePercentString + "% Mid: " + footstrikeStringValues.recentMidPercentString + "% Heel: " + footstrikeStringValues.recentHeelPercentString + "%"
+        avgFootstrikeLabel.text = "Fore: " + footstrikeStringValues.averageForePercentString + "% Mid: " + footstrikeStringValues.averageMidPercentString + "% Heel: " + footstrikeStringValues.averageHeelPercentString + "%"
+    }
+    
+    
     //MARK: - Bluetooth Manager Delegate Methods
     
     func updateForBLEEvent(_ bleEvent: BLEEvent) {
@@ -256,6 +273,11 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
             
             cadenceMetrics.incrementSteps()
             updateUICadenceValues()
+            
+        } else if returnValue == .foreStrike || returnValue == .midStrike || returnValue == .heelStrike {
+            
+            footstrikeMetrics.processFootstrike(forEvent: returnValue)
+            updateUIFootstrikeValues()
         }
     }
     
@@ -295,9 +317,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         newRunLogEntry.startTime = self.getStartTimeString()
         newRunLogEntry.runDuration = self.runTime
         
-        let newCadenceData = self.cadenceMetrics.getCadenceDataForSaving(forRunTime: self.runTime)
+        let newCadenceLog = self.cadenceMetrics.getCadenceLogForSaving(forRunTime: self.runTime)
         
-        newRunLogEntry.cadenceData = newCadenceData
+        newRunLogEntry.cadenceLog = newCadenceLog
         
         do {
             

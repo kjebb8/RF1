@@ -23,7 +23,7 @@ struct RequiredMetrics {
 
 func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics requiredMetrics: RequiredMetrics) -> (chartData: LineChartData, averageCadence: Double) {
     
-    guard let cadenceLog = runEntry.cadenceData?.cadenceLog else {fatalError()}
+    let cadenceLog = runEntry.cadenceLog
     
     let walkingThreshold: Double = 130 //Cadence below the threshold is considered walking
     
@@ -31,7 +31,7 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
     
     var cadenceDataEntries = [ChartDataEntry]()
     
-    let numberOfSimpleMAValues: Int = CadenceParameters.cadenceMovingAverageTime / CadenceParameters.cadenceLogTime
+    let numberOfSimpleMAValues: Int = MetricParameters.movingAverageTime / MetricParameters.metricLogTime
     var simpleMAValuesArray = [Double]()
     var simpleMA: Double = 0
     var simpleMADataEntries = [ChartDataEntry]()
@@ -56,12 +56,12 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
         
             if requiredMetrics.includeCadenceRawData {
                 
-                cadenceTime = (Double(cadenceTimeIntervals * CadenceParameters.cadenceLogTime) -  Double(CadenceParameters.cadenceLogTime) / 2.0) / 60.0
+                cadenceTime = (Double(cadenceTimeIntervals * MetricParameters.metricLogTime) -  Double(MetricParameters.metricLogTime) / 2.0) / 60.0
 
 //                if i == cadenceLog.count - 1 { //Last entry is likely shorter (minimum 5 seconds)
 //                    cadenceTime = runEntry.runDuration.inMinutes
 //                } else {
-//                    cadenceTime = (Double(cadenceTimeIntervals * CadenceParameters.cadenceLogTime) -  Double(CadenceParameters.cadenceLogTime) / 2.0) / 60.0
+//                    cadenceTime = (Double(cadenceTimeIntervals * CadenceParameters.metricLogTime) -  Double(CadenceParameters.metricLogTime) / 2.0) / 60.0
 //                }
                 
                 cadenceDataEntries.append(ChartDataEntry(x: cadenceTime, y: cadenceValue))
@@ -80,7 +80,7 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
                 
                 if cadenceTimeIntervals % numberOfRawValuesBetweenDataPoints == 0 && simpleMAValuesArray.count == numberOfSimpleMAValues { //SimpleMA using data on either side
                 
-                    cadenceTime = ((Double(cadenceTimeIntervals - numberOfRawValuesBetweenDataPoints)) * Double(CadenceParameters.cadenceLogTime)) / 60.0 //SimpleMA using data on either side
+                    cadenceTime = ((Double(cadenceTimeIntervals - numberOfRawValuesBetweenDataPoints)) * Double(MetricParameters.metricLogTime)) / 60.0 //SimpleMA using data on either side
                     simpleMA = simpleMAValuesArray.reduce(0, +) / Double(numberOfSimpleMAValues)
                     simpleMADataEntries.append(ChartDataEntry(x: cadenceTime, y: simpleMA))
                 }

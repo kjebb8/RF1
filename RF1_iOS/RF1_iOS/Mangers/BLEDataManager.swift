@@ -16,6 +16,9 @@ protocol BLEDataManagerDelegate {
 enum BLEDataManagerReturn {
     
     case didTakeStep
+    case foreStrike
+    case midStrike
+    case heelStrike
     case noActionRequired
 }
 
@@ -89,6 +92,13 @@ class BLEDataManager {
         
         if (oldHeelDown || oldForefootDown) && (!newHeelDown && !newForefootDown) { //When foot lifts up after stepping
             delegateVC?.didFinishDataProcessing(withReturn: .didTakeStep)
+        }
+        
+        if (!oldHeelDown && !oldForefootDown) {
+            
+            if (newHeelDown && newForefootDown) {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
+            else if (newHeelDown) {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)}
+            else if (newForefootDown){delegateVC?.didFinishDataProcessing(withReturn: .foreStrike)}
         }
         
         oldHeelDown = newHeelDown

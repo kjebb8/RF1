@@ -25,14 +25,15 @@
 		C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */; };
 		C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */; };
 		C08AAE862090E8610022A5C3 /* RunStatsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08AAE852090E8610022A5C3 /* RunStatsTableViewController.swift */; };
+		C08E4E3920B3294F00F8BFA0 /* FootstrikeMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3820B3294F00F8BFA0 /* FootstrikeMetrics.swift */; };
+		C08E4E3B20B3405600F8BFA0 /* MetricsParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3A20B3405600F8BFA0 /* MetricsParameters.swift */; };
+		C08E4E3F20B34A4200F8BFA0 /* FootstrikeLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3E20B34A4200F8BFA0 /* FootstrikeLogEntry.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
 		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
 		C0D98F4F20A9E6FF001031B1 /* MetricCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */; };
 		C0D98F5120A9E7A7001031B1 /* CustomMetricCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */; };
 		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
-		C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590D208A5A49001CAF23 /* CadenceData.swift */; };
 		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
-		C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0F82C942093847900930934 /* CadenceParameters.swift */; };
 		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
 /* End PBXBuildFile section */
 
@@ -59,14 +60,15 @@
 		C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceMetrics.swift; sourceTree = "<group>"; };
 		C08AAE832090E5630022A5C3 /* HistoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryTableViewController.swift; sourceTree = "<group>"; };
 		C08AAE852090E8610022A5C3 /* RunStatsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunStatsTableViewController.swift; sourceTree = "<group>"; };
+		C08E4E3820B3294F00F8BFA0 /* FootstrikeMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootstrikeMetrics.swift; sourceTree = "<group>"; };
+		C08E4E3A20B3405600F8BFA0 /* MetricsParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsParameters.swift; sourceTree = "<group>"; };
+		C08E4E3E20B34A4200F8BFA0 /* FootstrikeLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootstrikeLogEntry.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
 		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
 		C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MetricCell.xib; sourceTree = "<group>"; };
 		C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMetricCell.swift; sourceTree = "<group>"; };
 		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
-		C0EC590D208A5A49001CAF23 /* CadenceData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceData.swift; sourceTree = "<group>"; };
 		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
-		C0F82C942093847900930934 /* CadenceParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceParameters.swift; sourceTree = "<group>"; };
 		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -163,8 +165,8 @@
 			children = (
 				C0B25B862085020F00B4189B /* FSRData.swift */,
 				C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */,
-				C0EC590D208A5A49001CAF23 /* CadenceData.swift */,
 				C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */,
+				C08E4E3E20B34A4200F8BFA0 /* FootstrikeLogEntry.swift */,
 			);
 			path = "Realm Models";
 			sourceTree = "<group>";
@@ -181,8 +183,9 @@
 		C050E3BF2087CECC001B7F5F /* Metrics */ = {
 			isa = PBXGroup;
 			children = (
-				C0F82C942093847900930934 /* CadenceParameters.swift */,
+				C08E4E3A20B3405600F8BFA0 /* MetricsParameters.swift */,
 				C0895739205C6A0A00E019B6 /* CadenceMetrics.swift */,
+				C08E4E3820B3294F00F8BFA0 /* FootstrikeMetrics.swift */,
 			);
 			path = Metrics;
 			sourceTree = "<group>";
@@ -365,8 +368,8 @@
 				C0685A71209B75D90060FC5C /* BaseTableViewController.swift in Sources */,
 				C089573A205C6A0A00E019B6 /* CadenceMetrics.swift in Sources */,
 				C069E49220922C3100A00329 /* CustomRunLogCell.swift in Sources */,
+				C08E4E3B20B3405600F8BFA0 /* MetricsParameters.swift in Sources */,
 				C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */,
-				C0F82C952093847A00930934 /* CadenceParameters.swift in Sources */,
 				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
 				C08AAE862090E8610022A5C3 /* RunStatsTableViewController.swift in Sources */,
 				C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */,
@@ -374,8 +377,9 @@
 				C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */,
 				C062129C205B2E2C008937C7 /* TrackViewController.swift in Sources */,
 				C0D98F5120A9E7A7001031B1 /* CustomMetricCell.swift in Sources */,
-				C0EC590E208A5A49001CAF23 /* CadenceData.swift in Sources */,
+				C08E4E3920B3294F00F8BFA0 /* FootstrikeMetrics.swift in Sources */,
 				C01FBB94205D6C3700B250E6 /* IntExtensions.swift in Sources */,
+				C08E4E3F20B34A4200F8BFA0 /* FootstrikeLogEntry.swift in Sources */,
 				C00D738420990EE10041AABB /* DoubleExtension.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
 				C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */,

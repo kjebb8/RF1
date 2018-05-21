@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 class CadenceMetrics {
     
@@ -50,11 +51,11 @@ class CadenceMetrics {
         
         recentCadenceSteps.append(0)
         
-        if recentCadenceSteps.count > CadenceParameters.recentCadenceTime {
+        if recentCadenceSteps.count > MetricParameters.recentCadenceTime {
             recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only a certian time period is included
         }
         
-        if currentTime % CadenceParameters.cadenceLogTime == 0 {  //Add a value to the cadence log
+        if currentTime % MetricParameters.metricLogTime == 0 {  //Add a value to the cadence log
             
             var steps = Double(cadenceLogSteps)
             
@@ -65,7 +66,7 @@ class CadenceMetrics {
                 stepSubtractionValue = 2 * (stepFraction)
             }
             
-            cadenceLog.append(steps / CadenceParameters.cadenceLogTime.inMinutes)
+            cadenceLog.append(steps / MetricParameters.metricLogTime.inMinutes)
             cadenceLogSteps = 0
         }
     }
@@ -76,13 +77,11 @@ class CadenceMetrics {
     }
     
     
-    func getCadenceDataForSaving(forRunTime runTime: Int) -> (CadenceData) {
+    func getCadenceLogForSaving(forRunTime runTime: Int) -> (List<CadenceLogEntry>) {
         
-        let newCadenceData = CadenceData()
+        let newCadenceLog = List<CadenceLogEntry>()
         
-//        newCadenceData.averageCadence = averageCadence
-        
-        let remainingTime = runTime % CadenceParameters.cadenceLogTime
+        let remainingTime = runTime % MetricParameters.metricLogTime
         
         if remainingTime >= 5 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data if longer than 5 seconds (for accuracy)
         
@@ -90,10 +89,10 @@ class CadenceMetrics {
             
             let newCadenceLogEntry = CadenceLogEntry()
             newCadenceLogEntry.cadenceIntervalValue = data
-            newCadenceData.cadenceLog.append(newCadenceLogEntry)
+            newCadenceLog.append(newCadenceLogEntry)
         }
         
-        return(newCadenceData)
+        return(newCadenceLog)
     }
     
     
