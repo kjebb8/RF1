@@ -205,34 +205,33 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         let footstrikeChartData = getFormattedFootstrikeBarChartData(recentValues: footstrikeValues.recent, averageValues: footstrikeValues.average)
         
-        let formatter: CustomIntFormatter = CustomIntFormatter()
-        
         recentFootstrikeChartView.data = footstrikeChartData.recent
-        recentFootstrikeChartView.data!.setValueFormatter(formatter)
+        recentFootstrikeChartView.data!.setValueFormatter(IntPercentFormatter())
         
         averageFootstrikeChartView.data = footstrikeChartData.average
-        averageFootstrikeChartView.data!.setValueFormatter(formatter)
+        averageFootstrikeChartView.data!.setValueFormatter(IntPercentFormatter())
     }
     
     
-    func formatChart(_ chartView: BarChartView) {
+    func formatChart(_ chartView: BarChartView) { //Done once at ViewDidLoad()
         
-        chartView.chartDescription = nil //Label in bottom right corner
+        chartView.chartDescription = nil
         
-        let xlabels: [String] = ["", "         Fore", "         Mid", "         Heel"] //Very sketchy but the labels won't show up and align otherwise...
-        
-        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: xlabels)
+        chartView.xAxis.valueFormatter = FootstrikeBarChartFormatter()
         chartView.xAxis.labelPosition = .bottom
-        chartView.xAxis.labelTextColor = UIColor.white
-        chartView.xAxis.centerAxisLabelsEnabled = true
+        chartView.xAxis.labelTextColor = UIColor.lightGray
         chartView.xAxis.drawGridLinesEnabled = false
         chartView.xAxis.drawAxisLineEnabled = false
+        chartView.xAxis.labelCount = 3
+        chartView.xAxis.labelFont = .boldSystemFont(ofSize: 12)
         
         chartView.rightAxis.enabled = false
         
         chartView.leftAxis.enabled = false
 
         chartView.legend.enabled = false
+        
+        chartView.fitBars = true
     }
     
     

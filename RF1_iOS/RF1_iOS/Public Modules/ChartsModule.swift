@@ -141,19 +141,19 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
 
 func getFormattedFootstrikeBarChartData(recentValues: [Double], averageValues: [Double]) -> (recent: BarChartData, average: BarChartData) {
 
-    let recentDataEntries = [BarChartDataEntry(x: 1, y: recentValues[0]), BarChartDataEntry(x: 2, y: recentValues[1]), BarChartDataEntry(x: 3, y: recentValues[2])]
-    let averageDataEntries = [BarChartDataEntry(x: 1, y: averageValues[0]), BarChartDataEntry(x: 2, y: averageValues[1]), BarChartDataEntry(x: 3, y: averageValues[2])]
+    let recentDataEntries = [BarChartDataEntry(x: 0, y: recentValues[0]), BarChartDataEntry(x: 1, y: recentValues[1]), BarChartDataEntry(x: 2, y: recentValues[2])]
+    let averageDataEntries = [BarChartDataEntry(x: 0, y: averageValues[0]), BarChartDataEntry(x: 1, y: averageValues[1]), BarChartDataEntry(x: 2, y: averageValues[2])]
     
     let recentDataSet = BarChartDataSet(values: recentDataEntries, label: "") //Labels won't show up
     let averageDataSet = BarChartDataSet(values: averageDataEntries, label: "")
     
     recentDataSet.setColor(UIColor.white)
-    recentDataSet.valueTextColor = UIColor.white
-//    recentDataSet.drawValuesEnabled = false
+    recentDataSet.valueTextColor = UIColor.lightGray
+    recentDataSet.valueFont = .boldSystemFont(ofSize: 12)
     
     averageDataSet.setColor(UIColor.white)
-    averageDataSet.valueTextColor = UIColor.white
-//    averageDataSet.drawValuesEnabled = false
+    averageDataSet.valueTextColor = UIColor.lightGray
+    averageDataSet.valueFont = .boldSystemFont(ofSize: 12)
     
     return (BarChartData(dataSet: recentDataSet), BarChartData(dataSet: averageDataSet))
 }
@@ -161,10 +161,25 @@ func getFormattedFootstrikeBarChartData(recentValues: [Double], averageValues: [
 
 //MARK: - Formatters
 
-class CustomIntFormatter: NSObject, IValueFormatter{
+public class IntPercentFormatter: NSObject, IValueFormatter{
+    
     public func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
+        
         let correctValue = Int(value)
-        return String(correctValue)
+        return String(correctValue) + " %"
+    }
+}
+
+
+@objc(BarChartFormatter)
+public class FootstrikeBarChartFormatter: NSObject, IAxisValueFormatter{
+    
+    var xValsFootstrike: [String]! = ["Fore", "Mid", "Heel"]
+    
+    
+    public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
+        
+        return xValsFootstrike[Int(value)]
     }
 }
 

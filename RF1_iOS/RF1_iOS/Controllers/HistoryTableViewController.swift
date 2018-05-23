@@ -55,8 +55,10 @@ class HistoryTableViewController: BaseTableViewController {
             
             cell.chartView.chartDescription = nil //Label in bottom right corner
             cell.chartView.xAxis.drawLabelsEnabled = false
+            cell.chartView.xAxis.drawGridLinesEnabled = false
             cell.chartView.leftAxis.drawLabelsEnabled = false
-            cell.chartView.rightAxis.drawLabelsEnabled = false
+            cell.chartView.leftAxis.drawGridLinesEnabled = false
+            cell.chartView.rightAxis.enabled = false
             cell.chartView.legend.enabled = false
             cell.chartView.data = cadenceChartData
             
