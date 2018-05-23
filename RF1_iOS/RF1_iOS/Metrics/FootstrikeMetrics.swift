@@ -65,7 +65,7 @@ class FootstrikeMetrics {
     }
     
     
-    func getFootstrikeStringValues() -> (FootstrikeStringValues) {
+    func getFootstrikeValues() -> (recent: [Double], average: [Double]) {
         
         var recentForePercent: Double = 0
         var recentMidPercent: Double = 0
@@ -77,16 +77,16 @@ class FootstrikeMetrics {
             
         if totalFootstrikes != 0 {
         
-        recentForePercent = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
-        recentMidPercent = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
-        recentHeelPercent = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
+            recentForePercent = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
+            recentMidPercent = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
+            recentHeelPercent = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
             
-        averageForePercent = Double(totalFore) / Double(totalFootstrikes) * 100
-        averageMidPercent = Double(totalMid) / Double(totalFootstrikes) * 100
-        averageHeelPercent = Double(totalHeel) / Double(totalFootstrikes) * 100
+            averageForePercent = Double(totalFore) / Double(totalFootstrikes) * 100
+            averageMidPercent = Double(totalMid) / Double(totalFootstrikes) * 100
+            averageHeelPercent = Double(totalHeel) / Double(totalFootstrikes) * 100
         }
         
-        return FootstrikeStringValues(recentForePercent, recentMidPercent, recentHeelPercent, averageForePercent, averageMidPercent, averageHeelPercent)
+        return ([recentForePercent, recentMidPercent, recentHeelPercent], [averageForePercent, averageMidPercent, averageHeelPercent])
     }
     
     
@@ -95,7 +95,6 @@ class FootstrikeMetrics {
         foreLog.append(0)
         midLog.append(0)
         heelLog.append(0)
-        print(foreLog)
     }
     
     
@@ -123,26 +122,26 @@ class FootstrikeMetrics {
 
 //MARK: - Footstrike String Values Class
 
-class FootstrikeStringValues {
-    
-    var recentForePercentString: String
-    var recentMidPercentString: String
-    var recentHeelPercentString: String
-    
-    var averageForePercentString: String
-    var averageMidPercentString: String
-    var averageHeelPercentString: String
-    
-    init(_ recentForePercent: Double , _ recentMidPercent: Double, _ recentHeelPercent: Double, _ averageForePercent: Double, _ averageMidPercent: Double, _ averageHeelPercent: Double) {
-        
-        recentForePercentString = recentForePercent.roundedIntString
-        recentMidPercentString = recentMidPercent.roundedIntString
-        recentHeelPercentString = recentHeelPercent.roundedIntString
-        
-        averageForePercentString = averageForePercent.roundedIntString
-        averageMidPercentString = averageMidPercent.roundedIntString
-        averageHeelPercentString = averageHeelPercent.roundedIntString
-    }
-    
-    
-}
+//class FootstrikeStringValues {
+//
+//    var recentForePercentString: String
+//    var recentMidPercentString: String
+//    var recentHeelPercentString: String
+//
+//    var averageForePercentString: String
+//    var averageMidPercentString: String
+//    var averageHeelPercentString: String
+//
+//    init(_ recentForePercent: Double , _ recentMidPercent: Double, _ recentHeelPercent: Double, _ averageForePercent: Double, _ averageMidPercent: Double, _ averageHeelPercent: Double) {
+//
+//        recentForePercentString = recentForePercent.roundedIntString
+//        recentMidPercentString = recentMidPercent.roundedIntString
+//        recentHeelPercentString = recentHeelPercent.roundedIntString
+//
+//        averageForePercentString = averageForePercent.roundedIntString
+//        averageMidPercentString = averageMidPercent.roundedIntString
+//        averageHeelPercentString = averageHeelPercent.roundedIntString
+//    }
+//
+//
+//}

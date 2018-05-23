@@ -11,7 +11,7 @@ import Charts
 //Public Charts Module
 
 //Used to determine what data the user wants displayed
-struct RequiredMetrics {
+struct RequiredCadenceMetrics {
     
     var includeCadenceRawData: Bool = false
     var includeCadenceMovingAverage: Bool = false
@@ -21,7 +21,7 @@ struct RequiredMetrics {
 
 //MARK: - Cadence Chart
 
-func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics requiredMetrics: RequiredMetrics) -> (chartData: LineChartData, averageCadence: Double) {
+func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics requiredMetrics: RequiredCadenceMetrics) -> (chartData: LineChartData, averageCadence: Double) {
     
     let cadenceLog = runEntry.cadenceLog
     
@@ -134,3 +134,38 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withMetrics re
 
     return (chartData, averageCadence)
 }
+
+
+
+//MARK: - Footstrike Bar Chart
+
+func getFormattedFootstrikeBarChartData(recentValues: [Double], averageValues: [Double]) -> (recent: BarChartData, average: BarChartData) {
+
+    let recentDataEntries = [BarChartDataEntry(x: 1, y: recentValues[0]), BarChartDataEntry(x: 2, y: recentValues[1]), BarChartDataEntry(x: 3, y: recentValues[2])]
+    let averageDataEntries = [BarChartDataEntry(x: 1, y: averageValues[0]), BarChartDataEntry(x: 2, y: averageValues[1]), BarChartDataEntry(x: 3, y: averageValues[2])]
+    
+    let recentDataSet = BarChartDataSet(values: recentDataEntries, label: "") //Labels won't show up
+    let averageDataSet = BarChartDataSet(values: averageDataEntries, label: "")
+    
+    recentDataSet.setColor(UIColor.white)
+    recentDataSet.valueTextColor = UIColor.white
+//    recentDataSet.drawValuesEnabled = false
+    
+    averageDataSet.setColor(UIColor.white)
+    averageDataSet.valueTextColor = UIColor.white
+//    averageDataSet.drawValuesEnabled = false
+    
+    return (BarChartData(dataSet: recentDataSet), BarChartData(dataSet: averageDataSet))
+}
+
+
+//MARK: - Formatters
+
+class CustomIntFormatter: NSObject, IValueFormatter{
+    public func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
+        let correctValue = Int(value)
+        return String(correctValue)
+    }
+}
+
+

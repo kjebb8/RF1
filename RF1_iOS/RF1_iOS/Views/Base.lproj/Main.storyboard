@@ -233,22 +233,8 @@
                                     <constraint firstItem="8uN-UY-Uzn" firstAttribute="centerY" secondItem="GS4-6g-tu5" secondAttribute="centerY" constant="10" id="lxK-fh-nHi"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lSz-yQ-Ze1" userLabel="Recent Footstrike Value Container">
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lSz-yQ-Ze1" userLabel="Recent Footstrike Value Container" customClass="BarChartView" customModule="Charts">
                                 <rect key="frame" x="187.5" y="126" width="187.5" height="132"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="yx8-6s-xCY" userLabel="Recent Footstrike Value">
-                                        <rect key="frame" x="10" y="-5" width="167.5" height="123"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="110"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="yx8-6s-xCY" firstAttribute="top" secondItem="lSz-yQ-Ze1" secondAttribute="top" constant="-5" id="1b7-AK-cVc"/>
-                                    <constraint firstItem="yx8-6s-xCY" firstAttribute="centerY" secondItem="lSz-yQ-Ze1" secondAttribute="centerY" constant="-10" id="2d6-Cv-CdU"/>
-                                    <constraint firstItem="yx8-6s-xCY" firstAttribute="leading" secondItem="lSz-yQ-Ze1" secondAttribute="leading" constant="10" id="G5s-y7-8WS"/>
-                                    <constraint firstAttribute="trailing" secondItem="yx8-6s-xCY" secondAttribute="trailing" constant="10" id="uHX-s7-bUS"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OZM-ir-QPZ" userLabel="Avg. Cadence Label Container">
                                 <rect key="frame" x="0.0" y="258" width="187.5" height="65.5"/>
@@ -301,22 +287,8 @@
                                     <constraint firstAttribute="trailing" secondItem="HN9-w4-1hF" secondAttribute="trailing" constant="10" id="egK-ka-v7N"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fjq-BV-1tr" userLabel="Avg. Footstrike Value Container">
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fjq-BV-1tr" userLabel="Avg. Footstrike Value Container" customClass="BarChartView" customModule="Charts">
                                 <rect key="frame" x="187.5" y="323.5" width="187.5" height="132"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" minimumFontSize="20" translatesAutoresizingMaskIntoConstraints="NO" id="y5a-rr-IYY" userLabel="Avg. Footstrike Value">
-                                        <rect key="frame" x="10" y="-5" width="167.5" height="123"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="110"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="y5a-rr-IYY" firstAttribute="centerY" secondItem="fjq-BV-1tr" secondAttribute="centerY" constant="-10" id="JJE-4L-jdy"/>
-                                    <constraint firstItem="y5a-rr-IYY" firstAttribute="top" secondItem="fjq-BV-1tr" secondAttribute="top" constant="-5" id="e8h-1s-pYt"/>
-                                    <constraint firstAttribute="trailing" secondItem="y5a-rr-IYY" secondAttribute="trailing" constant="10" id="mqO-7X-iBz"/>
-                                    <constraint firstItem="y5a-rr-IYY" firstAttribute="leading" secondItem="fjq-BV-1tr" secondAttribute="leading" constant="10" id="u2s-Tk-ZdR"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zvP-eJ-dPS" userLabel="Time Label Container">
                                 <rect key="frame" x="0.0" y="455.5" width="187.5" height="66.5"/>
@@ -532,15 +504,15 @@
                         <viewLayoutGuide key="safeArea" id="juI-3W-ThD"/>
                     </view>
                     <connections>
+                        <outlet property="averageFootstrikeChartView" destination="fjq-BV-1tr" id="aYv-WK-vxv"/>
                         <outlet property="avgCadenceLabel" destination="jbE-pn-gJ9" id="9rR-Jh-nad"/>
-                        <outlet property="avgFootstrikeLabel" destination="y5a-rr-IYY" id="kX1-ZA-INg"/>
                         <outlet property="dataLabel" destination="rrX-Ew-hHH" id="mec-K9-n5r"/>
                         <outlet property="feedbackButton" destination="Gne-Sc-kmq" id="Xdr-9w-9a2"/>
                         <outlet property="hintLabel" destination="GwP-oN-DZj" id="0N4-Qz-J0y"/>
                         <outlet property="pauseButton" destination="T0n-6F-fpw" id="tzJ-fs-xOM"/>
                         <outlet property="recentCadenceLabel" destination="t6x-0S-HF0" id="bd4-PO-lRq"/>
                         <outlet property="recentCadenceTitle" destination="DXj-lB-gtl" id="jMS-3t-dxk"/>
-                        <outlet property="recentFootstrikeLabel" destination="yx8-6s-xCY" id="veu-60-8XM"/>
+                        <outlet property="recentFootstrikeChartView" destination="lSz-yQ-Ze1" id="QGA-PD-l6b"/>
                         <outlet property="recentFootstrikeTitle" destination="8uN-UY-Uzn" id="fM2-S3-hqY"/>
                         <outlet property="stepsLabel" destination="vkm-LL-KNS" id="Dve-42-6hv"/>
                         <outlet property="timeLabel" destination="afN-mH-Lu7" id="Yg9-Sk-OzF"/>

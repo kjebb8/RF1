@@ -11,7 +11,7 @@ import Charts
 
 protocol MetricCellDelegate {
     
-    func loadNewChart(withMetrics requiredMetrics: RequiredMetrics, atRow row: Int)
+    func loadNewChart(withMetrics requiredMetrics: RequiredCadenceMetrics, atRow row: Int)
 }
 
 
@@ -38,7 +38,7 @@ class CustomMetricCell: UITableViewCell {
     
     @IBAction func dataSwitched(_ sender: UISwitch) {
         
-        delegateVC?.loadNewChart(withMetrics: RequiredMetrics(includeCadenceRawData: rawDataSwitch.isOn,
+        delegateVC?.loadNewChart(withMetrics: RequiredCadenceMetrics(includeCadenceRawData: rawDataSwitch.isOn,
                                                               includeCadenceMovingAverage: movingAverageSwitch.isOn,
                                                               includeWalkingData: walkingDataSwitch.isOn), atRow: cellRow)
     }

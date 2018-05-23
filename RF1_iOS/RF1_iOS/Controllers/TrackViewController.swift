@@ -9,6 +9,7 @@
 import UIKit
 import CoreBluetooth
 import RealmSwift
+import Charts
 
 class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManagerDelegate {
     
@@ -45,6 +46,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     @IBOutlet weak var hintLabel: UILabel! //May not use this
     @IBOutlet weak var dataLabel: UILabel!
     
+    @IBOutlet weak var recentFootstrikeChartView: BarChartView!
+    @IBOutlet weak var averageFootstrikeChartView: BarChartView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,6 +61,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
 //        recentCadenceTitle.text = "\(MetricParameters.recentCadenceTime)s Cadence"
         hintLabel.text = ""
+        
+        formatChart(recentFootstrikeChartView)
+        formatChart(averageFootstrikeChartView)
         
         updateUICadenceValues()
         updateUIFootstrikeValues()
@@ -194,10 +201,38 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     func updateUIFootstrikeValues() {
         
-        let footstrikeStringValues = footstrikeMetrics.getFootstrikeStringValues()
+        let footstrikeValues = footstrikeMetrics.getFootstrikeValues()
         
-        recentFootstrikeLabel.text = "Fore: " + footstrikeStringValues.recentForePercentString + "% Mid: " + footstrikeStringValues.recentMidPercentString + "% Heel: " + footstrikeStringValues.recentHeelPercentString + "%"
-        avgFootstrikeLabel.text = "Fore: " + footstrikeStringValues.averageForePercentString + "% Mid: " + footstrikeStringValues.averageMidPercentString + "% Heel: " + footstrikeStringValues.averageHeelPercentString + "%"
+        let footstrikeChartData = getFormattedFootstrikeBarChartData(recentValues: footstrikeValues.recent, averageValues: footstrikeValues.average)
+        
+        let formatter: CustomIntFormatter = CustomIntFormatter()
+        
+        recentFootstrikeChartView.data = footstrikeChartData.recent
+        recentFootstrikeChartView.data!.setValueFormatter(formatter)
+        
+        averageFootstrikeChartView.data = footstrikeChartData.average
+        averageFootstrikeChartView.data!.setValueFormatter(formatter)
+    }
+    
+    
+    func formatChart(_ chartView: BarChartView) {
+        
+        chartView.chartDescription = nil //Label in bottom right corner
+        
+        let xlabels: [String] = ["", "         Fore", "         Mid", "         Heel"] //Very sketchy but the labels won't show up and align otherwise...
+        
+        chartView.xAxis.valueFormatter = IndexAxisValueFormatter(values: xlabels)
+        chartView.xAxis.labelPosition = .bottom
+        chartView.xAxis.labelTextColor = UIColor.white
+        chartView.xAxis.centerAxisLabelsEnabled = true
+        chartView.xAxis.drawGridLinesEnabled = false
+        chartView.xAxis.drawAxisLineEnabled = false
+        
+        chartView.rightAxis.enabled = false
+        
+        chartView.leftAxis.enabled = false
+
+        chartView.legend.enabled = false
     }
     
     

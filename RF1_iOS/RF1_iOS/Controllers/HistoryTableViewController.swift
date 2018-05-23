@@ -47,7 +47,7 @@ class HistoryTableViewController: BaseTableViewController {
 
          if let runEntry = runLog?[indexPath.row] {
             
-            let requiredMetrics = RequiredMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true, includeWalkingData: true)
+            let requiredMetrics = RequiredCadenceMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true, includeWalkingData: true)
             let returnData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: requiredMetrics)
             
             let cadenceChartData = returnData.chartData

@@ -16,10 +16,10 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
     var specificAverageCadence: Double = 0
     
     //Initial state of charts
-    var chartMetrics = [RequiredMetrics(includeCadenceRawData: false,
+    var chartMetrics = [RequiredCadenceMetrics(includeCadenceRawData: false,
                                         includeCadenceMovingAverage: true,
                                         includeWalkingData: true),
-                        RequiredMetrics(includeCadenceRawData: false,
+                        RequiredCadenceMetrics(includeCadenceRawData: false,
                                         includeCadenceMovingAverage: true,
                                         includeWalkingData: true)]
     
@@ -105,7 +105,7 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
     
     //MARK: - Metric Cell Delegate Method
     
-    func loadNewChart(withMetrics requiredMetrics: RequiredMetrics, atRow row: Int) {
+    func loadNewChart(withMetrics requiredMetrics: RequiredCadenceMetrics, atRow row: Int) {
         
         chartMetrics[row] = requiredMetrics
         tableView.reloadData()
