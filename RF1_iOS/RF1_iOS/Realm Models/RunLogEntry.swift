@@ -15,6 +15,12 @@ class RunLogEntry: Object {
     @objc dynamic var startTime: String = ""
     @objc dynamic var runDuration: Int = 0 //In seconds
     
+    @objc dynamic var averageCadence: Double = 0
+    @objc dynamic var averageCadenceRunningOnly: Double = 0
     var cadenceLog = List<CadenceLogEntry>()
+    
+    @objc dynamic var foreStrikePercentage: Double = 0
+    @objc dynamic var midStrikePercentage: Double = 0
+    @objc dynamic var heelStrikePercentage: Double = 0
     var footstrikeLog = List<FootstrikeLogEntry>()
 }

@@ -203,7 +203,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         let footstrikeValues = footstrikeMetrics.getFootstrikeValues()
         
-        let footstrikeChartData = getFormattedFootstrikeBarChartData(recentValues: footstrikeValues.recent, averageValues: footstrikeValues.average)
+        let footstrikeChartData = getFormattedTrackingFootstrikeBarChartData(recentValues: footstrikeValues.recent, averageValues: footstrikeValues.average)
         
         recentFootstrikeChartView.data = footstrikeChartData.recent
         recentFootstrikeChartView.data!.setValueFormatter(IntPercentFormatter())
@@ -351,9 +351,18 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         newRunLogEntry.startTime = self.getStartTimeString()
         newRunLogEntry.runDuration = self.runTime
         
-        let newCadenceLog = self.cadenceMetrics.getCadenceLogForSaving(forRunTime: self.runTime)
+        let newCadenceData = self.cadenceMetrics.getCadenceDataForSaving(forRunTime: self.runTime)
         
-        newRunLogEntry.cadenceLog = newCadenceLog
+        newRunLogEntry.cadenceLog = newCadenceData.cadenceLog
+        newRunLogEntry.averageCadence = newCadenceData.averageCadence
+        newRunLogEntry.averageCadenceRunningOnly = newCadenceData.runningCadence
+        
+        let newFootstrikeData = self.footstrikeMetrics.getFootstrikeDataForSaving()
+        
+        newRunLogEntry.footstrikeLog = newFootstrikeData.footstrikeLog
+        newRunLogEntry.foreStrikePercentage = newFootstrikeData.footstrikePercentages["Fore"]!
+        newRunLogEntry.midStrikePercentage = newFootstrikeData.footstrikePercentages["Mid"]!
+        newRunLogEntry.heelStrikePercentage = newFootstrikeData.footstrikePercentages["Heel"]!
         
         do {
             

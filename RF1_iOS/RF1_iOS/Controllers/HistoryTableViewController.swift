@@ -19,7 +19,6 @@ class HistoryTableViewController: BaseTableViewController {
         
         loadRunLog()
         tableView.register(UINib(nibName: "RunLogCell", bundle: nil), forCellReuseIdentifier: "customRunLogCell")
-        tableView.rowHeight = 130
     }
     
     
@@ -37,40 +36,69 @@ class HistoryTableViewController: BaseTableViewController {
     // MARK: - Table View Data Source Methods
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (runLog?.count ?? 1)
+        return (runLog?.count ?? -1) + 1 //No cell if no run log
+    }
+    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        var cellHeight: CGFloat = 140
+        
+        if indexPath.row == 0 {cellHeight = 40}
+        
+        return cellHeight
     }
 
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "customRunLogCell", for: indexPath) as! CustomRunLogCell
-
-         if let runEntry = runLog?[indexPath.row] {
+        if indexPath.row == 0 {
             
-            let requiredMetrics = RequiredCadenceMetrics(includeCadenceRawData: false, includeCadenceMovingAverage: true, includeWalkingData: true)
-            let returnData = getFormattedCadenceChartData(forEntry: runEntry, withMetrics: requiredMetrics)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "tapForStatsCell")
+            cell?.textLabel?.text = "Tap a Cell for Details"
+            cell?.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+            cell?.textLabel?.textAlignment = .center
+            cell?.backgroundColor = UIColor.clear
             
-            let cadenceChartData = returnData.chartData
-            let specificAverageCadence = returnData.averageCadence
+            return cell!
             
-            cell.chartView.chartDescription = nil //Label in bottom right corner
-            cell.chartView.xAxis.drawLabelsEnabled = false
-            cell.chartView.xAxis.drawGridLinesEnabled = false
-            cell.chartView.leftAxis.drawLabelsEnabled = false
-            cell.chartView.leftAxis.drawGridLinesEnabled = false
-            cell.chartView.rightAxis.enabled = false
-            cell.chartView.legend.enabled = false
-            cell.chartView.data = cadenceChartData
-            
-            cell.dateLabel.text = runEntry.date
-            cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
-            cell.timeLabel.text = runEntry.startTime
-            cell.cadenceLabel.text = specificAverageCadence.roundedIntString
-            cell.layer.borderWidth = 5
-            cell.layer.borderColor = UIColor.black.cgColor
-        }
+        } else {
         
-        return cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "customRunLogCell", for: indexPath) as! CustomRunLogCell
+
+             if let runEntry = runLog?[indexPath.row - 1] {
+                
+                let footstrikeData = getFormattedRealmFootstrikeBarChartData(forEntry: runEntry)
+                
+                cell.chartView.chartDescription = nil
+                
+                cell.chartView.xAxis.valueFormatter = FootstrikeBarChartFormatter()
+                cell.chartView.xAxis.labelPosition = .bottom
+                cell.chartView.xAxis.labelTextColor = UIColor.lightGray
+                cell.chartView.xAxis.drawGridLinesEnabled = false
+                cell.chartView.xAxis.drawAxisLineEnabled = false
+                cell.chartView.xAxis.labelCount = 3
+                cell.chartView.xAxis.labelFont = .boldSystemFont(ofSize: 10)
+                
+                cell.chartView.rightAxis.enabled = false
+                
+                cell.chartView.leftAxis.enabled = false
+                
+                cell.chartView.legend.enabled = false
+
+                cell.chartView.data = footstrikeData
+                cell.chartView.data!.setValueFormatter(IntPercentFormatter())
+                
+                cell.dateLabel.text = runEntry.date
+                cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
+                cell.timeLabel.text = runEntry.startTime
+                cell.cadenceLabel.text = runEntry.averageCadenceRunningOnly.roundedIntString
+                cell.layer.borderWidth = 3
+                cell.layer.borderColor = UIColor.black.cgColor
+            }
+            
+            return cell
+        }
     }
     
     
@@ -84,7 +112,7 @@ class HistoryTableViewController: BaseTableViewController {
         let destinationVC = segue.destination as! RunStatsTableViewController
         
         if let indexPath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedRun = runLog?[indexPath.row]
+            destinationVC.selectedRun = runLog?[indexPath.row - 1]
         }
     }
     

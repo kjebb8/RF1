@@ -28,6 +28,7 @@
 		C08E4E3920B3294F00F8BFA0 /* FootstrikeMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3820B3294F00F8BFA0 /* FootstrikeMetrics.swift */; };
 		C08E4E3B20B3405600F8BFA0 /* MetricsParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3A20B3405600F8BFA0 /* MetricsParameters.swift */; };
 		C08E4E3F20B34A4200F8BFA0 /* FootstrikeLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08E4E3E20B34A4200F8BFA0 /* FootstrikeLogEntry.swift */; };
+		C097078A20B7295500E2066B /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = C097078920B7295500E2066B /* Enums.swift */; };
 		C0B25B872085020F00B4189B /* FSRData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B25B862085020F00B4189B /* FSRData.swift */; };
 		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
 		C0D98F4F20A9E6FF001031B1 /* MetricCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */; };
@@ -63,6 +64,7 @@
 		C08E4E3820B3294F00F8BFA0 /* FootstrikeMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootstrikeMetrics.swift; sourceTree = "<group>"; };
 		C08E4E3A20B3405600F8BFA0 /* MetricsParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsParameters.swift; sourceTree = "<group>"; };
 		C08E4E3E20B34A4200F8BFA0 /* FootstrikeLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FootstrikeLogEntry.swift; sourceTree = "<group>"; };
+		C097078920B7295500E2066B /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		C0B25B862085020F00B4189B /* FSRData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FSRData.swift; sourceTree = "<group>"; };
 		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
 		C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MetricCell.xib; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				C0C24996209A15D6000C6B14 /* ChartsModule.swift */,
+				C097078920B7295500E2066B /* Enums.swift */,
 			);
 			path = "Public Modules";
 			sourceTree = "<group>";
@@ -372,6 +375,7 @@
 				C0685A6F209B5F7D0060FC5C /* BaseViewController.swift in Sources */,
 				C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */,
 				C08AAE862090E8610022A5C3 /* RunStatsTableViewController.swift in Sources */,
+				C097078A20B7295500E2066B /* Enums.swift in Sources */,
 				C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */,
 				C08AAE842090E5630022A5C3 /* HistoryTableViewController.swift in Sources */,
 				C067BE36206AA88300CD8D04 /* BLEManager.swift in Sources */,

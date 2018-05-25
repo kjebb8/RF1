@@ -77,7 +77,7 @@ class CadenceMetrics {
     }
     
     
-    func getCadenceLogForSaving(forRunTime runTime: Int) -> (List<CadenceLogEntry>) {
+    func getCadenceDataForSaving(forRunTime runTime: Int) -> (cadenceLog: List<CadenceLogEntry>, averageCadence: Double, runningCadence: Double) {
         
         let newCadenceLog = List<CadenceLogEntry>()
         
@@ -85,14 +85,20 @@ class CadenceMetrics {
         
         if remainingTime >= 5 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data if longer than 5 seconds (for accuracy)
         
+        var runningCadenceValues = [Double]() //For calculating the average cadence for running only
+        
         for data in cadenceLog {
             
             let newCadenceLogEntry = CadenceLogEntry()
             newCadenceLogEntry.cadenceIntervalValue = data
             newCadenceLog.append(newCadenceLogEntry)
+            
+            if data >= MetricParameters.walkingThresholdCadence {runningCadenceValues.append(data)}
         }
         
-        return(newCadenceLog)
+        let runningCadence = runningCadenceValues.reduce(0, +) / Double(runningCadenceValues.count)
+        
+        return(newCadenceLog, averageCadence, runningCadence)
     }
     
     

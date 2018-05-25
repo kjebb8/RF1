@@ -22,21 +22,23 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HUQ-B4-OA7" userLabel="Average Stat Container">
                         <rect key="frame" x="16" y="31" width="343" height="30"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Cadence: 999 steps/min" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7JD-0A-gLG" userLabel="Date Label">
-                                <rect key="frame" x="12" y="6.5" width="319" height="27"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average Cadence: 999 steps/min" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="7JD-0A-gLG" userLabel="Data Label">
+                                <rect key="frame" x="12" y="0.0" width="319" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="7JD-0A-gLG" firstAttribute="centerY" secondItem="HUQ-B4-OA7" secondAttribute="centerY" constant="5" id="K3K-cl-iYQ"/>
+                            <constraint firstItem="7JD-0A-gLG" firstAttribute="top" secondItem="HUQ-B4-OA7" secondAttribute="top" id="4cq-VS-rzS"/>
+                            <constraint firstItem="7JD-0A-gLG" firstAttribute="leading" secondItem="HUQ-B4-OA7" secondAttribute="leading" constant="12" id="PAo-RU-nDV"/>
                             <constraint firstAttribute="height" constant="30" id="Zye-RP-PBQ"/>
-                            <constraint firstItem="7JD-0A-gLG" firstAttribute="centerX" secondItem="HUQ-B4-OA7" secondAttribute="centerX" id="ZzZ-Ug-oFl"/>
+                            <constraint firstAttribute="trailing" secondItem="7JD-0A-gLG" secondAttribute="trailing" constant="12" id="d5f-pK-W6P"/>
+                            <constraint firstAttribute="bottom" secondItem="7JD-0A-gLG" secondAttribute="bottom" id="n5V-DM-Pzb"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BG2-4Q-wcB" userLabel="Chart View" customClass="LineChartView" customModule="Charts">
-                        <rect key="frame" x="16" y="71" width="343" height="344"/>
+                        <rect key="frame" x="16" y="66" width="343" height="349"/>
                         <color key="backgroundColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3On-s2-sDW" userLabel="Raw Data Container">
@@ -48,8 +50,8 @@
                                     <action selector="dataSwitched:" destination="QSI-vE-rTg" eventType="valueChanged" id="Z6Q-Di-sik"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Raw Cadence Data:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXN-6d-rmd">
-                                <rect key="frame" x="10" y="7" width="187.5" height="26.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Raw Data:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXN-6d-rmd">
+                                <rect key="frame" x="10" y="7" width="97" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="0.69999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -122,7 +124,7 @@
                     <constraint firstItem="3On-s2-sDW" firstAttribute="top" secondItem="BG2-4Q-wcB" secondAttribute="bottom" constant="5" id="Ft8-oz-0Xv"/>
                     <constraint firstItem="BG2-4Q-wcB" firstAttribute="leading" secondItem="gqM-PP-5gc" secondAttribute="leadingMargin" id="Gz7-79-zZQ"/>
                     <constraint firstItem="BG2-4Q-wcB" firstAttribute="trailing" secondItem="gqM-PP-5gc" secondAttribute="trailingMargin" id="HUY-0g-mqu"/>
-                    <constraint firstItem="BG2-4Q-wcB" firstAttribute="top" secondItem="HUQ-B4-OA7" secondAttribute="bottom" constant="10" id="Rvc-W8-i1S"/>
+                    <constraint firstItem="BG2-4Q-wcB" firstAttribute="top" secondItem="HUQ-B4-OA7" secondAttribute="bottom" constant="5" id="Rvc-W8-i1S"/>
                     <constraint firstAttribute="trailingMargin" secondItem="3eR-Jl-xer" secondAttribute="trailing" id="Txa-Z1-n6G"/>
                     <constraint firstItem="HUQ-B4-OA7" firstAttribute="leading" secondItem="gqM-PP-5gc" secondAttribute="leadingMargin" id="U6S-ks-QoZ"/>
                     <constraint firstItem="3eR-Jl-xer" firstAttribute="top" secondItem="3On-s2-sDW" secondAttribute="bottom" id="WYa-R1-U0O"/>
@@ -135,9 +137,15 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="averageStatContainer" destination="HUQ-B4-OA7" id="mcb-cr-iBo"/>
+                <outlet property="averageStatContainerHeight" destination="Zye-RP-PBQ" id="OHK-bJ-QUi"/>
                 <outlet property="averageStatLabel" destination="7JD-0A-gLG" id="g2s-2D-1Ok"/>
                 <outlet property="chartView" destination="BG2-4Q-wcB" id="V7w-i9-4NI"/>
+                <outlet property="movingAverageContainerHeight" destination="dQ5-Cc-B3o" id="iul-Pk-v4c"/>
+                <outlet property="movingAverageLabel" destination="r6Y-lv-Ekl" id="cIS-7M-ffC"/>
                 <outlet property="movingAverageSwitch" destination="H9h-yh-kjo" id="BPG-7k-b75"/>
+                <outlet property="rawDataContainerHeight" destination="HDL-8g-rtd" id="j86-P0-bse"/>
+                <outlet property="rawDataLabel" destination="qXN-6d-rmd" id="2MY-X8-svN"/>
                 <outlet property="rawDataSwitch" destination="2kP-Mm-nRf" id="Jqk-Kz-l1E"/>
                 <outlet property="walkingDataSwitch" destination="6nW-WL-lKU" id="UPH-JM-7t6"/>
             </connections>

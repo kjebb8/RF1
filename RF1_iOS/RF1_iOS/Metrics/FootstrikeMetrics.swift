@@ -9,13 +9,6 @@
 import Foundation
 import RealmSwift
 
-enum FootstrikeType {
-    
-    case fore
-    case mid
-    case heel
-}
-
 class FootstrikeMetrics {
     
     private var recentFootstrikes = [FootstrikeType]()
@@ -65,28 +58,28 @@ class FootstrikeMetrics {
     }
     
     
-    func getFootstrikeValues() -> (recent: [Double], average: [Double]) {
+    func getFootstrikeValues() -> (recent: Dictionary<String,Double>, average: Dictionary<String,Double>) {
         
-        var recentForePercent: Double = 0
-        var recentMidPercent: Double = 0
-        var recentHeelPercent: Double = 0
+        var recentDict: Dictionary<String,Double> = ["Fore" : 0,
+                                                     "Mid" : 0,
+                                                     "Heel" : 0]
         
-        var averageForePercent: Double = 0
-        var averageMidPercent: Double = 0
-        var averageHeelPercent: Double = 0
+        var averageDict: Dictionary<String,Double> = ["Fore" : 0,
+                                                      "Mid" : 0,
+                                                      "Heel" : 0]
             
         if totalFootstrikes != 0 {
         
-            recentForePercent = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
-            recentMidPercent = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
-            recentHeelPercent = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
+            recentDict["Fore"] = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
+            recentDict["Mid"] = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
+            recentDict["Heel"] = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
             
-            averageForePercent = Double(totalFore) / Double(totalFootstrikes) * 100
-            averageMidPercent = Double(totalMid) / Double(totalFootstrikes) * 100
-            averageHeelPercent = Double(totalHeel) / Double(totalFootstrikes) * 100
+            averageDict["Fore"] = Double(totalFore) / Double(totalFootstrikes) * 100
+            averageDict["Mid"] = Double(totalMid) / Double(totalFootstrikes) * 100
+            averageDict["Heel"] = Double(totalHeel) / Double(totalFootstrikes) * 100
         }
         
-        return ([recentForePercent, recentMidPercent, recentHeelPercent], [averageForePercent, averageMidPercent, averageHeelPercent])
+        return (recentDict, averageDict)
     }
     
     
@@ -98,7 +91,7 @@ class FootstrikeMetrics {
     }
     
     
-    func getFootstrikeLogForSaving() -> (List<FootstrikeLogEntry>) {
+    func getFootstrikeDataForSaving() -> (footstrikeLog: List<FootstrikeLogEntry>, footstrikePercentages: Dictionary<String,Double>) {//[Double]) {
         
         let newFootstrikeLog = List<FootstrikeLogEntry>()
         
@@ -113,7 +106,11 @@ class FootstrikeMetrics {
             newFootstrikeLog.append(newFootstrikeLogEntry)
         }
         
-        return(newFootstrikeLog)
+        let footstrikePercentages: Dictionary<String,Double> = ["Fore" : Double(totalFore) / Double(totalFootstrikes) * 100,
+                                                                "Mid" : Double(totalMid) / Double(totalFootstrikes) * 100,
+                                                                "Heel" : Double(totalHeel) / Double(totalFootstrikes) * 100]
+        
+        return(newFootstrikeLog, footstrikePercentages)
     }
     
     

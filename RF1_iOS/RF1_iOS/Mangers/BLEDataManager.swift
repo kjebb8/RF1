@@ -13,15 +13,6 @@ protocol BLEDataManagerDelegate {
     func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn)
 }
 
-enum BLEDataManagerReturn {
-    
-    case didTakeStep
-    case foreStrike
-    case midStrike
-    case heelStrike
-    case noActionRequired
-}
-
 
 class BLEDataManager {
     

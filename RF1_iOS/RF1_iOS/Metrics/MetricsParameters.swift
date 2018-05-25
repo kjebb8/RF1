@@ -13,6 +13,8 @@ struct MetricParameters {
     static let recentCadenceTime: Int = 15 //Number of seconds used to calculate the current cadence
     static let recentFootstrikeCount: Int = 20 //Number of most recent footstrike measurements for the real-time metrics
     
+    static let walkingThresholdCadence: Double = 130 //Cadence below the threshold is considered walking
+    
     static let metricLogTime: Int = 5//Seconds between data points for historical data
     static let movingAverageTime: Int = 20 //Seconds included in moving average calculation. Needs to be an even multiple of cadenceLogTime (6x not 5x)
 }

@@ -16,8 +16,8 @@ class CustomRunLogCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var cadenceLabel: UILabel!
     
-    @IBOutlet weak var chartView: LineChartView!
-
+    @IBOutlet weak var chartView: BarChartView!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
