@@ -19,7 +19,7 @@ struct RequiredChartData {
 }
 
 
-//MARK: - Cadence Chart
+//MARK: - Cadence Line Chart
 
 func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withData requiredData: RequiredChartData) -> (LineChartData) {
     
@@ -122,15 +122,15 @@ func getFormattedCadenceChartData(forEntry runEntry: RunLogEntry, withData requi
 
 //MARK: - Footstrike Bar Charts
 
-func getFormattedTrackingFootstrikeBarChartData(recentValues: Dictionary<String,Double>, averageValues: Dictionary<String,Double>) -> (recent: BarChartData, average: BarChartData) {
+func getFormattedTrackingFootstrikeBarChartData(recentValues: Dictionary<FootstrikeType,Double>, averageValues: Dictionary<FootstrikeType,Double>) -> (recent: BarChartData, average: BarChartData) {
 
-    let recentDataEntries = [BarChartDataEntry(x: 0, y: recentValues["Fore"]!),
-                             BarChartDataEntry(x: 1, y: recentValues["Mid"]!),
-                             BarChartDataEntry(x: 2, y: recentValues["Heel"]!)]
+    let recentDataEntries = [BarChartDataEntry(x: 0, y: recentValues[.fore]!),
+                             BarChartDataEntry(x: 1, y: recentValues[.mid]!),
+                             BarChartDataEntry(x: 2, y: recentValues[.heel]!)]
     
-    let averageDataEntries = [BarChartDataEntry(x: 0, y: averageValues["Fore"]!),
-                              BarChartDataEntry(x: 1, y: averageValues["Mid"]!),
-                              BarChartDataEntry(x: 2, y: averageValues["Heel"]!)]
+    let averageDataEntries = [BarChartDataEntry(x: 0, y: averageValues[.fore]!),
+                              BarChartDataEntry(x: 1, y: averageValues[.mid]!),
+                              BarChartDataEntry(x: 2, y: averageValues[.heel]!)]
     
    return (formattedFootstrikeBarChartData(forEntries: recentDataEntries),
            formattedFootstrikeBarChartData(forEntries: averageDataEntries))
@@ -139,9 +139,9 @@ func getFormattedTrackingFootstrikeBarChartData(recentValues: Dictionary<String,
 
 func getFormattedRealmFootstrikeBarChartData(forEntry runEntry: RunLogEntry) -> (BarChartData) {
     
-    let dataEntries = [BarChartDataEntry(x: 0, y: runEntry.foreStrikePercentage),
-                       BarChartDataEntry(x: 1, y: runEntry.midStrikePercentage),
-                       BarChartDataEntry(x: 2, y: runEntry.heelStrikePercentage)]
+    let dataEntries = [BarChartDataEntry(x: 0, y: runEntry.foreStrikePercentageRunning),
+                       BarChartDataEntry(x: 1, y: runEntry.midStrikePercentageRunning),
+                       BarChartDataEntry(x: 2, y: runEntry.heelStrikePercentageRunning)]
     
     return (formattedFootstrikeBarChartData(forEntries: dataEntries))
 }
@@ -167,13 +167,7 @@ func getFormattedFootstrikeLineChartData(forEntry runEntry: RunLogEntry, withDat
     let cadenceLog = runEntry.cadenceLog
     
     let numberOfSimpleMAValues: Int = MetricParameters.movingAverageTime / MetricParameters.metricLogTime
-    
-//    var foreDataEntries = [ChartDataEntry]()
-//
-//    var midDataEntries = [ChartDataEntry]()
-//
-//    var heelDataEntries = [ChartDataEntry]()
-    
+
     var foreSimpleMAValuesArray = [Int]()
     var foreSimpleMADataEntries = [ChartDataEntry]()
     
@@ -183,78 +177,51 @@ func getFormattedFootstrikeLineChartData(forEntry runEntry: RunLogEntry, withDat
     var heelSimpleMAValuesArray = [Int]()
     var heelSimpleMADataEntries = [ChartDataEntry]()
     
-//    if requiredData.includeRawData || requiredData.includeMovingAverage {
+    var footstrikeTimeIntervals: Int = 0 //How many cadence values are being used
     
-        var footstrikeTimeIntervals: Int = 0 //How many cadence values are being used
+    for i in 0..<footstrikeLog.count {
         
-        for i in 0..<footstrikeLog.count {
-            
-            let cadenceIndex = min(i, cadenceLog.count - 1) //footstrikeLog is potentially 1 element longer than cadenceLog, so make sure the index does not go out of bounds. This means if the last cadence interval was considered walking, then the last two footstrike elements would be considered walking
-            
-            let cadenceValue = cadenceLog[cadenceIndex].cadenceIntervalValue
-            
-            if !requiredData.includeWalkingData {
-                if cadenceValue < MetricParameters.walkingThresholdCadence {continue} //Skip loop iteration if walking
-            }
-            
-            footstrikeTimeIntervals += 1
-            
-//            if requiredData.includeRawData {
-//
-//                footstrikeTime = (Double(footstrikeTimeIntervals * MetricParameters.metricLogTime) -  Double(MetricParameters.metricLogTime) / 2.0) / 60.0
-//
-//                let foreStrikesInInterval: Int = footstrikeLog[i].foreIntervalValue
-//                let midStrikesInInterval: Int = footstrikeLog[i].midIntervalValue
-//                let heelStrikesInInterval: Int = footstrikeLog[i].heelIntervalValue
-//
-//                let totalStrikesInInterval: Int = foreStrikesInInterval + midStrikesInInterval + heelStrikesInInterval
-//
-//                let heelPercent: Double = Double(heelStrikesInInterval) / Double(totalStrikesInInterval) * 100
-//                let midPercent: Double = Double(midStrikesInInterval) / Double(totalStrikesInInterval) * 100 + heelPercent
-//
-//                foreDataEntries.append(ChartDataEntry(x: footstrikeTime, y: 100)) //Always 100% based on how the data will be graphed
-//                midDataEntries.append(ChartDataEntry(x: footstrikeTime, y: midPercent))
-//                heelDataEntries.append(ChartDataEntry(x: footstrikeTime, y: heelPercent))
-//            }
-            
-            
-            if requiredData.includeMovingAverage {
-                
-                foreSimpleMAValuesArray.append(footstrikeLog[i].foreIntervalValue)
-                midSimpleMAValuesArray.append(footstrikeLog[i].midIntervalValue)
-                heelSimpleMAValuesArray.append(footstrikeLog[i].heelIntervalValue)
-                
-                if foreSimpleMAValuesArray.count > numberOfSimpleMAValues {
-                    
-                    foreSimpleMAValuesArray.remove(at: 0)
-                    midSimpleMAValuesArray.remove(at: 0)
-                    heelSimpleMAValuesArray.remove(at: 0)
-                }
-                
-                let numberOfRawValuesBetweenDataPoints: Int = numberOfSimpleMAValues / 2 //Determines the frequency of simpleMA data points using modulus
-                
-                if footstrikeTimeIntervals % numberOfRawValuesBetweenDataPoints == 0 && foreSimpleMAValuesArray.count == numberOfSimpleMAValues { //SimpleMA using data on either side
-                    
-                    let footstrikeTime: Double = ((Double(footstrikeTimeIntervals - numberOfRawValuesBetweenDataPoints)) * Double(MetricParameters.metricLogTime)) / 60.0 //SimpleMA using data on either side
-                    
-                    let foreStrikesInInterval: Int = foreSimpleMAValuesArray.reduce(0, +)
-                    let midStrikesInInterval: Int = midSimpleMAValuesArray.reduce(0, +)
-                    let heelStrikesInInterval: Int = heelSimpleMAValuesArray.reduce(0, +)
-                    
-                    let totalStrikesInInterval: Int = foreStrikesInInterval + midStrikesInInterval + heelStrikesInInterval
-                    
-                    let heelPercent: Double = Double(heelStrikesInInterval) / Double(totalStrikesInInterval) * 100
-                    let midPercent: Double = Double(midStrikesInInterval) / Double(totalStrikesInInterval) * 100 + heelPercent
-                    
-                    foreSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: 100)) //Always 100% based on how the data will be graphed
-                    midSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: midPercent))
-                    heelSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: heelPercent))
-                }
-            }
+        let cadenceIndex = min(i, cadenceLog.count - 1) //footstrikeLog is potentially 1 element longer than cadenceLog, so make sure the index does not go out of bounds. This means if the last cadence interval was considered walking, then the last two footstrike elements would be considered walking
+        
+        let cadenceValue = cadenceLog[cadenceIndex].cadenceIntervalValue
+        
+        if !requiredData.includeWalkingData {
+            if cadenceValue < MetricParameters.walkingThresholdCadence {continue} //Skip loop iteration if walking
         }
-//    }
+        
+        footstrikeTimeIntervals += 1
+
+        foreSimpleMAValuesArray.append(footstrikeLog[i].foreIntervalValue)
+        midSimpleMAValuesArray.append(footstrikeLog[i].midIntervalValue)
+        heelSimpleMAValuesArray.append(footstrikeLog[i].heelIntervalValue)
     
-//    let cadenceDataSet = LineChartDataSet(values: cadenceDataEntries, label: "Raw Data")
+        if foreSimpleMAValuesArray.count > numberOfSimpleMAValues {
+            
+            foreSimpleMAValuesArray.remove(at: 0)
+            midSimpleMAValuesArray.remove(at: 0)
+            heelSimpleMAValuesArray.remove(at: 0)
+        }
+    
+        let numberOfRawValuesBetweenDataPoints: Int = numberOfSimpleMAValues / 2 //Determines the frequency of simpleMA data points using modulus
+    
+        if footstrikeTimeIntervals % numberOfRawValuesBetweenDataPoints == 0 && foreSimpleMAValuesArray.count == numberOfSimpleMAValues { //SimpleMA using data on either side
+            
+            let footstrikeTime: Double = ((Double(footstrikeTimeIntervals - numberOfRawValuesBetweenDataPoints)) * Double(MetricParameters.metricLogTime)) / 60.0 //SimpleMA using data on either side
+            
+            let foreStrikesInInterval: Int = foreSimpleMAValuesArray.reduce(0, +)
+            let midStrikesInInterval: Int = midSimpleMAValuesArray.reduce(0, +)
+            let heelStrikesInInterval: Int = heelSimpleMAValuesArray.reduce(0, +)
+            
+            let totalStrikesInInterval: Int = foreStrikesInInterval + midStrikesInInterval + heelStrikesInInterval
+            
+            let heelPercent: Double = Double(heelStrikesInInterval) / Double(totalStrikesInInterval) * 100
+            let midPercent: Double = Double(midStrikesInInterval) / Double(totalStrikesInInterval) * 100 + heelPercent
+            
+            foreSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: 100)) //Always 100% based on how the data will be graphed
+            midSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: midPercent))
+            heelSimpleMADataEntries.append(ChartDataEntry(x: footstrikeTime, y: heelPercent))
+        }
+    }
     
     let foreSimpleMADataSet = LineChartDataSet(values: foreSimpleMADataEntries, label: "Forefoot % Moving Average   ") //Tab puts next legend entry on new line
     let midSimpleMADataSet = LineChartDataSet(values: midSimpleMADataEntries, label: "Midfoot % Moving Average  ")
@@ -300,7 +267,7 @@ public class IntPercentFormatter: NSObject, IValueFormatter{
     
     public func stringForValue(_ value: Double, entry: ChartDataEntry, dataSetIndex: Int, viewPortHandler: ViewPortHandler?) -> String {
         
-        let correctValue = Int(value)
+        let correctValue = Int(value.rounded())
         return String(correctValue) + " %"
     }
 }
@@ -322,12 +289,9 @@ public class FootstrikeBarChartFormatter: NSObject, IAxisValueFormatter{
 @objc(LineChartFormatter)
 public class IntPercentAxisFormatter: NSObject, IAxisValueFormatter{
     
-    var xValsFootstrike: [String]! = ["Fore", "Mid", "Heel"]
-    
-    
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         
-        let correctValue = Int(value)
+        let correctValue = Int(value.rounded())
         return String(correctValue) + "%"
     }
 }
@@ -335,9 +299,6 @@ public class IntPercentAxisFormatter: NSObject, IAxisValueFormatter{
 
 @objc(LineChartFormatter)
 public class TimeXAxisFormatter: NSObject, IAxisValueFormatter{
-    
-    var xValsFootstrike: [String]! = ["Fore", "Mid", "Heel"]
-    
     
     public func stringForValue(_ value: Double, axis: AxisBase?) -> String {
         

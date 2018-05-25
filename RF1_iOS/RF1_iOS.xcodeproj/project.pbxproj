@@ -33,6 +33,7 @@
 		C0C24997209A15D6000C6B14 /* ChartsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0C24996209A15D6000C6B14 /* ChartsModule.swift */; };
 		C0D98F4F20A9E6FF001031B1 /* MetricCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */; };
 		C0D98F5120A9E7A7001031B1 /* CustomMetricCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */; };
+		C0E1310520B87BA80089B579 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E1310420B87BA80089B579 /* DateExtension.swift */; };
 		C0EC590C208A5A3C001CAF23 /* RunLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */; };
 		C0EC5910208A5B68001CAF23 /* CadenceLogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */; };
 		CCDB7E139C7EDC0E4808054C /* Pods_RF1_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */; };
@@ -69,6 +70,7 @@
 		C0C24996209A15D6000C6B14 /* ChartsModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartsModule.swift; sourceTree = "<group>"; };
 		C0D98F4E20A9E6FF001031B1 /* MetricCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MetricCell.xib; sourceTree = "<group>"; };
 		C0D98F5020A9E7A7001031B1 /* CustomMetricCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMetricCell.swift; sourceTree = "<group>"; };
+		C0E1310420B87BA80089B579 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		C0EC590B208A5A3C001CAF23 /* RunLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunLogEntry.swift; sourceTree = "<group>"; };
 		C0EC590F208A5B68001CAF23 /* CadenceLogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadenceLogEntry.swift; sourceTree = "<group>"; };
 		FE7F73C06AB907857D49CAF7 /* Pods_RF1_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RF1_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +180,7 @@
 			children = (
 				C01FBB93205D6C3700B250E6 /* IntExtensions.swift */,
 				C00D738320990EE10041AABB /* DoubleExtension.swift */,
+				C0E1310420B87BA80089B579 /* DateExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				C08E4E3F20B34A4200F8BFA0 /* FootstrikeLogEntry.swift in Sources */,
 				C00D738420990EE10041AABB /* DoubleExtension.swift in Sources */,
 				C005F2692057174F006A14CB /* AppDelegate.swift in Sources */,
+				C0E1310520B87BA80089B579 /* DateExtension.swift in Sources */,
 				C067BE38206AAC3700CD8D04 /* BLEDataManager.swift in Sources */,
 				C0B25B872085020F00B4189B /* FSRData.swift in Sources */,
 				C031BE94206301CC00CEA165 /* PeripheralDevice.swift in Sources */,

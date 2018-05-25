@@ -39,7 +39,7 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
         
         let initialRequiredChartData = RequiredChartData(includeRawData: false,
                                                        includeMovingAverage: true,
-                                                       includeWalkingData: true)
+                                                       includeWalkingData: false)
         
         for metric in metricKeys {
             chartMetricsRequiredData[metric] = initialRequiredChartData
@@ -114,12 +114,31 @@ class RunStatsTableViewController: BaseTableViewController, MetricCellDelegate {
                 cell.rawDataContainerHeight.constant = 0
                 cell.movingAverageContainerHeight.constant = 0
                 
-                cell.averageStatLabel.text = "Forefoot Strike: " + runEntry.foreStrikePercentage.roundedIntString + "%\n" + "Midfoot Strike: " + runEntry.midStrikePercentage.roundedIntString + "%\n" + "Heel Strike: " + runEntry.heelStrikePercentage.roundedIntString + "%"
+                var specificForeStrikePercentage: Double
+                var specificMidStrikePercentage: Double
+                var specificHeelStrikePercentage: Double
+                
+                if requiredChartData.includeWalkingData {
+                    
+                    specificForeStrikePercentage = runEntry.foreStrikePercentage
+                    specificMidStrikePercentage = runEntry.midStrikePercentage
+                    specificHeelStrikePercentage = runEntry.heelStrikePercentage
+                    
+                } else {
+                    
+                    specificForeStrikePercentage = runEntry.foreStrikePercentageRunning
+                    specificMidStrikePercentage = runEntry.midStrikePercentageRunning
+                    specificHeelStrikePercentage = runEntry.heelStrikePercentageRunning
+                }
+                
+                cell.averageStatLabel.text = "Forefoot Strike: " + specificForeStrikePercentage.roundedIntString + "%\n" + "Midfoot Strike: " + specificMidStrikePercentage.roundedIntString + "%\n" + "Heel Strike: " + specificHeelStrikePercentage.roundedIntString + "%"
                 
                 let footstrikeChartData = getFormattedFootstrikeLineChartData(forEntry: runEntry, withData: requiredChartData)
                 
                 cell.chartView.leftAxis.axisMaximum = 100
+                cell.chartView.leftAxis.axisMinimum = 0
                 cell.chartView.rightAxis.axisMaximum = 100
+                cell.chartView.rightAxis.axisMinimum = 0
                 
                 cell.chartView.leftAxis.valueFormatter = IntPercentAxisFormatter()
                 cell.chartView.rightAxis.valueFormatter = IntPercentAxisFormatter()

@@ -89,7 +89,7 @@ class HistoryTableViewController: BaseTableViewController {
                 cell.chartView.data = footstrikeData
                 cell.chartView.data!.setValueFormatter(IntPercentFormatter())
                 
-                cell.dateLabel.text = runEntry.date
+                cell.dateLabel.text = runEntry.date?.getDateString()
                 cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
                 cell.timeLabel.text = runEntry.startTime
                 cell.cadenceLabel.text = runEntry.averageCadenceRunningOnly.roundedIntString
@@ -122,7 +122,7 @@ class HistoryTableViewController: BaseTableViewController {
     func loadRunLog() {
         
         let realm = try! Realm()
-        runLog = realm.objects(RunLogEntry.self)
+        runLog = realm.objects(RunLogEntry.self).sorted(byKeyPath: "date", ascending: false)
         tableView.reloadData()
     }
 

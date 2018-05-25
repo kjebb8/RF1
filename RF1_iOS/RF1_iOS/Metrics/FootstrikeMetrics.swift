@@ -19,10 +19,13 @@ class FootstrikeMetrics {
     
     private var totalFootstrikes: Int = 0
     
+    private var totalForeRunning: Int = 0
+    private var totalMidRunning: Int = 0
+    private var totalHeelRunning: Int = 0
+    
     private var foreLog: [Int] = [0] //Each entry has number of forefoot strikes for a given interval time period
     private var midLog: [Int] = [0]
     private var heelLog: [Int] = [0]
-    
     
     //MARK: - Public Access Methods
     
@@ -43,47 +46,57 @@ class FootstrikeMetrics {
         if footstrikeType == .fore {
             
             totalFore += 1
+            totalForeRunning += 1
             foreLog[foreLog.count - 1] += 1
             
         } else if footstrikeType == .mid {
             
             totalMid += 1
+            totalMidRunning += 1
             midLog[midLog.count - 1] += 1
             
         } else if footstrikeType == .heel {
             
             totalHeel += 1
+            totalHeelRunning += 1
             heelLog[heelLog.count - 1] += 1
         }
     }
     
     
-    func getFootstrikeValues() -> (recent: Dictionary<String,Double>, average: Dictionary<String,Double>) {
+    func getFootstrikeValues() -> (recent: Dictionary<FootstrikeType,Double>, average: Dictionary<FootstrikeType,Double>) {
         
-        var recentDict: Dictionary<String,Double> = ["Fore" : 0,
-                                                     "Mid" : 0,
-                                                     "Heel" : 0]
+        var recentDict: Dictionary<FootstrikeType,Double> = [.fore : 0,
+                                                             .mid : 0,
+                                                             .heel : 0]
         
-        var averageDict: Dictionary<String,Double> = ["Fore" : 0,
-                                                      "Mid" : 0,
-                                                      "Heel" : 0]
+        var averageDict: Dictionary<FootstrikeType,Double> = [.fore : 0,
+                                                              .mid : 0,
+                                                              .heel : 0]
             
         if totalFootstrikes != 0 {
         
-            recentDict["Fore"] = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
-            recentDict["Mid"] = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
-            recentDict["Heel"] = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
+            recentDict[.fore] = Double(recentFootstrikes.filter{$0 == .fore}.count) / Double(recentFootstrikes.count) * 100
+            recentDict[.mid] = Double(recentFootstrikes.filter{$0 == .mid}.count) / Double(recentFootstrikes.count) * 100
+            recentDict[.heel] = Double(recentFootstrikes.filter{$0 == .heel}.count) / Double(recentFootstrikes.count) * 100
             
-            averageDict["Fore"] = Double(totalFore) / Double(totalFootstrikes) * 100
-            averageDict["Mid"] = Double(totalMid) / Double(totalFootstrikes) * 100
-            averageDict["Heel"] = Double(totalHeel) / Double(totalFootstrikes) * 100
+            averageDict[.fore] = Double(totalFore) / Double(totalFootstrikes) * 100
+            averageDict[.mid] = Double(totalMid) / Double(totalFootstrikes) * 100
+            averageDict[.heel] = Double(totalHeel) / Double(totalFootstrikes) * 100
         }
         
         return (recentDict, averageDict)
     }
     
     
-    func updateFootstrikeLog() { //Assumes function is called at the correct time intervals
+    func updateFootstrikeLog(runningInInterval: Bool) { //Assumes function is called at the correct time intervals
+        
+        if !runningInInterval { //If not running, subtract the values from that interval
+            
+            totalForeRunning -= foreLog[foreLog.count - 1]
+            totalMidRunning -= midLog[midLog.count - 1]
+            totalHeelRunning -= heelLog[heelLog.count - 1]
+        }
         
         foreLog.append(0)
         midLog.append(0)
@@ -91,7 +104,7 @@ class FootstrikeMetrics {
     }
     
     
-    func getFootstrikeDataForSaving() -> (footstrikeLog: List<FootstrikeLogEntry>, footstrikePercentages: Dictionary<String,Double>) {//[Double]) {
+    func getFootstrikeDataForSaving() -> (footstrikeLog: List<FootstrikeLogEntry>, footstrikePercentages: Dictionary<FootstrikeType,Double>, footstrikePercentagesRunning: Dictionary<FootstrikeType,Double>) {
         
         let newFootstrikeLog = List<FootstrikeLogEntry>()
         
@@ -106,39 +119,18 @@ class FootstrikeMetrics {
             newFootstrikeLog.append(newFootstrikeLogEntry)
         }
         
-        let footstrikePercentages: Dictionary<String,Double> = ["Fore" : Double(totalFore) / Double(totalFootstrikes) * 100,
-                                                                "Mid" : Double(totalMid) / Double(totalFootstrikes) * 100,
-                                                                "Heel" : Double(totalHeel) / Double(totalFootstrikes) * 100]
+        let footstrikePercentages: Dictionary<FootstrikeType,Double> = [.fore : Double(totalFore) / max(Double(totalFootstrikes), 1) * 100,
+                                                                        .mid : Double(totalMid) / max(Double(totalFootstrikes), 1) * 100,
+                                                                        .heel : Double(totalHeel) / max(Double(totalFootstrikes), 1) * 100]
         
-        return(newFootstrikeLog, footstrikePercentages)
+        let totalFootstrikesRunning = totalForeRunning + totalMidRunning + totalHeelRunning
+        
+        let footstrikePercentagesRunning: Dictionary<FootstrikeType,Double> = [.fore : Double(totalForeRunning) / max(Double(totalFootstrikesRunning), 1) * 100,
+                                                                               .mid : Double(totalMidRunning) / max(Double(totalFootstrikesRunning), 1) * 100,
+                                                                               .heel : Double(totalHeelRunning) / max(Double(totalFootstrikesRunning), 1) * 100]
+        
+        return(newFootstrikeLog, footstrikePercentages, footstrikePercentagesRunning)
     }
     
     
 }
-
-
-//MARK: - Footstrike String Values Class
-
-//class FootstrikeStringValues {
-//
-//    var recentForePercentString: String
-//    var recentMidPercentString: String
-//    var recentHeelPercentString: String
-//
-//    var averageForePercentString: String
-//    var averageMidPercentString: String
-//    var averageHeelPercentString: String
-//
-//    init(_ recentForePercent: Double , _ recentMidPercent: Double, _ recentHeelPercent: Double, _ averageForePercent: Double, _ averageMidPercent: Double, _ averageHeelPercent: Double) {
-//
-//        recentForePercentString = recentForePercent.roundedIntString
-//        recentMidPercentString = recentMidPercent.roundedIntString
-//        recentHeelPercentString = recentHeelPercent.roundedIntString
-//
-//        averageForePercentString = averageForePercent.roundedIntString
-//        averageMidPercentString = averageMidPercent.roundedIntString
-//        averageHeelPercentString = averageHeelPercent.roundedIntString
-//    }
-//
-//
-//}

@@ -11,7 +11,7 @@ import RealmSwift
 
 class RunLogEntry: Object {
     
-    @objc dynamic var date: String = ""
+    @objc dynamic var date: Date?
     @objc dynamic var startTime: String = ""
     @objc dynamic var runDuration: Int = 0 //In seconds
     
@@ -22,5 +22,8 @@ class RunLogEntry: Object {
     @objc dynamic var foreStrikePercentage: Double = 0
     @objc dynamic var midStrikePercentage: Double = 0
     @objc dynamic var heelStrikePercentage: Double = 0
+    @objc dynamic var foreStrikePercentageRunning: Double = 0
+    @objc dynamic var midStrikePercentageRunning: Double = 0
+    @objc dynamic var heelStrikePercentageRunning: Double = 0
     var footstrikeLog = List<FootstrikeLogEntry>()
 }

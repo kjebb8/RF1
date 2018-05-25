@@ -92,10 +92,10 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     @objc func runTimerIntervalTick() {
         
         runTime += 1
-        cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
+        let isRunningInterval: Bool = cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
         updateUICadenceValues()
         
-        if runTime % MetricParameters.metricLogTime == 0 {footstrikeMetrics.updateFootstrikeLog()}
+        if runTime % MetricParameters.metricLogTime == 0 {footstrikeMetrics.updateFootstrikeLog(runningInInterval: isRunningInterval)}
     }
     
     
@@ -295,7 +295,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         bleDataManager.processNewData(updatedData: data)
         dataLabel.text = "Forefoot: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
-//        print("\(bleDataManager.forefootVoltage) \(bleDataManager.heelVoltage)")
     }
     
     
@@ -347,22 +346,27 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         let newRunLogEntry = RunLogEntry()
         
-        newRunLogEntry.date = self.getDateString()
-        newRunLogEntry.startTime = self.getStartTimeString()
-        newRunLogEntry.runDuration = self.runTime
+        newRunLogEntry.date = date
+        newRunLogEntry.startTime = date.getStartTimeString()
+        newRunLogEntry.runDuration = runTime
         
-        let newCadenceData = self.cadenceMetrics.getCadenceDataForSaving(forRunTime: self.runTime)
+        let newCadenceData = cadenceMetrics.getCadenceDataForSaving(forRunTime: runTime)
         
         newRunLogEntry.cadenceLog = newCadenceData.cadenceLog
         newRunLogEntry.averageCadence = newCadenceData.averageCadence
         newRunLogEntry.averageCadenceRunningOnly = newCadenceData.runningCadence
         
-        let newFootstrikeData = self.footstrikeMetrics.getFootstrikeDataForSaving()
+        let newFootstrikeData = footstrikeMetrics.getFootstrikeDataForSaving()
         
         newRunLogEntry.footstrikeLog = newFootstrikeData.footstrikeLog
-        newRunLogEntry.foreStrikePercentage = newFootstrikeData.footstrikePercentages["Fore"]!
-        newRunLogEntry.midStrikePercentage = newFootstrikeData.footstrikePercentages["Mid"]!
-        newRunLogEntry.heelStrikePercentage = newFootstrikeData.footstrikePercentages["Heel"]!
+        
+        newRunLogEntry.foreStrikePercentage = newFootstrikeData.footstrikePercentages[.fore]!
+        newRunLogEntry.midStrikePercentage = newFootstrikeData.footstrikePercentages[.mid]!
+        newRunLogEntry.heelStrikePercentage = newFootstrikeData.footstrikePercentages[.heel]!
+        
+        newRunLogEntry.foreStrikePercentageRunning = newFootstrikeData.footstrikePercentagesRunning[.fore]!
+        newRunLogEntry.midStrikePercentageRunning = newFootstrikeData.footstrikePercentagesRunning[.mid]!
+        newRunLogEntry.heelStrikePercentageRunning = newFootstrikeData.footstrikePercentagesRunning[.heel]!
         
         do {
             
@@ -376,22 +380,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
             print("Error saving context \(error)")
         }
     }
-    
-    func getDateString() -> (String) {
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        dateFormatter.locale = Locale(identifier: "en_US")
-        return dateFormatter.string(from: date)
-    }
-    
-    
-    func getStartTimeString() -> (String) {
-        
-        let formatterTime = DateFormatter()
-        formatterTime.dateFormat = "hh:mm a"
-        return formatterTime.string(from: date)
-    }
+
     
 }

@@ -92,7 +92,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXc-4Y-cw8" userLabel="Average Container">
                         <rect key="frame" x="16" y="500" width="343" height="40"/>
                         <subviews>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6nW-WL-lKU">
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6nW-WL-lKU">
                                 <rect key="frame" x="284" y="4.5" width="51" height="31"/>
                                 <connections>
                                     <action selector="dataSwitched:" destination="QSI-vE-rTg" eventType="valueChanged" id="EzP-cL-eOH"/>
