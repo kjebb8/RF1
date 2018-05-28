@@ -46,7 +46,7 @@ enum BLEDataManagerReturn { //Lists the possible events that can occur as a resu
 }
 
 
-enum MectricType { //Used in RunStatsVC to track the type of metric being used for tableView cells
+enum MetricType { //Used in RunStatsVC to track the type of metric being used for tableView cells
     
     case cadence
     case footstrike

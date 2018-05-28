@@ -66,36 +66,7 @@ class HistoryTableViewController: BaseTableViewController {
         
             let cell = tableView.dequeueReusableCell(withIdentifier: "customRunLogCell", for: indexPath) as! CustomRunLogCell
 
-             if let runEntry = runLog?[indexPath.row - 1] {
-                
-                let footstrikeData = getFormattedRealmFootstrikeBarChartData(forEntry: runEntry)
-                
-                cell.chartView.chartDescription = nil
-                
-                cell.chartView.xAxis.valueFormatter = FootstrikeBarChartFormatter()
-                cell.chartView.xAxis.labelPosition = .bottom
-                cell.chartView.xAxis.labelTextColor = UIColor.lightGray
-                cell.chartView.xAxis.drawGridLinesEnabled = false
-                cell.chartView.xAxis.drawAxisLineEnabled = false
-                cell.chartView.xAxis.labelCount = 3
-                cell.chartView.xAxis.labelFont = .boldSystemFont(ofSize: 10)
-                
-                cell.chartView.rightAxis.enabled = false
-                
-                cell.chartView.leftAxis.enabled = false
-                
-                cell.chartView.legend.enabled = false
-
-                cell.chartView.data = footstrikeData
-                cell.chartView.data!.setValueFormatter(IntPercentFormatter())
-                
-                cell.dateLabel.text = runEntry.date?.getDateString()
-                cell.durationLabel.text = runEntry.runDuration.getFormattedRunTimeString()
-                cell.timeLabel.text = runEntry.startTime
-                cell.cadenceLabel.text = runEntry.averageCadenceRunningOnly.roundedIntString
-                cell.layer.borderWidth = 3
-                cell.layer.borderColor = UIColor.black.cgColor
-            }
+            if let runEntry = runLog?[indexPath.row - 1] {cell.setCellUI(forRunEntry: runEntry)}
             
             return cell
         }
