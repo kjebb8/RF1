@@ -294,7 +294,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func didReceiveBLEData(data: Data) {
         
         bleDataManager.processNewData(updatedData: data)
-        dataLabel.text = "Forefoot: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
+        dataLabel.text = "Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
     }
     
     
