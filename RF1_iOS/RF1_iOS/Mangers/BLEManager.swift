@@ -15,26 +15,6 @@ protocol BLEManagerDelegate {
     func didReceiveBLEData(data: Data)
 }
 
-enum BLEEvent {
-   
-    case scanStarted
-    case scanTimeOut
-    case failedToConnect
-    case disconnected
-    case bleTurnedOff
-    case bleTurnedOn
-}
-
-
-enum BLEState {
-
-    case scanning
-    case connected
-    case notConnected
-    case bleOff
-    case bleUnavailable
-}
-
 
 class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     

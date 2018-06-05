@@ -13,12 +13,6 @@ protocol BLEDataManagerDelegate {
     func didFinishDataProcessing(withReturn returnValue: BLEDataManagerReturn)
 }
 
-enum BLEDataManagerReturn {
-    
-    case didTakeStep
-    case noActionRequired
-}
-
 
 class BLEDataManager {
     
@@ -38,8 +32,9 @@ class BLEDataManager {
     private var newForefootDown: Bool = false
     private var oldForefootDown: Bool = false
     
-    private let upperMVLimit: Int = 2900
-    private let lowerMVLimit: Int = 2700
+    private let upperMVLimit: Int = 2940
+    private let midMVLimit: Int = 2910 //For determining midfoot strike
+    private let lowerMVLimit: Int = 2760
     
     private var logRawData: Bool = false
     private var clearRawData: Bool = false //BIG RED BUTTON for FSR Data. Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
@@ -77,18 +72,25 @@ class BLEDataManager {
         
         if oldHeelDown && (heelVoltageCouple[0] < lowerMVLimit) && (heelVoltageCouple[1] < lowerMVLimit) {
             newHeelDown = false
-        } else if !oldHeelDown && ((heelVoltageCouple[0] > upperMVLimit) || (heelVoltageCouple[1] > upperMVLimit)) {
+        } else if !oldHeelDown && ((heelVoltageCouple[0] > upperMVLimit) && (heelVoltageCouple[1] > upperMVLimit)) {
             newHeelDown = true
         }
-     
+        
         if oldForefootDown && (forefootVoltageCouple[0] < lowerMVLimit) && (forefootVoltageCouple[1] < lowerMVLimit) {
             newForefootDown = false
-        } else if !oldForefootDown && ((forefootVoltageCouple[0] > upperMVLimit) || (forefootVoltageCouple[1] > upperMVLimit)) {
+        } else if !oldForefootDown && ((forefootVoltageCouple[0] > upperMVLimit) && (forefootVoltageCouple[1] > upperMVLimit)) {
             newForefootDown = true
         }
         
         if (oldHeelDown || oldForefootDown) && (!newHeelDown && !newForefootDown) { //When foot lifts up after stepping
             delegateVC?.didFinishDataProcessing(withReturn: .didTakeStep)
+        }
+        
+        if (!oldHeelDown && !oldForefootDown) {
+            
+            if (newHeelDown && forefootVoltageCouple[0] > midMVLimit) || (newForefootDown && heelVoltageCouple[0] > midMVLimit) {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
+            else if (newHeelDown) {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)}
+            else if (newForefootDown){delegateVC?.didFinishDataProcessing(withReturn: .foreStrike)}
         }
         
         oldHeelDown = newHeelDown

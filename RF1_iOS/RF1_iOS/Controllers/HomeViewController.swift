@@ -138,7 +138,7 @@ class HomeViewController: BaseViewController, BLEManagerDelegate {
     
     
     func didReceiveBLEData(data: Data) {
-        self.bleManager.turnOffNotifications() //Don't want notifications on the home screen
+        self.bleManager.turnOffNotifications() //Don't want notifications on the home screen if they somehow get through
     }
     
     

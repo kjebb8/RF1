@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import RealmSwift
 
 class CadenceMetrics {
     
@@ -15,6 +16,7 @@ class CadenceMetrics {
     
     private var totalSteps: Int = 0
     private var averageCadence: Double = 0 //Cadence for entire run
+    private var runningCadenceValues = [Double]() //For calculating the average cadence for running only
     
     private var cadenceLogSteps: Double = 0 //Counts the steps in the current log interval time. Counts fractions of a step for accuracy
     private var cadenceLog = [Double]() //Each entry has cadence for a given interval time period
@@ -33,7 +35,7 @@ class CadenceMetrics {
         totalSteps += 2
         cadenceLogSteps += 2
         
-        if stepSubtractionValue > 0 { //If most of the step occured in the previous interval, subtract that fraction from this interval
+        if stepSubtractionValue != 0 { //If most of the step occured in the previous interval, subtract that fraction from this interval
             cadenceLogSteps -= stepSubtractionValue
             stepSubtractionValue = 0
         }
@@ -43,18 +45,20 @@ class CadenceMetrics {
     }
     
     
-    func updateCadence(atTimeInSeconds currentTime: Int) { //Assumes function is called every second
+    func updateCadence(atTimeInSeconds currentTime: Int) -> (Bool) { //Assumes function is called every second
 
         recentCadence = Double(recentCadenceSteps.reduce(0, +)) / recentCadenceSteps.count.inMinutes //.inMinutes converts to Double
         averageCadence = Double(totalSteps) /  currentTime.inMinutes
         
         recentCadenceSteps.append(0)
         
-        if recentCadenceSteps.count > CadenceParameters.recentCadenceTime {
+        if recentCadenceSteps.count > MetricParameters.recentCadenceTime {
             recentCadenceSteps.remove(at: 0) //Removes the oldest value so that only a certian time period is included
         }
         
-        if currentTime % CadenceParameters.cadenceLogTime == 0 {  //Add a value to the cadence log
+        var runningInInterval: Bool = false
+        
+        if currentTime % MetricParameters.metricLogTime == 0 {  //Add a value to the cadence log
             
             var steps = Double(cadenceLogSteps)
             
@@ -65,9 +69,18 @@ class CadenceMetrics {
                 stepSubtractionValue = 2 * (stepFraction)
             }
             
-            cadenceLog.append(steps / CadenceParameters.cadenceLogTime.inMinutes)
+            let intervalCadence = steps / MetricParameters.metricLogTime.inMinutes
+            cadenceLog.append(intervalCadence)
             cadenceLogSteps = 0
+            
+            if intervalCadence >= MetricParameters.walkingThresholdCadence {
+                
+                runningInInterval = true //Sent to other metric modules to say whether the user was running during the interval
+                runningCadenceValues.append(intervalCadence)
+            }
         }
+        
+        return runningInInterval
     }
     
     
@@ -76,13 +89,11 @@ class CadenceMetrics {
     }
     
     
-    func getCadenceDataForSaving(forRunTime runTime: Int) -> (CadenceData) {
+    func getCadenceDataForSaving(forRunTime runTime: Int) -> (cadenceLog: List<CadenceLogEntry>, averageCadence: Double, runningCadence: Double) {
         
-        let newCadenceData = CadenceData()
+        let newCadenceLog = List<CadenceLogEntry>()
         
-//        newCadenceData.averageCadence = averageCadence
-        
-        let remainingTime = runTime % CadenceParameters.cadenceLogTime
+        let remainingTime = runTime % MetricParameters.metricLogTime
         
         if remainingTime >= 5 {cadenceLog.append(Double(cadenceLogSteps) / remainingTime.inMinutes)} //Adds the incomplete cadence data if longer than 5 seconds (for accuracy)
         
@@ -90,10 +101,12 @@ class CadenceMetrics {
             
             let newCadenceLogEntry = CadenceLogEntry()
             newCadenceLogEntry.cadenceIntervalValue = data
-            newCadenceData.cadenceLog.append(newCadenceLogEntry)
+            newCadenceLog.append(newCadenceLogEntry)
         }
         
-        return(newCadenceData)
+        let runningCadence = runningCadenceValues.reduce(0, +) / max(Double(runningCadenceValues.count), 1)
+        
+        return(newCadenceLog, averageCadence, runningCadence)
     }
     
     

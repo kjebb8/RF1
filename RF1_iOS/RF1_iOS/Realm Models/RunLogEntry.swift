@@ -11,9 +11,19 @@ import RealmSwift
 
 class RunLogEntry: Object {
     
-    @objc dynamic var date: String = ""
+    @objc dynamic var date: Date?
     @objc dynamic var startTime: String = ""
     @objc dynamic var runDuration: Int = 0 //In seconds
     
-    @objc dynamic var cadenceData: CadenceData?
+    @objc dynamic var averageCadence: Double = 0
+    @objc dynamic var averageCadenceRunningOnly: Double = 0
+    var cadenceLog = List<CadenceLogEntry>()
+    
+    @objc dynamic var foreStrikePercentage: Double = 0
+    @objc dynamic var midStrikePercentage: Double = 0
+    @objc dynamic var heelStrikePercentage: Double = 0
+    @objc dynamic var foreStrikePercentageRunning: Double = 0
+    @objc dynamic var midStrikePercentageRunning: Double = 0
+    @objc dynamic var heelStrikePercentageRunning: Double = 0
+    var footstrikeLog = List<FootstrikeLogEntry>()
 }
