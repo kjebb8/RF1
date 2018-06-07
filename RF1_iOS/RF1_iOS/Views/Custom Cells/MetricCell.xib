@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -13,10 +13,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="customMetricCell" rowHeight="561" id="QSI-vE-rTg" userLabel="Metric Cell" customClass="CustomMetricCell" customModule="RF1_iOS" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="561"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="510"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QSI-vE-rTg" id="gqM-PP-5gc">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="560.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="509.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HUQ-B4-OA7" userLabel="Average Stat Container">
@@ -38,11 +38,11 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BG2-4Q-wcB" userLabel="Chart View" customClass="LineChartView" customModule="Charts">
-                        <rect key="frame" x="16" y="66" width="343" height="349"/>
+                        <rect key="frame" x="16" y="66" width="343" height="298"/>
                         <color key="backgroundColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3On-s2-sDW" userLabel="Raw Data Container">
-                        <rect key="frame" x="16" y="420" width="343" height="40"/>
+                        <rect key="frame" x="16" y="369" width="343" height="40"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="2kP-Mm-nRf">
                                 <rect key="frame" x="284" y="4.5" width="51" height="31"/>
@@ -50,7 +50,7 @@
                                     <action selector="dataSwitched:" destination="QSI-vE-rTg" eventType="valueChanged" id="Z6Q-Di-sik"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Raw Data:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXN-6d-rmd">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Raw Data:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="qXN-6d-rmd">
                                 <rect key="frame" x="10" y="7" width="97" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="0.69999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -63,10 +63,11 @@
                             <constraint firstItem="2kP-Mm-nRf" firstAttribute="centerY" secondItem="3On-s2-sDW" secondAttribute="centerY" id="J9L-Xy-UQ0"/>
                             <constraint firstAttribute="trailing" secondItem="2kP-Mm-nRf" secondAttribute="trailing" constant="10" id="UcB-7m-hBd"/>
                             <constraint firstItem="qXN-6d-rmd" firstAttribute="centerY" secondItem="3On-s2-sDW" secondAttribute="centerY" id="YmM-Ir-lwI"/>
+                            <constraint firstItem="qXN-6d-rmd" firstAttribute="top" secondItem="3On-s2-sDW" secondAttribute="top" constant="7" id="zFs-qT-oYl"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3eR-Jl-xer" userLabel="Average Container">
-                        <rect key="frame" x="16" y="460" width="343" height="40"/>
+                        <rect key="frame" x="16" y="409" width="343" height="40"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H9h-yh-kjo">
                                 <rect key="frame" x="284" y="4.5" width="51" height="31"/>
@@ -74,7 +75,7 @@
                                     <action selector="dataSwitched:" destination="QSI-vE-rTg" eventType="valueChanged" id="Ra2-At-AUC"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Moving Average:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6Y-lv-Ekl">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Moving Average:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="r6Y-lv-Ekl">
                                 <rect key="frame" x="10" y="7.5" width="159.5" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="0.69999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -83,6 +84,7 @@
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="H9h-yh-kjo" secondAttribute="trailing" constant="10" id="4lm-54-ntm"/>
+                            <constraint firstItem="r6Y-lv-Ekl" firstAttribute="top" secondItem="3eR-Jl-xer" secondAttribute="top" constant="7.5" id="CYQ-ww-eo5"/>
                             <constraint firstItem="H9h-yh-kjo" firstAttribute="centerY" secondItem="3eR-Jl-xer" secondAttribute="centerY" id="LW3-Ng-y1K"/>
                             <constraint firstItem="r6Y-lv-Ekl" firstAttribute="leading" secondItem="3eR-Jl-xer" secondAttribute="leading" constant="10" id="Lp4-Jh-uDU"/>
                             <constraint firstAttribute="height" constant="40" id="dQ5-Cc-B3o"/>
@@ -90,7 +92,7 @@
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GXc-4Y-cw8" userLabel="Average Container">
-                        <rect key="frame" x="16" y="500" width="343" height="40"/>
+                        <rect key="frame" x="16" y="449" width="343" height="40"/>
                         <subviews>
                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6nW-WL-lKU">
                                 <rect key="frame" x="284" y="4.5" width="51" height="31"/>
@@ -98,8 +100,8 @@
                                     <action selector="dataSwitched:" destination="QSI-vE-rTg" eventType="valueChanged" id="EzP-cL-eOH"/>
                                 </connections>
                             </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Include Walking/Standing:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jeh-cz-yId">
-                                <rect key="frame" x="10" y="7.5" width="249" height="26.5"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Include Walking:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="jeh-cz-yId">
+                                <rect key="frame" x="10" y="7.5" width="156" height="26.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <color key="textColor" white="0.69999999999999996" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -108,6 +110,7 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="HED-WH-zGr"/>
                             <constraint firstItem="jeh-cz-yId" firstAttribute="leading" secondItem="GXc-4Y-cw8" secondAttribute="leading" constant="10" id="Rax-yE-cnM"/>
+                            <constraint firstItem="jeh-cz-yId" firstAttribute="top" secondItem="GXc-4Y-cw8" secondAttribute="top" constant="7.5" id="SaS-Js-7qz"/>
                             <constraint firstAttribute="trailing" secondItem="6nW-WL-lKU" secondAttribute="trailing" constant="10" id="Uav-cQ-Vgl"/>
                             <constraint firstAttribute="height" constant="40" id="eQ6-Hy-kzM"/>
                             <constraint firstItem="6nW-WL-lKU" firstAttribute="centerY" secondItem="GXc-4Y-cw8" secondAttribute="centerY" id="jRK-ii-Tr4"/>
