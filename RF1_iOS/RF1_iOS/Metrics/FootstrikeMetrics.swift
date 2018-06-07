@@ -64,7 +64,7 @@ class FootstrikeMetrics {
     }
     
     
-    func getFootstrikeValues() -> (recent: Dictionary<FootstrikeType,Double>, average: Dictionary<FootstrikeType,Double>) {
+    func getFootstrikeValues() -> (recent: Dictionary<FootstrikeType,Double>, average: Dictionary<FootstrikeType,Double>) {  //Called from View Controller right after processFootstrike()
         
         var recentDict: Dictionary<FootstrikeType,Double> = [.fore : 0,
                                                              .mid : 0,
@@ -89,7 +89,7 @@ class FootstrikeMetrics {
     }
     
     
-    func updateFootstrikeLog(runningInInterval: Bool) { //Assumes function is called at the correct time intervals
+    func updateFootstrikeLog(runningInInterval: Bool, runEnded: Bool = false) { //Assumes function is called at the correct log time intervals
         
         if !runningInInterval { //If not running, subtract the values from that interval
             
@@ -98,9 +98,12 @@ class FootstrikeMetrics {
             totalHeelRunning -= heelLog[heelLog.count - 1]
         }
         
-        foreLog.append(0)
-        midLog.append(0)
-        heelLog.append(0)
+        if !runEnded {
+            
+            foreLog.append(0)
+            midLog.append(0)
+            heelLog.append(0)
+        }
     }
     
     

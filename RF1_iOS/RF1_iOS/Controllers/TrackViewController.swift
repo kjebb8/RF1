@@ -65,8 +65,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         formatChart(recentFootstrikeChartView)
         formatChart(averageFootstrikeChartView)
         
-        updateUICadenceValues()
-        updateUIFootstrikeValues()
+        updateUICadence()
+        updateUIFootstrike()
     }
     
     
@@ -92,10 +92,14 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     @objc func runTimerIntervalTick() {
         
         runTime += 1
-        let isRunningInterval: Bool = cadenceMetrics.updateCadence(atTimeInSeconds: runTime)
-        updateUICadenceValues()
+        cadenceMetrics.updateUICadenceValues(atTimeInSeconds: runTime) //Needs to be outside updateUICadence() because the steps should update in real time but the cadence values should update every second
+        updateUICadence()
         
-        if runTime % MetricParameters.metricLogTime == 0 {footstrikeMetrics.updateFootstrikeLog(runningInInterval: isRunningInterval)}
+        if runTime % MetricParameters.metricLogTime == 0 {
+            
+            let isRunningInterval: Bool = cadenceMetrics.updateCadenceLog()
+            footstrikeMetrics.updateFootstrikeLog(runningInInterval: isRunningInterval)
+        }
     }
     
     
@@ -187,7 +191,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     }
     
     
-    func updateUICadenceValues() {
+    func updateUICadence() {
         
         let cadenceStringValues = cadenceMetrics.getCadenceStringValues()
         
@@ -199,7 +203,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     }
     
     
-    func updateUIFootstrikeValues() {
+    func updateUIFootstrike() {
         
         let footstrikeValues = footstrikeMetrics.getFootstrikeValues()
         
@@ -305,12 +309,12 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         if returnValue == .didTakeStep {
             
             cadenceMetrics.incrementSteps()
-            updateUICadenceValues()
+            updateUICadence()
             
         } else if returnValue == .foreStrike || returnValue == .midStrike || returnValue == .heelStrike {
             
             footstrikeMetrics.processFootstrike(forEvent: returnValue)
-            updateUIFootstrikeValues()
+            updateUIFootstrike()
         }
     }
     
@@ -344,13 +348,16 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     func saveData() {
         
+        let isRunningInterval: Bool = cadenceMetrics.updateCadenceLog()
+        footstrikeMetrics.updateFootstrikeLog(runningInInterval: isRunningInterval, runEnded: true)
+        
         let newRunLogEntry = RunLogEntry()
         
         newRunLogEntry.date = date
         newRunLogEntry.startTime = date.getStartTimeString()
         newRunLogEntry.runDuration = runTime
         
-        let newCadenceData = cadenceMetrics.getCadenceDataForSaving(forRunTime: runTime)
+        let newCadenceData = cadenceMetrics.getCadenceDataForSaving()
         
         newRunLogEntry.cadenceLog = newCadenceData.cadenceLog
         newRunLogEntry.averageCadence = newCadenceData.averageCadence

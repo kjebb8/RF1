@@ -181,9 +181,7 @@ func getFormattedFootstrikeLineChartData(forEntry runEntry: RunLogEntry, withDat
     
     for i in 0..<footstrikeLog.count {
         
-        let cadenceIndex = min(i, cadenceLog.count - 1) //footstrikeLog is potentially 1 element longer than cadenceLog, so make sure the index does not go out of bounds. This means if the last cadence interval was considered walking, then the last two footstrike elements would be considered walking
-        
-        let cadenceValue = cadenceLog[cadenceIndex].cadenceIntervalValue
+        let cadenceValue = cadenceLog[i].cadenceIntervalValue
         
         if !requiredData.includeWalkingData {
             if cadenceValue < MetricParameters.walkingThresholdCadence {continue} //Skip loop iteration if walking
@@ -212,7 +210,7 @@ func getFormattedFootstrikeLineChartData(forEntry runEntry: RunLogEntry, withDat
             let midStrikesInInterval: Int = midSimpleMAValuesArray.reduce(0, +)
             let heelStrikesInInterval: Int = heelSimpleMAValuesArray.reduce(0, +)
             
-            let totalStrikesInInterval: Int = foreStrikesInInterval + midStrikesInInterval + heelStrikesInInterval
+            let totalStrikesInInterval: Int = max(foreStrikesInInterval + midStrikesInInterval + heelStrikesInInterval, 1)
             
             let heelPercent: Double = Double(heelStrikesInInterval) / Double(totalStrikesInInterval) * 100
             let midPercent: Double = Double(midStrikesInInterval) / Double(totalStrikesInInterval) * 100 + heelPercent

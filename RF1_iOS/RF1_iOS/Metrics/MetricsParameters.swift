@@ -10,7 +10,7 @@ import Foundation
 
 struct MetricParameters {
     
-    static let recentCadenceTime: Int = 10 //Number of seconds used to calculate the current cadence
+    static let recentCadenceCount: Int = 10 //Number of seconds used to calculate the current cadence
     static let recentFootstrikeCount: Int = 10 //Number of most recent footstrike measurements for the real-time metrics
     
     static let walkingThresholdCadence: Double = 130 //Cadence below the threshold is considered walking
