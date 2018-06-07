@@ -11,14 +11,14 @@ import RealmSwift
 
 class CadenceMetrics {
     
-    private var recentStepTimesArray = [Double]() //Holds most recent step data within time given by cadence parameters
-    private var recentCadence: Double = 0 //Cadence for the most recent step data
+    private var recentStepTimesArray = [Double]() //Holds most recent step time data within time frame given by cadence parameters
+    private var recentCadence: Double = 0 //Cadence for the most recent data
     
     private var totalSteps: Int = 0
     private var averageCadence: Double = 0 //Cadence for entire run
     private var runningCadenceValues = [Double]() //For calculating the average cadence for running only
     
-    private var stepTimesInLogInterval = [Double]() //Counts the steps in the current log interval time. Counts fractions of a step for accuracy
+    private var stepTimesInLogInterval = [Double]() //Logs the time between each step for each step in an interval
     private var cadenceLog = [Double]() //Each entry has cadence for a given interval time period
     
     private var timeSinceLastStep: Double = 0 //in seconds, Measures the elapsed time since the last step was taken
@@ -73,6 +73,8 @@ class CadenceMetrics {
     
     
     func getCadenceDataForSaving() -> (cadenceLog: List<CadenceLogEntry>, averageCadence: Double, runningCadence: Double) {
+        
+        //updateCadenceLog() is called right before getting the save data
         
         let newCadenceLog = List<CadenceLogEntry>()
         

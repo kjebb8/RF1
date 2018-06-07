@@ -17,9 +17,9 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     var bleDataManager: BLEDataManager! //Handles the incoming BLE notification data and reports back with run-related events
     
-    var cadenceMetrics = CadenceMetrics() //Holds the properties and mehtods used to track user's cadence
+    var cadenceMetrics = CadenceMetrics() //Holds the properties and methods used to track user's cadence
     
-    var footstrikeMetrics = FootstrikeMetrics() ////Holds the properties and mehtods used to track user's footstrike characteristics
+    var footstrikeMetrics = FootstrikeMetrics() //Holds the properties and methods used to track user's footstrike characteristics
     
     var inRunState: Bool = false //Reflects whether the timer is paused by user or not
     
@@ -59,7 +59,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         bleDataManager = BLEDataManager(delegate: self)
         
-//        recentCadenceTitle.text = "\(MetricParameters.recentCadenceTime)s Cadence"
         hintLabel.text = ""
         
         formatChart(recentFootstrikeChartView)

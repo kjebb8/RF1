@@ -23,8 +23,8 @@ class BLEDataManager {
     var heelVoltage: Int = 0 //Could make private if not printing out to label
     var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
-    private var heelVoltageCouple: [Int] = [0,0]
-    private var forefootVoltageCouple: [Int] = [0,0]
+    private var heelForceCouple: [Double] = [0,0]
+    private var forefootForceCouple: [Double] = [0,0]
     
     private var newHeelDown: Bool = false
     private var oldHeelDown: Bool = false
@@ -32,9 +32,8 @@ class BLEDataManager {
     private var newForefootDown: Bool = false
     private var oldForefootDown: Bool = false
     
-    private let upperMVLimit: Int = 2940
-    private let midMVLimit: Int = 2910 //For determining midfoot strike
-    private let lowerMVLimit: Int = 2760
+    private var upperForceLimit: Double = 2650 //In grams
+    private var lowerForceLimit: Double = 2300 //In grams
     
     private var logRawData: Bool = false
     private var clearRawData: Bool = false //BIG RED BUTTON for FSR Data. Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
@@ -64,21 +63,21 @@ class BLEDataManager {
         
         saveFsrData(dataToBeSaved: data)
         
-        heelVoltageCouple.remove(at: 0)
-        heelVoltageCouple.append(heelVoltage)
+        heelForceCouple.remove(at: 0)
+        heelForceCouple.append(calculateForce(forVoltage: heelVoltage))
         
-        forefootVoltageCouple.remove(at: 0)
-        forefootVoltageCouple.append(forefootVoltage)
+        forefootForceCouple.remove(at: 0)
+        forefootForceCouple.append(calculateForce(forVoltage: forefootVoltage))
         
-        if oldHeelDown && (heelVoltageCouple[0] < lowerMVLimit) && (heelVoltageCouple[1] < lowerMVLimit) {
+        if oldHeelDown && (heelForceCouple[0] < lowerForceLimit) && (heelForceCouple[1] < lowerForceLimit) {
             newHeelDown = false
-        } else if !oldHeelDown && ((heelVoltageCouple[0] > upperMVLimit) && (heelVoltageCouple[1] > upperMVLimit)) {
+        } else if !oldHeelDown && ((heelForceCouple[0] > upperForceLimit) || (heelForceCouple[1] > upperForceLimit)) {
             newHeelDown = true
         }
         
-        if oldForefootDown && (forefootVoltageCouple[0] < lowerMVLimit) && (forefootVoltageCouple[1] < lowerMVLimit) {
+        if oldForefootDown && (forefootForceCouple[0] < lowerForceLimit) && (forefootForceCouple[1] < lowerForceLimit) {
             newForefootDown = false
-        } else if !oldForefootDown && ((forefootVoltageCouple[0] > upperMVLimit) && (forefootVoltageCouple[1] > upperMVLimit)) {
+        } else if !oldForefootDown && ((forefootForceCouple[0] > upperForceLimit) || (forefootForceCouple[1] > upperForceLimit)) {
             newForefootDown = true
         }
         
@@ -88,7 +87,7 @@ class BLEDataManager {
         
         if (!oldHeelDown && !oldForefootDown) {
             
-            if (newHeelDown && forefootVoltageCouple[0] > midMVLimit) || (newForefootDown && heelVoltageCouple[0] > midMVLimit) {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
+            if (newHeelDown && newForefootDown) {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
             else if (newHeelDown) {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)}
             else if (newForefootDown){delegateVC?.didFinishDataProcessing(withReturn: .foreStrike)}
         }
@@ -115,6 +114,22 @@ class BLEDataManager {
         if logRawData {logData(forefootVoltage, heelVoltage)}
     }
     
+    
+    private func calculateForce(forVoltage voltageInt: Int) -> Double { //Returns force in grams
+        
+        let voltage = Double(voltageInt)
+        
+        var force: Double = 25
+        
+        if voltage > 413 {
+            
+            let resistance = (3300 - voltage) * 10000 / voltage
+            let logResistance = (log(resistance) / log(10)) //change base to 10
+            force = pow(10, -1.391 * logResistance + 7.740) //From FSR data sheet calibration curve
+        }
+        
+        return force
+    }
     
     
     //MARK: - Realm Content
