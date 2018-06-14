@@ -66,13 +66,13 @@ class FootstrikeMetrics {
     
     func getFootstrikeValues() -> (recent: Dictionary<FootstrikeType,Double>, average: Dictionary<FootstrikeType,Double>) {  //Called from View Controller right after processFootstrike()
         
-        var recentDict: Dictionary<FootstrikeType,Double> = [.fore : 0,
-                                                             .mid : 0,
-                                                             .heel : 0]
+        var recentDict: Dictionary<FootstrikeType,Double> = [.fore : 0.0,
+                                                             .mid : 0.0,
+                                                             .heel : 0.0]
         
-        var averageDict: Dictionary<FootstrikeType,Double> = [.fore : 0,
-                                                              .mid : 0,
-                                                              .heel : 0]
+        var averageDict: Dictionary<FootstrikeType,Double> = [.fore : 0.0,
+                                                              .mid : 0.0,
+                                                              .heel : 0.0]
             
         if totalFootstrikes != 0 {
         

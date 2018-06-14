@@ -60,6 +60,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         bleDataManager = BLEDataManager(delegate: self)
         
         hintLabel.text = ""
+        dataLabel.text = ""
         
         formatChart(recentFootstrikeChartView)
         formatChart(averageFootstrikeChartView)
@@ -297,7 +298,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func didReceiveBLEData(data: Data) {
         
         bleDataManager.processNewData(updatedData: data)
-        dataLabel.text = "Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
+//        dataLabel.text = "Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
+        print("Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)")
     }
     
     
