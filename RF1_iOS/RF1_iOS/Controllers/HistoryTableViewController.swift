@@ -55,7 +55,7 @@ class HistoryTableViewController: BaseTableViewController {
         if indexPath.row == 0 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: "tapForStatsCell")
-            cell?.textLabel?.text = "Tap a Cell for Details"
+            cell?.textLabel?.text = runLog?.count != 0 ? "Tap a Cell for Details" : "No Data Available"
             cell?.textLabel?.font = UIFont.boldSystemFont(ofSize: 20)
             cell?.textLabel?.textAlignment = .center
             cell?.backgroundColor = UIColor.clear

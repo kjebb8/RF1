@@ -51,12 +51,13 @@ class CadenceMetrics {
     func updateCadenceLog() -> (Bool) { //Assumes function is called at the correct log time intervals
         
         var runningInInterval: Bool = false
-            
-        let intervalCadence = calculateCadence(fromStepTimesArray: stepTimesInLogInterval)
         
+        print(stepTimesInLogInterval)
+        let intervalCadence = calculateCadence(fromStepTimesArray: stepTimesInLogInterval)
+        print(intervalCadence)
         cadenceLog.append(intervalCadence)
         stepTimesInLogInterval.removeAll()
-        
+        print(stepTimesInLogInterval)
         if intervalCadence >= MetricParameters.walkingThresholdCadence {
             
             runningInInterval = true //Sent to other metric modules to say whether the user was running during the interval

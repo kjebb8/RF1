@@ -20,8 +20,8 @@ class BLEDataManager {
     
     private var delegateVC: BLEDataManagerDelegate?
     
-    var heelVoltage: Int = 0 //Could make private if not printing out to label
-    var forefootVoltage: Int = 0 //Could make private if not printing out to label
+//    var heelVoltage: Int = 0 //Could make private if not printing out to label
+//    var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
     private var heelForceFifo: [Double] = []
     private var forefootForceFifo: [Double] = []
@@ -38,6 +38,7 @@ class BLEDataManager {
     
     private let forceDerivativeLimit: Double = 500 //grams per 0.05 seconds
     private let upperForceLimit: Double = 4500 //grams
+    private var lowerForceLimit: Double = 3000 //grams
     
     private let heelConstant1: Double = 1.8
     private let heelConstant2: Double = 2.0
@@ -46,7 +47,7 @@ class BLEDataManager {
     private let midConstant2: Double = 5.0
     private let midConstant3: Double = 2.0
     
-    private let logRawData: Bool = false
+    private let logRawData: Bool = true
     private let clearRawData: Bool = false //BIG RED BUTTON for FSR Data. Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
     
     init(delegate: BLEDataManagerDelegate) {
@@ -70,9 +71,11 @@ class BLEDataManager {
     }
     
     
-    func processNewData(updatedData data: Data) { //Public Access
+//    func processNewData(updatedData data: Data) { //Public Access
+    func analyze(_ heelVoltage: Int, _ forefootVoltage: Int) {
         
-        saveFsrData(dataToBeSaved: data)
+//        saveFsrData(dataToBeSaved: data)
+        if logRawData {logData(forefootVoltage, heelVoltage)}
         
         if heelForceFifo.count < forceFifoSize {
             
@@ -104,11 +107,12 @@ class BLEDataManager {
             } else if
                 !oldHeelDown && //If heel was previously up AND
                 !oldForefootDown && //Forefoot was previously up (force rises after a minimum when forefoot is pushing off) AND
-                ((heelDerivativeOld > forceDerivativeLimit * heelConstant1) || //If the oldest slope is great enough OR
-                    (heelDerivativeOld > forceDerivativeLimit && //If the oldest slope is moderate AND
-                        heelDerivativeOld + heelDerivativeMiddle > forceDerivativeLimit * heelConstant2)) { //Sum of slopes is positive enough, then heel is down
+                    ((heelDerivativeOld > forceDerivativeLimit * heelConstant1) || //If the oldest slope is great enough OR
+                        (heelDerivativeOld > forceDerivativeLimit && //If the oldest slope is moderate AND
+                            heelDerivativeOld + heelDerivativeMiddle > forceDerivativeLimit * heelConstant2)) { //Sum of slopes is positive enough, then heel is down
                 
                 newHeelDown = true
+//                heelReleaseForce = min(heelForceFifo[0] + 500, lowerForceLimit)
                 heelReleaseForce = heelForceFifo[0] + 500
             }
         
@@ -120,11 +124,12 @@ class BLEDataManager {
                 
             } else if
                 !oldForefootDown && //If forefoot was previously up AND
-                ((forefootDerivativeOld > forceDerivativeLimit && //If the oldest slope is great enough AND
-                    forefootDerivativeOld + forefootDerivativeMiddle + forefootDerivativeNew > forceDerivativeLimit * forefootConstant1) || //Sum of all three slopes is significant, then forefoot is down OR
+                    ((forefootDerivativeOld > forceDerivativeLimit && //If the oldest slope is great enough AND
+                        forefootDerivativeOld + forefootDerivativeMiddle + forefootDerivativeNew > forceDerivativeLimit * forefootConstant1) || //Sum of all three slopes is significant, then forefoot is down OR
                     forefootForceFifo[1] > upperForceLimit) { //The seconds oldest value is high enough (if there is a slow rise), then the forefoot is down
                 
                 newForefootDown = true
+//                forefootReleaseForce = min(forefootForceFifo[0] + 500, lowerForceLimit)
                 forefootReleaseForce = forefootForceFifo[0] + 500
             }
         
@@ -177,10 +182,10 @@ class BLEDataManager {
             }
         }
         
-        heelVoltage = Int(fsrDataArray[0])
-        forefootVoltage = Int(fsrDataArray[1])
-        
-        if logRawData {logData(forefootVoltage, heelVoltage)}
+//        heelVoltage = Int(fsrDataArray[0])
+//        forefootVoltage = Int(fsrDataArray[1])
+//        
+//        if logRawData {logData(forefootVoltage, heelVoltage)}
     }
     
     

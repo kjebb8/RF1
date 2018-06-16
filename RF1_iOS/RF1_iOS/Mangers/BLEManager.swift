@@ -85,20 +85,41 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
         }
     }
     
+    var time: Int = 0 //In seconds
+    var timer = Timer()
+    var cadenceMetrics: CadenceMetrics!
+    var dataProcessor: BLEDataManager!
+    func initializeTimer() {
+        
+        timer = Timer.scheduledTimer(
+            timeInterval: 0.05, //Goes off 20 Hz
+            target: self,
+            selector: (#selector(self.runTimerIntervalTick)),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    
+    @objc func runTimerIntervalTick() {
+        
+        dataProcessor.analyze(nickHeel[time], nickForefoot[time])
+        time += 1
+    }
     
     func turnOnNotifications() {
+        initializeTimer()
+//        if let characteristic = fsrCharacteristic {
+//            fsrPeripheral?.setNotifyValue(true, for: characteristic)
+//        }
         
-        if let characteristic = fsrCharacteristic {
-            fsrPeripheral?.setNotifyValue(true, for: characteristic)
-        }
     }
     
     
     func turnOffNotifications() {
-        
-        if let characteristic = fsrCharacteristic {
-            fsrPeripheral?.setNotifyValue(false, for: characteristic)
-        }
+        timer.invalidate()
+//        if let characteristic = fsrCharacteristic {
+//            fsrPeripheral?.setNotifyValue(false, for: characteristic)
+//        }
     }
     
     
