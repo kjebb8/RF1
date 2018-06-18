@@ -20,8 +20,8 @@ class BLEDataManager {
     
     private var delegateVC: BLEDataManagerDelegate?
     
-//    var heelVoltage: Int = 0 //Could make private if not printing out to label
-//    var forefootVoltage: Int = 0 //Could make private if not printing out to label
+    var heelVoltage: Int = 0 //Could make private if not printing out to label
+    var forefootVoltage: Int = 0 //Could make private if not printing out to label
     
     private var heelForceFifo: [Double] = []
     private var forefootForceFifo: [Double] = []
@@ -47,7 +47,7 @@ class BLEDataManager {
     private let midConstant2: Double = 5.0
     private let midConstant3: Double = 2.0
     
-    private let logRawData: Bool = true
+    private let logRawData: Bool = false
     private let clearRawData: Bool = false //BIG RED BUTTON for FSR Data. Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
     
     init(delegate: BLEDataManagerDelegate) {
@@ -57,7 +57,7 @@ class BLEDataManager {
         
         if logRawData {
             
-            setUpRealm()
+            dataLogIndex = 0
             if clearRawData {clearRealm()}
         }
     }
@@ -71,11 +71,9 @@ class BLEDataManager {
     }
     
     
-//    func processNewData(updatedData data: Data) { //Public Access
-    func analyze(_ heelVoltage: Int, _ forefootVoltage: Int) {
+    func processNewData(updatedData data: Data) { //Public Access
         
-//        saveFsrData(dataToBeSaved: data)
-        if logRawData {logData(forefootVoltage, heelVoltage)}
+        saveFsrData(dataToBeSaved: data)
         
         if heelForceFifo.count < forceFifoSize {
             
@@ -112,9 +110,10 @@ class BLEDataManager {
                             heelDerivativeOld + heelDerivativeMiddle > forceDerivativeLimit * heelConstant2)) { //Sum of slopes is positive enough, then heel is down
                 
                 newHeelDown = true
-//                heelReleaseForce = min(heelForceFifo[0] + 500, lowerForceLimit)
-                heelReleaseForce = heelForceFifo[0] + 500
+                heelReleaseForce = min(heelForceFifo[0] + 500, lowerForceLimit)
             }
+            
+            var slopeConditionMet: Bool = false
         
             if
                 oldForefootDown && //If forefoot was down AND
@@ -122,15 +121,20 @@ class BLEDataManager {
                 
                 newForefootDown = false
                 
-            } else if
-                !oldForefootDown && //If forefoot was previously up AND
-                    ((forefootDerivativeOld > forceDerivativeLimit && //If the oldest slope is great enough AND
-                        forefootDerivativeOld + forefootDerivativeMiddle + forefootDerivativeNew > forceDerivativeLimit * forefootConstant1) || //Sum of all three slopes is significant, then forefoot is down OR
-                    forefootForceFifo[1] > upperForceLimit) { //The seconds oldest value is high enough (if there is a slow rise), then the forefoot is down
+            } else if !oldForefootDown { //If forefoot was previously up AND
                 
-                newForefootDown = true
-//                forefootReleaseForce = min(forefootForceFifo[0] + 500, lowerForceLimit)
-                forefootReleaseForce = forefootForceFifo[0] + 500
+                if (forefootDerivativeOld > forceDerivativeLimit && //If the oldest slope is great enough AND
+                    forefootDerivativeOld + forefootDerivativeMiddle + forefootDerivativeNew > forceDerivativeLimit * forefootConstant1) { //Sum of all three slopes is significant, then forefoot is down
+                
+                    slopeConditionMet = true
+                    newForefootDown = true
+                    forefootReleaseForce = min(forefootForceFifo[0] + 500, lowerForceLimit)
+                    
+                } else if forefootForceFifo[1] > upperForceLimit { //Otherwise, if the seconds oldest value is high enough (if there is a slow rise), then the forefoot is down
+                    
+                    newForefootDown = true
+                    forefootReleaseForce = min(forefootForceFifo[0] + 500, lowerForceLimit)
+                }
             }
         
             if (oldForefootDown || oldHeelDown) && (!newForefootDown && !newHeelDown) { //When both parts of the foot are up after one of them is down
@@ -145,17 +149,18 @@ class BLEDataManager {
                     //The same is done for forefoot, which biases the results to be harder to get midfoot strikes (as it should be)
                     if heelDerivativeOld > forefootDerivativeOld * midConstant1 {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)}
                     else if forefootDerivativeOld > heelDerivativeOld * midConstant1 {delegateVC?.didFinishDataProcessing(withReturn: .foreStrike)}
-                    else {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
+                    else {
+                        delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
                 }
                     
                 else if (newHeelDown) {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)} //If only heel went down
                     
                 else if (newForefootDown){ //If only forefoot went down
                     
-                    //If the newest forefoot slope is significantly greater than the earlier two, then:
+                    //If the slope conditon was met, AND the newest forefoot slope is significantly greater than the earlier two, then:
                     //1)It could be counted as a heel strike if the heel was already going down during the middle slope or
                     //2)Counted as a midfoot strike if the new heel slope is similar to the new forefoot slope
-                    if (forefootDerivativeNew > (forefootDerivativeOld + forefootDerivativeMiddle) * midConstant2) {
+                    if slopeConditionMet && (forefootDerivativeNew > (forefootDerivativeOld + forefootDerivativeMiddle) * midConstant2) {
                         
                         if (heelDerivativeMiddle > forceDerivativeLimit && forefootDerivativeMiddle < 0) {delegateVC?.didFinishDataProcessing(withReturn: .heelStrike)}
                         else if (heelDerivativeNew > forefootDerivativeNew / midConstant3) {delegateVC?.didFinishDataProcessing(withReturn: .midStrike)}
@@ -182,10 +187,10 @@ class BLEDataManager {
             }
         }
         
-//        heelVoltage = Int(fsrDataArray[0])
-//        forefootVoltage = Int(fsrDataArray[1])
-//        
-//        if logRawData {logData(forefootVoltage, heelVoltage)}
+        heelVoltage = Int(fsrDataArray[0])
+        forefootVoltage = Int(fsrDataArray[1])
+        
+        if logRawData {logData(forefootVoltage, heelVoltage)}
     }
     
     
@@ -208,15 +213,7 @@ class BLEDataManager {
     
     //MARK: - Realm Content
     
-    private var realm: Realm?
-    
     private var dataLogIndex: Int?
-    
-    private func setUpRealm() {
-        
-        realm = try! Realm()
-        dataLogIndex = 0
-    }
     
     private func logData(_ forefootVoltage: Int, _ heelVoltage: Int) {
         
@@ -227,8 +224,11 @@ class BLEDataManager {
         newFSRData.sampleIndex = dataLogIndex!
 
         do {
-            try realm?.write {
-                realm?.add(newFSRData)
+            
+            let realm = try! Realm()
+            
+            try realm.write {
+                realm.add(newFSRData)
             }
         } catch {
             print("Error saving context \(error)")
@@ -238,11 +238,14 @@ class BLEDataManager {
     
     private func clearRealm() { //Must comment out this line in BLEManager "delegateVC?.updateUIForBLEState(bleState)" (line 75)
         
-        let oldData: Results<FSRData> = realm!.objects(FSRData.self)
+        let realm = try! Realm()
+        
+        let oldData: Results<FSRData> = realm.objects(FSRData.self)
         for fsrResult in oldData {
             do {
-                try realm?.write {
-                    realm?.delete(fsrResult)
+            
+                try realm.write {
+                    realm.delete(fsrResult)
                 }
             } catch {
                 print("Error deleting \(error)")

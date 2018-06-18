@@ -58,8 +58,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         bleManager.setDelegate(to: self)
         
         bleDataManager = BLEDataManager(delegate: self)
-        bleManager.cadenceMetrics = cadenceMetrics
-        bleManager.dataProcessor = bleDataManager
         
         hintLabel.text = ""
         dataLabel.text = ""
@@ -299,7 +297,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     
     func didReceiveBLEData(data: Data) {
         
-//        bleDataManager.processNewData(updatedData: data)
+        bleDataManager.processNewData(updatedData: data)
 //        dataLabel.text = "Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
 //        print("Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)")
     }

@@ -24,8 +24,9 @@ class CadenceMetrics {
     private var timeSinceLastStep: Double = 0 //in seconds, Measures the elapsed time since the last step was taken
 
     var stepTimer = Timer()
-    let stepTimeInterval = 0.05 //Goes off every second 50ms or 20 Hz
+    private let stepTimeInterval = 0.025 //Goes off every second 25ms or 40 Hz
     
+    private let logStepData: Bool = false
     
     //MARK: - Public Access Methods
     
@@ -36,6 +37,10 @@ class CadenceMetrics {
         
         stepTimesInLogInterval.append(timeSinceLastStep)
         totalSteps += 2
+        
+        if logStepData {
+            logData(timeSinceLastStep, cadenceLog.count + 1)
+        }
         
         timeSinceLastStep = 0
     }
@@ -51,13 +56,12 @@ class CadenceMetrics {
     func updateCadenceLog() -> (Bool) { //Assumes function is called at the correct log time intervals
         
         var runningInInterval: Bool = false
-        
         print(stepTimesInLogInterval)
         let intervalCadence = calculateCadence(fromStepTimesArray: stepTimesInLogInterval)
-        print(intervalCadence)
+        
         cadenceLog.append(intervalCadence)
         stepTimesInLogInterval.removeAll()
-        print(stepTimesInLogInterval)
+        
         if intervalCadence >= MetricParameters.walkingThresholdCadence {
             
             runningInInterval = true //Sent to other metric modules to say whether the user was running during the interval
@@ -121,6 +125,28 @@ class CadenceMetrics {
     
     @objc private func stepTimerIntervalTick() {
         timeSinceLastStep += stepTimeInterval
+    }
+    
+    
+    //MARK: - Realm Content
+    
+    private func logData(_ stepTime: Double, _ intervalNumber: Int) {
+        
+        let newStepTimeData = StepTimeData()
+        newStepTimeData.stepTime = stepTime
+        newStepTimeData.logInterval = intervalNumber
+        
+        do {
+            
+            let realm = try! Realm()
+            
+            try realm.write {
+                realm.add(newStepTimeData)
+            }
+            
+        } catch {
+            print("Error saving context \(error)")
+        }
     }
     
     
