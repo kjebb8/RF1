@@ -21,16 +21,11 @@ class CadenceMetrics {
     private var stepTimesInLogInterval = [Double]() //Logs the time between each step for each step in an interval
     private var cadenceLog = [Double]() //Each entry has cadence for a given interval time period
     
-    private var timeSinceLastStep: Double = 0 //in seconds, Measures the elapsed time since the last step was taken
-
-    var stepTimer = Timer()
-    private let stepTimeInterval = 0.025 //Goes off every second 25ms or 40 Hz
-    
     private let logStepData: Bool = false
     
     //MARK: - Public Access Methods
     
-    func incrementSteps() { //Called from View Controller when dataProcessor returns that a step was taken
+    func incrementSteps(_ timeSinceLastStep: Double) { //Called from View Controller when dataProcessor returns that a step was taken
         
         recentStepTimesArray.append(timeSinceLastStep)
         if recentStepTimesArray.count > MetricParameters.recentCadenceCount {recentStepTimesArray.remove(at: 0)}
@@ -41,8 +36,6 @@ class CadenceMetrics {
         if logStepData {
             logData(timeSinceLastStep, cadenceLog.count + 1)
         }
-        
-        timeSinceLastStep = 0
     }
     
     
@@ -56,7 +49,6 @@ class CadenceMetrics {
     func updateCadenceLog() -> (Bool) { //Assumes function is called at the correct log time intervals
         
         var runningInInterval: Bool = false
-        print(stepTimesInLogInterval)
         let intervalCadence = calculateCadence(fromStepTimesArray: stepTimesInLogInterval)
         
         cadenceLog.append(intervalCadence)
@@ -107,24 +99,6 @@ class CadenceMetrics {
         if averageStepTime != 0 {cadence = 1 / averageStepTime * 60}
         
         return cadence
-    }
-    
-    
-    //MARK: - Step Timing Methods
-    
-    func initializeStepTimer() { //Follows the runTimer in TrackViewController
-        
-        stepTimer = Timer.scheduledTimer(
-            timeInterval: stepTimeInterval,
-            target: self,
-            selector: (#selector(CadenceMetrics.stepTimerIntervalTick)),
-            userInfo: nil,
-            repeats: true)
-    }
-    
-    
-    @objc private func stepTimerIntervalTick() {
-        timeSinceLastStep += stepTimeInterval
     }
     
     

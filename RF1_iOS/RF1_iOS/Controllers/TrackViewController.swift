@@ -30,6 +30,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     var runTime: Int = 0 //In seconds
     var runTimer = Timer()
     
+    var timeSinceLastStep: Double = 0 //in seconds, Measures the elapsed time since the last step was taken by counting incoming data at 20Hz and uses this for cadence calculations
+    
     let date = Date()
     
     @IBOutlet weak var recentCadenceTitle: UILabel!
@@ -149,7 +151,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
                         if (self.inRunState) { //Restore state
                             
                             self.initializeRunTimer()
-                            self.cadenceMetrics.initializeStepTimer()
                             self.bleManager.turnOnNotifications()
                         }
                     }
@@ -174,7 +175,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func setPauseState() {
         
         runTimer.invalidate()
-        cadenceMetrics.stepTimer.invalidate()
         inRunState = false
         bleManager.turnOffNotifications()
         pauseButton.setTitle("Resume", for: .normal)
@@ -184,7 +184,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func setRunState() {
         
         initializeRunTimer()
-        cadenceMetrics.initializeStepTimer()
         inRunState = true
         bleManager.turnOnNotifications()
         pauseButton.setTitle("Pause", for: .normal)
@@ -298,6 +297,7 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
     func didReceiveBLEData(data: Data) {
         
         bleDataManager.processNewData(updatedData: data)
+        timeSinceLastStep += PeripheralDevice.samplePeriod //This works in sleep mode while a timer does not!
 //        dataLabel.text = "Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)"
 //        print("Fore: \(bleDataManager.forefootVoltage) Heel: \(bleDataManager.heelVoltage)")
     }
@@ -309,7 +309,8 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         
         if returnValue == .didTakeStep {
             
-            cadenceMetrics.incrementSteps()
+            cadenceMetrics.incrementSteps(timeSinceLastStep)
+            timeSinceLastStep = 0
             updateUICadence()
             
         } else if returnValue == .foreStrike || returnValue == .midStrike || returnValue == .heelStrike {
@@ -327,7 +328,6 @@ class TrackViewController: BaseViewController, BLEManagerDelegate, BLEDataManage
         if inRunState { //To preserve the state if user continues but stop updates while alert is up
             
             runTimer.invalidate()
-            cadenceMetrics.stepTimer.invalidate()
             bleManager.turnOffNotifications()
         }
         

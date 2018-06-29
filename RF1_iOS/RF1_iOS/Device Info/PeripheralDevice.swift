@@ -17,4 +17,6 @@ struct PeripheralDevice {
     static let fsrDataCharacteristicUUID = CBUUID(string: "6c1b0002-4e01-8b6f-9a30-4ab6f2d2937c")
     
     static let numberOfSensors: Int = 2
+    
+    static let samplePeriod: Double = 0.05 //20 Hz on the hardware
 }
