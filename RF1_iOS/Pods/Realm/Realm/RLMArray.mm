@@ -253,7 +253,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
         RLMArrayValidateMatchingObjectType(self, obj);
     }
     changeArray(self, NSKeyValueChangeInsertion, NSMakeRange(_backingArray.count, array.count), ^{
-        [self->_backingArray addObjectsFromArray:array];
+        [_backingArray addObjectsFromArray:array];
     });
 }
 
@@ -261,7 +261,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     RLMArrayValidateMatchingObjectType(self, anObject);
     validateArrayBounds(self, index, true);
     changeArray(self, NSKeyValueChangeInsertion, index, ^{
-        [self->_backingArray insertObject:anObject atIndex:index];
+        [_backingArray insertObject:anObject atIndex:index];
     });
 }
 
@@ -270,7 +270,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
         NSUInteger currentIndex = [indexes firstIndex];
         for (RLMObject *obj in objects) {
             RLMArrayValidateMatchingObjectType(self, obj);
-            [self->_backingArray insertObject:obj atIndex:currentIndex];
+            [_backingArray insertObject:obj atIndex:currentIndex];
             currentIndex = [indexes indexGreaterThanIndex:currentIndex];
         }
     });
@@ -279,13 +279,13 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 - (void)removeObjectAtIndex:(NSUInteger)index {
     validateArrayBounds(self, index);
     changeArray(self, NSKeyValueChangeRemoval, index, ^{
-        [self->_backingArray removeObjectAtIndex:index];
+        [_backingArray removeObjectAtIndex:index];
     });
 }
 
 - (void)removeObjectsAtIndexes:(NSIndexSet *)indexes {
     changeArray(self, NSKeyValueChangeRemoval, indexes, ^{
-        [self->_backingArray removeObjectsAtIndexes:indexes];
+        [_backingArray removeObjectsAtIndexes:indexes];
     });
 }
 
@@ -293,7 +293,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     RLMArrayValidateMatchingObjectType(self, anObject);
     validateArrayBounds(self, index);
     changeArray(self, NSKeyValueChangeReplacement, index, ^{
-        [self->_backingArray replaceObjectAtIndex:index withObject:anObject];
+        [_backingArray replaceObjectAtIndex:index withObject:anObject];
     });
 }
 
@@ -305,8 +305,8 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     auto start = std::min(sourceIndex, destinationIndex);
     auto len = std::max(sourceIndex, destinationIndex) - start + 1;
     changeArray(self, NSKeyValueChangeReplacement, {start, len}, ^{
-        [self->_backingArray removeObjectAtIndex:sourceIndex];
-        [self->_backingArray insertObject:original atIndex:destinationIndex];
+        [_backingArray removeObjectAtIndex:sourceIndex];
+        [_backingArray insertObject:original atIndex:destinationIndex];
     });
 }
 
@@ -315,7 +315,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
     validateArrayBounds(self, index2);
 
     changeArray(self, NSKeyValueChangeReplacement, ^{
-        [self->_backingArray exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
+        [_backingArray exchangeObjectAtIndex:index1 withObjectAtIndex:index2];
     }, [=] {
         NSMutableIndexSet *set = [[NSMutableIndexSet alloc] initWithIndex:index1];
         [set addIndex:index2];
@@ -344,7 +344,7 @@ static void validateArrayBounds(__unsafe_unretained RLMArray *const ar,
 
 - (void)removeAllObjects {
     changeArray(self, NSKeyValueChangeRemoval, NSMakeRange(0, _backingArray.count), ^{
-        [self->_backingArray removeAllObjects];
+        [_backingArray removeAllObjects];
     });
 }
 
